@@ -1,0 +1,179 @@
+id: guild_tensions
+name: Guild Tensions
+tags:
+  - social
+  - intrigue
+  - faction
+
+preconditions: []
+
+roles:
+  - id: craftsman
+    label: A Guild Craftsman
+    archetypeFilter:
+      - blacksmith
+      - carpenter
+  - id: merchant
+    label: A Merchant
+    archetypeFilter:
+      - merchant
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The argument spills out of the guild hall and into the lane. {craftsman.name} jabs a finger
+      at {merchant.name}, face red. "You import shoddy foreign goods and call it trade! You are
+      strangling every skilled hand in this town!" The merchant crosses their arms. "I sell what
+      the market demands — unlike your guild, which demands without producing." A crowd is forming.
+    choices:
+      - id: side_craftsman
+        label: Step in and back the craftsman
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: faction
+            target: merchants_guild
+            value: -2
+          - type: relationship
+            target: '{craftsman.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: guild_dispute
+            value: true
+        exhaustionCost: 1
+        nextNodeId: sided_craftsman
+      - id: side_merchant
+        label: Agree with the merchant's free-market argument
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 3
+          - type: faction
+            target: craftsmen_guild
+            value: -2
+          - type: relationship
+            target: '{merchant.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: guild_dispute
+            value: true
+        exhaustionCost: 1
+        nextNodeId: sided_merchant
+      - id: mediate
+        label: Step between them and call for calm
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+          - type: world_fact
+            target: guild_dispute
+            value: true
+        exhaustionCost: 2
+        nextNodeId: mediated
+      - id: watch_and_leave
+        label: Watch in silence and slip away
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: guild_dispute
+            value: true
+        exhaustionCost: 0
+        nextNodeId: watched
+
+  sided_craftsman:
+    id: sided_craftsman
+    text: >-
+      {craftsman.name} looks grateful. {merchant.name} narrows their eyes at you. "Another guild
+      lapdog," they mutter, and walk away. The craftsman grips your arm. "We will remember friends
+      in the days to come."
+    choices:
+      - id: ask_whats_at_stake
+        label: Ask what exactly is being disputed
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: move_on
+        label: Nod and go about your business
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+
+  sided_merchant:
+    id: sided_merchant
+    text: >-
+      {merchant.name} gives you a thin, satisfied smile. {craftsman.name} spits on the cobblestones
+      and storms off. "You will regret this," the craftsman calls back. The merchant leans close.
+      "There is opportunity ahead for those with clear eyes."
+    choices:
+      - id: ask_what_opportunity
+        label: Ask what opportunity they mean
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: move_on
+        label: Smile and say nothing
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+
+  mediated:
+    id: mediated
+    text: >-
+      Both parties glare at you, then at each other. The crowd disperses, muttering. {craftsman.name}
+      shakes their head. "Pretty words do not fix a broken market." {merchant.name} straightens their
+      coat. "At least someone here has some sense." Neither is truly satisfied — but the shouting stops.
+    choices:
+      - id: press_for_meeting
+        label: Suggest they meet formally with a neutral party present
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: leave_it
+        label: Leave them to cool off on their own
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+
+  watched:
+    id: watched
+    text: >-
+      You drift away before anyone marks you. But you have heard enough: trade rights, import fees,
+      and old grudges. Something is building between the guilds, and it will not resolve itself quietly.
+    choices:
+      - id: note_it_down
+        label: File it away — information is always useful
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null

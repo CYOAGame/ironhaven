@@ -1,0 +1,235 @@
+id: guild_confrontation
+name: The Guild Confrontation
+tags:
+  - social
+  - faction
+  - intrigue
+
+preconditions:
+  - type: world_fact
+    key: warned_guild
+    value: true
+  - operator: or
+    conditions:
+      - type: world_fact
+        key: warned_guild
+        value: true
+      - type: world_fact
+        key: joined_scheme
+        value: true
+
+roles:
+  - id: guild_master
+    label: The Guild Master
+    archetypeFilter:
+      - blacksmith
+      - carpenter
+  - id: schemer
+    label: The Merchant Schemer
+    archetypeFilter:
+      - merchant
+  - id: crowd_member
+    label: A Townsperson
+    archetypeFilter:
+      - merchant
+      - blacksmith
+      - farmer
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The town square fills with bodies. On one side: craftsmen with folded arms and hard faces.
+      On the other: merchants in fine coats. {guild_master.name} and {schemer.name} face each other
+      across ten feet of cobblestone. Someone has posted the charter loophole on the notice board —
+      your name, if you are involved, sits at the edge of everyone's awareness. The crowd watches.
+      This is the moment.
+    choices:
+      - id: speak_for_guild
+        label: Step forward and speak for the craftsmen's guild
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: faction
+            target: merchants_guild
+            value: -2
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: craftsmen
+        exhaustionCost: 2
+        nextNodeId: spoke_for_guild
+      - id: speak_for_merchants
+        label: Step forward and speak for the merchants
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 3
+          - type: faction
+            target: craftsmen_guild
+            value: -2
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: merchants
+        exhaustionCost: 2
+        nextNodeId: spoke_for_merchants
+      - id: call_for_arbitration
+        label: Call for arbitration under the town charter
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: arbitrated
+        exhaustionCost: 3
+        nextNodeId: arbitration
+      - id: stay_silent
+        label: Say nothing and let it play out
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: played_out
+
+  spoke_for_guild:
+    id: spoke_for_guild
+    text: >-
+      Your voice cuts through the noise. You lay out the guild's case — fair wages, local craft,
+      the town's own prosperity. The craftsmen cheer. {schemer.name} watches you with cold eyes.
+      The crowd shifts. This is not over, but the momentum has changed.
+    choices:
+      - id: press_advantage
+        label: Press the advantage — demand the loophole be closed
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: faction
+            target: merchants_guild
+            value: -1
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: offer_compromise
+        label: Offer a compromise to end it cleanly
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  spoke_for_merchants:
+    id: spoke_for_merchants
+    text: >-
+      You argue free trade, lower prices for common folk, the right of the market to self-correct.
+      The merchants applaud. {guild_master.name} gives you a look of quiet contempt.
+      {crowd_member.name} mutters something unflattering under their breath. The merchants have
+      won this round — but you have made enemies among the craftsmen.
+    choices:
+      - id: accept_the_fallout
+        label: Accept the craftsmen's anger — it was worth it
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: -1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: apologize_privately
+        label: Seek out {guild_master.name} later to explain your reasoning
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 2
+        nextNodeId: null
+
+  arbitration:
+    id: arbitration
+    text: >-
+      Silence. Then {guild_master.name} and {schemer.name} look at each other — neither wanting to
+      be seen refusing reason in front of the whole town. Grudgingly, both agree to arbitration.
+      The crowd disperses, unsatisfied but calm. You have bought the town time. What the arbitrators
+      decide is another matter.
+    choices:
+      - id: volunteer_to_serve
+        label: Volunteer to serve on the arbitration panel
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+        exhaustionCost: 3
+        nextNodeId: null
+      - id: step_back
+        label: Step back and let others take it from here
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+
+  played_out:
+    id: played_out
+    text: >-
+      The shouting escalates. Someone throws a rotten apple. The guard moves in to separate the
+      factions before it turns to blows. {guild_master.name} and {schemer.name} are escorted off
+      in opposite directions, still glaring. Nothing is resolved. The wound festers.
+    choices:
+      - id: help_guard_clear_square
+        label: Help the guard clear the square
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: follow_guild_master
+        label: Follow {guild_master.name} to see what happens next
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: null

@@ -1,0 +1,163 @@
+id: merchant_scheme
+name: The Merchant's Scheme
+tags:
+  - intrigue
+  - social
+  - faction
+
+preconditions:
+  - type: world_fact
+    key: guild_dispute
+    value: true
+
+roles:
+  - id: schemer
+    label: A Calculating Merchant
+    archetypeFilter:
+      - merchant
+    traitRequirements:
+      cunning:
+        min: 4
+  - id: guild_master
+    label: The Guild Master
+    archetypeFilter:
+      - blacksmith
+      - carpenter
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {schemer.name} finds you alone behind the market stalls. They glance both ways before
+      speaking. "The guild is bleeding silver trying to maintain their price floor. I have a plan
+      to flood the market with cheaper goods — legally, through a loophole in the charter. I need
+      a trusted partner to front the operation." They hold out a folded paper. "Forty percent of
+      the profits."
+    choices:
+      - id: join_scheme
+        label: Take the paper — forty percent sounds fair
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: -3
+          - type: relationship
+            target: '{schemer.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: joined_scheme
+            value: true
+        exhaustionCost: 1
+        nextNodeId: joined
+      - id: refuse_scheme
+        label: Decline — you want no part of it
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: -1
+        exhaustionCost: 0
+        nextNodeId: refused
+      - id: warn_guild
+        label: Refuse — and go warn {guild_master.name}
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: faction
+            target: merchants_guild
+            value: -2
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 3
+            axis: trust
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 2
+        nextNodeId: warned
+
+  joined:
+    id: joined
+    text: >-
+      {schemer.name} tucks the signed paper away with a satisfied nod. "Good. We move in three
+      days. Stay quiet until then." The plan is in motion. Whatever comes next, you are part of it.
+    choices:
+      - id: study_the_charter
+        label: Study the charter loophole yourself — know what you are in for
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: trust_the_schemer
+        label: Trust {schemer.name} to handle the details
+        consequences:
+          - type: relationship
+            target: '{schemer.id}'
+            value: 1
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: null
+
+  refused:
+    id: refused
+    text: >-
+      {schemer.name} slides the paper back into their coat. "A shame. You would have done well."
+      They walk away without another word. The offer is closed — for now.
+    choices:
+      - id: reconsider_warn
+        label: Reconsider — go warn the guild anyway
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: stay_out
+        label: Stay out of it entirely
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  warned:
+    id: warned
+    text: >-
+      {guild_master.name} listens with darkening expression. "Charter loophole — of course. We
+      have been too trusting." They grip your hand. "You have done the guild a great service. When
+      this comes to a head, we will stand beside you." The coming confrontation feels inevitable now.
+    choices:
+      - id: ask_what_to_expect
+        label: Ask what {guild_master.name} intends to do about it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: leave_it_to_guild
+        label: Leave it in the guild's hands
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null

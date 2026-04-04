@@ -1,0 +1,165 @@
+id: friendly_rival
+name: The Friendly Rival
+tags:
+  - social
+  - competition
+
+preconditions: []
+
+roles:
+  - id: rival
+    label: A Trade Rival
+    archetypeFilter:
+      - blacksmith
+      - merchant
+      - carpenter
+    traitRequirements:
+      strength:
+        min: 3
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {rival.name} finds you at your workbench and leans against the doorframe with a grin that
+      is half-friendly and entirely competitive. "I hear you have been doing good work. So have I.
+      Let us settle it properly — a contest. Best piece by sundown, judged by three folk from
+      the market. Loser buys the winner's supper."
+    choices:
+      - id: accept_fairly
+        label: Accept — fair competition, may the better work win
+        consequences:
+          - type: relationship
+            target: '{rival.id}'
+            value: 2
+            axis: rivalry
+          - type: relationship
+            target: '{rival.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 2
+        nextNodeId: competed_fairly
+      - id: cheat
+        label: Accept — and spend the morning cutting corners cleverly
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{rival.id}'
+            value: 2
+            axis: rivalry
+        exhaustionCost: 1
+        nextNodeId: cheated
+      - id: decline
+        label: Decline gracefully — you have more important things today
+        consequences:
+          - type: relationship
+            target: '{rival.id}'
+            value: -1
+            axis: rivalry
+          - type: relationship
+            target: '{rival.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 0
+        nextNodeId: declined
+
+  competed_fairly:
+    id: competed_fairly
+    text: >-
+      By sundown you have produced something you are genuinely proud of. So has {rival.name}. The
+      judges debate for twenty minutes, then split their vote two-to-one — in your favor, by the
+      slimmest margin. {rival.name} laughs and extends a hand. "Fair enough. You earned it."
+      Supper is warm and the conversation is better.
+    choices:
+      - id: be_generous_winner
+        label: Offer to split the cost of supper — you are gracious in victory
+        consequences:
+          - type: relationship
+            target: '{rival.id}'
+            value: 2
+            axis: affection
+          - type: relationship_tag
+            target: '{rival.id}'
+            value: friendly_rival
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: enjoy_victory
+        label: Let them pay — you won, fair and square
+        consequences:
+          - type: relationship
+            target: '{rival.id}'
+            value: 1
+            axis: rivalry
+          - type: relationship_tag
+            target: '{rival.id}'
+            value: friendly_rival
+        exhaustionCost: 0
+        nextNodeId: null
+
+  cheated:
+    id: cheated
+    text: >-
+      Your piece wins, but the second judge squints at the joints for too long before reluctantly
+      agreeing. {rival.name} shakes your hand, but there is something in their eyes — a flicker
+      of doubt. They pay for supper and say nothing more about it. You eat in mild discomfort.
+    choices:
+      - id: confess
+        label: Confess over supper — you are not proud of it
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{rival.id}'
+            value: 3
+            axis: trust
+          - type: relationship
+            target: '{rival.id}'
+            value: -1
+            axis: rivalry
+          - type: relationship_tag
+            target: '{rival.id}'
+            value: friendly_rival
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: say_nothing
+        label: Say nothing and let it stand
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  declined:
+    id: declined
+    text: >-
+      {rival.name} shrugs. "Another time, then." They do not seem offended — just mildly amused.
+      As they go, you wonder if you passed up something worth having: a good contest and a fair
+      witness to your work.
+    choices:
+      - id: reconsider
+        label: Call them back — actually, you have time after all
+        consequences:
+          - type: relationship
+            target: '{rival.id}'
+            value: 1
+            axis: rivalry
+          - type: relationship
+            target: '{rival.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: let_it_go
+        label: Let it go for today
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null

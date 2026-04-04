@@ -1,0 +1,179 @@
+id: ancient_symbols
+name: Ancient Symbols
+tags:
+  - mystery
+  - exploration
+  - intrigue
+
+preconditions:
+  - type: world_fact
+    key: cellar_opened
+    value: true
+
+roles:
+  - id: scholar_neighbor
+    label: A Learned Neighbor
+    archetypeFilter:
+      - merchant
+      - farmer
+    traitRequirements:
+      cunning:
+        min: 3
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The cellar walls are covered floor to ceiling in symbols — not scratched but carved, deep
+      and deliberate, by hands that knew what they were doing. Spirals connected to straight lines.
+      Eyes. Figures with too many limbs. And in the center of the far wall, a phrase repeated in
+      three languages, two of which you cannot read. The one you can says: DO NOT OPEN THE WAY.
+    choices:
+      - id: study_carefully
+        label: Study the symbols methodically — copy what you can
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: symbols_studied
+            value: true
+        exhaustionCost: 3
+        nextNodeId: studied
+      - id: copy_phrase
+        label: Copy only the repeated phrase and leave
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: symbols_studied
+            value: true
+        exhaustionCost: 2
+        nextNodeId: copied_phrase
+      - id: ask_neighbor
+        label: Bring {scholar_neighbor.name} here to look
+        consequences:
+          - type: relationship
+            target: '{scholar_neighbor.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: brought_neighbor
+      - id: seal_it_back
+        label: You have seen enough — seal it back and walk away
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: sealed_back
+
+  studied:
+    id: studied
+    text: >-
+      Hours pass. When you finally climb back out, your back aches and your hand is cramped from
+      writing. The patterns have a logic — a geometry that repeats at different scales. Whatever
+      was being warded against was not small. Your notes feel like a key you do not yet know the
+      lock for.
+    choices:
+      - id: show_someone
+        label: Show your notes to someone who might understand
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: symbols_shared
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: keep_private
+        label: Keep the notes private — this knowledge feels dangerous
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  copied_phrase:
+    id: copied_phrase
+    text: >-
+      You emerge with the phrase in three languages on a scrap of vellum. The third language, you
+      realize, resembles nothing you have seen — curved, almost organic. You find yourself staring
+      at it in the fading light, trying to make it mean something.
+    choices:
+      - id: seek_translation
+        label: Ask around for someone who might recognize the third script
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: symbols_shared
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: file_it_away
+        label: Tuck it away for now
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  brought_neighbor:
+    id: brought_neighbor
+    text: >-
+      {scholar_neighbor.name} stands at the base of the stairs, lantern raised, turning slowly.
+      Their face drains of color. "I have seen this once before," they say quietly. "In a book my
+      father burned." They do not explain. They climb out ahead of you and wait in the lane,
+      breathing too fast.
+    choices:
+      - id: press_them
+        label: Press {scholar_neighbor.name} to explain what they know
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{scholar_neighbor.id}'
+            value: -1
+            axis: trust
+          - type: world_fact
+            target: symbols_studied
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: give_them_space
+        label: Give them space — ask again when they have settled
+        consequences:
+          - type: relationship
+            target: '{scholar_neighbor.id}'
+            value: 2
+            axis: affection
+          - type: world_fact
+            target: symbols_studied
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+
+  sealed_back:
+    id: sealed_back
+    text: >-
+      You drag the door shut and lock it again. Whatever is down there has been quiet for decades.
+      It can stay that way. But the image of the repeated phrase does not leave you. DO NOT OPEN
+      THE WAY. You wonder, walking home, if you already have.
+    choices:
+      - id: tell_no_one
+        label: Tell no one what you saw
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null

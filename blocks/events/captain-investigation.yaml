@@ -1,0 +1,187 @@
+id: captain_investigation
+name: The Captain's Investigation
+tags:
+  - intrigue
+  - faction
+  - social
+
+preconditions:
+  - type: world_fact
+    key: corruption_reported
+    value: true
+
+roles:
+  - id: captain
+    label: The Guard Captain
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+  - id: corrupt_guard
+    label: The Accused Guard
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {captain.name} summons you to the guardhouse. It is spare and clean — the kind of space that
+      belongs to someone who means what they say. The captain closes the door and sits across from
+      you. "{corrupt_guard.name} denies everything. Their record is clean." A pause. "Tell me
+      exactly what happened. Spare nothing."
+    choices:
+      - id: full_truth
+        label: Tell the complete truth — every word, every detail
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{captain.id}'
+            value: 3
+            axis: respect
+          - type: relationship
+            target: '{corrupt_guard.id}'
+            value: -3
+            axis: rivalry
+          - type: world_fact
+            target: testified_truthfully
+            value: true
+        exhaustionCost: 2
+        nextNodeId: told_truth
+      - id: partial_truth
+        label: Tell most of it — but soften the edges
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: testified_vaguely
+            value: true
+        exhaustionCost: 1
+        nextNodeId: told_partial
+      - id: recant
+        label: Claim you may have misunderstood — walk it back
+        consequences:
+          - type: stat
+            target: cunning
+            value: -1
+          - type: faction
+            target: town_guard
+            value: -1
+          - type: relationship
+            target: '{captain.id}'
+            value: -2
+            axis: respect
+          - type: world_fact
+            target: testimony_recanted
+            value: true
+        exhaustionCost: 1
+        nextNodeId: recanted
+
+  told_truth:
+    id: told_truth
+    text: >-
+      {captain.name} writes without looking up, then sets the quill down. "This is enough to
+      open a formal inquiry." They meet your eyes. "You understand this may make you a target.
+      {corrupt_guard.name} has friends." A long silence. "I will have two guards on your door
+      tonight. Whether you want them or not."
+    choices:
+      - id: accept_protection
+        label: Accept the protection gratefully
+        consequences:
+          - type: relationship
+            target: '{captain.id}'
+            value: 2
+            axis: trust
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: decline_protection
+        label: Decline — you can look after yourself
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: relationship
+            target: '{captain.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 0
+        nextNodeId: null
+
+  told_partial:
+    id: told_partial
+    text: >-
+      {captain.name} listens, tapping a finger on the table. "You are holding something back."
+      It is not a question. "I understand caution — but half a truth is a dangerous thing in an
+      inquiry. If it comes out you softened your account, it reflects on you, not {corrupt_guard.name}."
+      The captain leans back and waits.
+    choices:
+      - id: come_clean
+        label: Come clean — tell them all of it
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: testified_truthfully
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: hold_firm
+        label: Hold to your account — it is what you are comfortable with
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  recanted:
+    id: recanted
+    text: >-
+      {captain.name} sets the quill down slowly. "I see." Their voice is flat. "Then we have
+      nothing to act on." They stand. "You are dismissed." There is no warmth in it. Outside,
+      you pass {corrupt_guard.name} in the lane — they give you a slow, satisfied smile. You
+      look away first.
+    choices:
+      - id: regret_it
+        label: Feel the weight of it — some choices cannot be undone
+        consequences:
+          - type: stat
+            target: cunning
+            value: -1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: report_again
+        label: Turn back and change your statement before it is too late
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: testified_truthfully
+            value: true
+          - type: relationship
+            target: '{captain.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 2
+        nextNodeId: null

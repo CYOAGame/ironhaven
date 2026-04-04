@@ -1,0 +1,162 @@
+id: romantic_evening
+name: A Romantic Evening
+tags:
+  - social
+  - romance
+
+preconditions:
+  - type: relationship_axis
+    axis: affection
+    min: 4
+
+roles:
+  - id: beloved
+    label: Someone You Have Grown Close To
+    traitRequirements:
+      charisma:
+        min: 3
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {beloved.name} appears at your door at dusk with something wrapped in cloth — bread, a
+      small wheel of cheese, two cups. "I thought we could sit on the roof," they say, as if this
+      is entirely ordinary. The sky is doing something remarkable with the light. They are watching
+      you rather than the sky.
+    choices:
+      - id: go_to_roof
+        label: Go to the roof with them — forget everything else for one evening
+        consequences:
+          - type: relationship
+            target: '{beloved.id}'
+            value: 3
+            axis: affection
+          - type: relationship
+            target: '{beloved.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: on_the_roof
+      - id: invite_inside
+        label: Invite them inside instead — somewhere warmer, more private
+        consequences:
+          - type: relationship
+            target: '{beloved.id}'
+            value: 2
+            axis: affection
+          - type: relationship
+            target: '{beloved.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: inside
+      - id: beg_off
+        label: Beg off — you have too much to do tonight
+        consequences:
+          - type: relationship
+            target: '{beloved.id}'
+            value: -2
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: begged_off
+
+  on_the_roof:
+    id: on_the_roof
+    text: >-
+      The town looks smaller from up here — the anxieties of the day more manageable. {beloved.name}
+      leans against your shoulder without ceremony. "I do not know what is coming," they say eventually.
+      "The invasion, the guilds, all of it. But this is good." A pause. "You are good." You are
+      very aware of the warmth of them beside you.
+    choices:
+      - id: tell_how_you_feel
+        label: Tell them plainly how you feel about them
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{beloved.id}'
+            value: 3
+            axis: affection
+          - type: relationship_tag
+            target: '{beloved.id}'
+            value: lover
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: stay_in_the_moment
+        label: Say nothing — let the moment be enough
+        consequences:
+          - type: relationship
+            target: '{beloved.id}'
+            value: 2
+            axis: affection
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  inside:
+    id: inside
+    text: >-
+      {beloved.name} seems pleased by the choice. You clear space at the table and sit across from
+      each other in the quiet. Somewhere around the second cup, the conversation turns from small
+      things to true things — what you want, what you fear, what the world feels like right now.
+      It is the kind of honesty that only happens in the right kind of quiet.
+    choices:
+      - id: share_secrets
+        label: Share something about yourself you have told no one else
+        consequences:
+          - type: relationship
+            target: '{beloved.id}'
+            value: 3
+            axis: trust
+          - type: relationship
+            target: '{beloved.id}'
+            value: 2
+            axis: affection
+          - type: relationship_tag
+            target: '{beloved.id}'
+            value: lover
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: listen_more_than_talk
+        label: Listen more than you talk — they have things to say
+        consequences:
+          - type: relationship
+            target: '{beloved.id}'
+            value: 2
+            axis: trust
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  begged_off:
+    id: begged_off
+    text: >-
+      {beloved.name} nods and gathers their things. "Another time," they say — not cold, but
+      careful. After they leave, you stand at the door for a moment too long. The bread and cheese
+      they carried are still in your mind. The sky is doing something beautiful and you are inside.
+    choices:
+      - id: go_after_them
+        label: Go after them — the work can wait
+        consequences:
+          - type: relationship
+            target: '{beloved.id}'
+            value: 1
+            axis: affection
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: let_it_go
+        label: Let it go. Focus on what needed doing.
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null

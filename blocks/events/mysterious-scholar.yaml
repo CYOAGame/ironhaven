@@ -1,0 +1,201 @@
+id: mysterious_scholar
+name: The Mysterious Scholar
+tags:
+  - mystery
+  - intrigue
+  - social
+
+preconditions:
+  - type: world_fact
+    key: symbols_studied
+    value: true
+
+roles:
+  - id: scholar
+    label: A Traveling Scholar
+    traitRequirements:
+      cunning:
+        min: 5
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {scholar.name} arrives at the inn with two mules and a cart loaded entirely with wooden
+      chests. They ask no one for directions but find you anyway. "You have been in the cellar,"
+      they say, without greeting. "I can tell by the chalk dust and the way you look at walls."
+      They sit across from you uninvited. "Show me what you copied. I will tell you what it means —
+      but you will not enjoy the answer."
+    choices:
+      - id: show_notes
+        label: Show them your notes or copied phrase
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{scholar.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: showed_notes
+      - id: test_them_first
+        label: Ask them something only someone knowledgeable would know
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: tested_scholar
+      - id: refuse
+        label: Refuse — you do not know this person
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{scholar.id}'
+            value: -1
+            axis: trust
+        exhaustionCost: 0
+        nextNodeId: refused
+
+  showed_notes:
+    id: showed_notes
+    text: >-
+      {scholar.name} studies your notes for a long time. When they look up, their expression is
+      carefully controlled. "These are binding wards. Pre-Imperial. The third language is Karathi —
+      spoken by the precursor civilization that was destroyed by the first demon incursion, four
+      hundred years ago." They tap the phrase. "This is a seal, not a warning. Something is
+      imprisoned beneath your town. And if the invasion continues—" They stop. "The seals weaken
+      when fear and death accumulate. You need to know this."
+    choices:
+      - id: ask_more
+        label: Press them for everything they know about the invasion and the seals
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: prophecy_known
+            value: true
+          - type: questline
+            target: 'demon_invasion:lore_uncovered'
+            value: 1
+          - type: relationship
+            target: '{scholar.id}'
+            value: 2
+            axis: respect
+        exhaustionCost: 2
+        nextNodeId: learned_more
+      - id: report_to_guard
+        label: Say this needs to go to the guard captain immediately
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: prophecy_known
+            value: true
+          - type: world_fact
+            target: guard_warned_of_seals
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: stay_quiet
+        label: Ask them to keep this between the two of you for now
+        consequences:
+          - type: world_fact
+            target: prophecy_known
+            value: true
+          - type: relationship
+            target: '{scholar.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: null
+
+  tested_scholar:
+    id: tested_scholar
+    text: >-
+      You ask about the third script on your copied phrase. {scholar.name} does not hesitate.
+      "Karathi. It says: the form bound here must not walk again." They fold their hands. "Now —
+      your notes, if you please. We are wasting time."
+    choices:
+      - id: convinced_show
+        label: You are convinced — show them everything
+        consequences:
+          - type: relationship
+            target: '{scholar.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: prophecy_known
+            value: true
+          - type: questline
+            target: 'demon_invasion:lore_uncovered'
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: learned_more
+      - id: still_cautious
+        label: Show them only partial notes — trust is earned slowly
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: prophecy_known
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+
+  learned_more:
+    id: learned_more
+    text: >-
+      {scholar.name} talks for two hours. You learn about the Karathi civilization, the first
+      incursion, the binding rituals used to imprison a demon lord beneath towns built on
+      battlefields. Your town is one of seven such sites. "The invasion," they say finally, "is
+      not conquest. It is retrieval. They are coming for what is buried here." They stand to leave.
+      "Decide what to do with that."
+    choices:
+      - id: ask_them_to_stay
+        label: Ask {scholar.name} to stay and help
+        consequences:
+          - type: relationship
+            target: '{scholar.id}'
+            value: 2
+            axis: affection
+          - type: relationship_tag
+            target: '{scholar.id}'
+            value: trusted_ally
+          - type: world_fact
+            target: scholar_staying
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: let_them_go
+        label: Thank them and let them go — you have what you need
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  refused:
+    id: refused
+    text: >-
+      {scholar.name} nods as though they expected this. "Caution is sensible." They slide a small
+      card across the table — a name, an inn in the next town. "When you change your mind, which
+      you will, come find me." They leave without touching their ale.
+    choices:
+      - id: follow_up
+        label: Decide to follow up — tuck the card away carefully
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null

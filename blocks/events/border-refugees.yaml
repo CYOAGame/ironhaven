@@ -1,0 +1,177 @@
+id: border_refugees
+name: The Border Refugees
+tags:
+  - social
+  - faction
+  - questline
+
+preconditions:
+  - type: questline_stage
+    key: demon_invasion
+    value: heroes_rally
+    operator: gte
+
+roles:
+  - id: refugee_leader
+    label: A Refugee Leader
+    traitRequirements:
+      charisma:
+        min: 2
+  - id: town_elder
+    label: A Town Elder
+    archetypeFilter:
+      - merchant
+      - farmer
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      They arrive at dawn — forty, maybe fifty people. Families with loaded carts, soldiers
+      without armor. {refugee_leader.name} leads them, exhausted but upright. "The border is
+      gone," they say to whoever will listen. "Three villages in two days. We had nowhere else
+      to come." {town_elder.name} stands at the gate and looks at you, waiting for someone
+      else to decide.
+    choices:
+      - id: help_them
+        label: Step up — help get the refugees settled inside the walls
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: faction
+            target: town_guard
+            value: -1
+          - type: relationship
+            target: '{refugee_leader.id}'
+            value: 3
+            axis: trust
+          - type: world_fact
+            target: helped_refugees
+            value: true
+        exhaustionCost: 3
+        nextNodeId: helped
+      - id: exploit_them
+        label: Offer help in exchange for labor or goods at below-fair rates
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+          - type: faction
+            target: village_folk
+            value: -2
+          - type: relationship
+            target: '{refugee_leader.id}'
+            value: -2
+            axis: trust
+          - type: world_fact
+            target: exploited_refugees
+            value: true
+        exhaustionCost: 1
+        nextNodeId: exploited
+      - id: ignore_them
+        label: Stay out of it — let the town elder deal with it
+        consequences:
+          - type: faction
+            target: village_folk
+            value: -1
+        exhaustionCost: 0
+        nextNodeId: ignored
+
+  helped:
+    id: helped
+    text: >-
+      You find floor space in the warehouse, negotiate with the baker for bread, and help a young
+      family carry a bed frame they should not have tried to bring. {refugee_leader.name} finds
+      you at the end of it. "You did not have to do that." They press something small into your
+      hand — a carved token, worn smooth. "Where we came from, this means you are kin."
+    choices:
+      - id: ask_about_the_border
+        label: Ask {refugee_leader.name} exactly what they saw at the border
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: questline
+            target: 'demon_invasion:border_intelligence'
+            value: 1
+          - type: world_fact
+            target: border_report_received
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: let_them_rest
+        label: Tell them to rest — there will be time for questions later
+        consequences:
+          - type: relationship
+            target: '{refugee_leader.id}'
+            value: 2
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: null
+
+  exploited:
+    id: exploited
+    text: >-
+      {refugee_leader.name} agrees — they have no other options. You profit. The transaction is
+      clean. But the warehouse that night is quiet in a way that weighs on you, and you catch
+      {refugee_leader.name} watching you with an expression that is not gratitude.
+    choices:
+      - id: feel_regret
+        label: Feel the wrongness of it — consider making it right
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: helped_refugees
+            value: true
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: justify_it
+        label: Tell yourself it was fair trade in hard times
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  ignored:
+    id: ignored
+    text: >-
+      {town_elder.name} makes the decisions without you. The refugees are allowed inside but
+      given little. {refugee_leader.name} glances at you once, then looks away. You were there
+      and did nothing. That is its own kind of answer.
+    choices:
+      - id: help_after_the_fact
+        label: Help quietly after the formal decision is made
+        consequences:
+          - type: world_fact
+            target: helped_refugees
+            value: true
+          - type: faction
+            target: village_folk
+            value: 1
+          - type: relationship
+            target: '{refugee_leader.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: carry_on
+        label: Carry on with the day
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null

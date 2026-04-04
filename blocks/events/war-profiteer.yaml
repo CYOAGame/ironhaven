@@ -1,0 +1,219 @@
+id: war_profiteer
+name: The War Profiteer
+tags:
+  - faction
+  - questline
+  - intrigue
+
+preconditions:
+  - type: questline_stage
+    key: demon_invasion
+    value: border_falls
+    operator: gte
+
+roles:
+  - id: profiteer
+    label: A Price-Gouging Merchant
+    archetypeFilter:
+      - merchant
+    traitRequirements:
+      cunning:
+        min: 4
+  - id: poor_buyer
+    label: A Desperate Buyer
+    archetypeFilter:
+      - farmer
+      - blacksmith
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The market has changed overnight. Bread: triple the price. Iron: four times. Rope: if you
+      can find it. {profiteer.name} stands behind their stall with a ledger and the calm of
+      someone who has planned for exactly this. {poor_buyer.name} is arguing with an assistant,
+      holding out coins that are not enough. The crowd watches, muttering. Nobody is doing anything.
+    choices:
+      - id: hoard_goods
+        label: Quietly buy as much as you can afford — you will need it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: village_folk
+            value: -2
+          - type: world_fact
+            target: hoarded_supplies
+            value: true
+        exhaustionCost: 2
+        nextNodeId: hoarded
+      - id: share_supplies
+        label: Use your own stockpile to help {poor_buyer.name} and others
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 3
+          - type: relationship
+            target: '{poor_buyer.id}'
+            value: 3
+            axis: trust
+          - type: world_fact
+            target: shared_supplies
+            value: true
+        exhaustionCost: 3
+        nextNodeId: shared
+      - id: confront_profiteer
+        label: Confront {profiteer.name} publicly about the prices
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: -2
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: relationship
+            target: '{profiteer.id}'
+            value: -3
+            axis: rivalry
+        exhaustionCost: 2
+        nextNodeId: confronted_profiteer
+      - id: do_nothing
+        label: Walk past — this is how war economies work
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: village_folk
+            value: -1
+        exhaustionCost: 0
+        nextNodeId: did_nothing
+
+  hoarded:
+    id: hoarded
+    text: >-
+      You leave with your arms full. The looks follow you out. That night, your stores are full
+      and the town's are not. You will not go hungry. Whether that makes you clever or something
+      else depends on who is doing the judging.
+    choices:
+      - id: share_some
+        label: Reconsider — share some of what you bought
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: shared_supplies
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: keep_it_all
+        label: Keep it. You look after yourself.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  shared:
+    id: shared
+    text: >-
+      By evening, word has spread. People come to you — not with money, but with labor, with
+      small gifts, with the specific gratitude of people who did not expect to be helped. It
+      costs you materially. The look on {poor_buyer.name}'s face when you handed them the bread
+      stays with you longer than the silver you lost.
+    choices:
+      - id: keep_helping
+        label: Keep your door open for those who need it
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: exhaustion
+            target: self
+            value: 2
+          - type: world_fact
+            target: community_fed
+            value: true
+        exhaustionCost: 3
+        nextNodeId: null
+      - id: set_limits
+        label: Help where you can, but set limits — you have your own needs
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 1
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  confronted_profiteer:
+    id: confronted_profiteer
+    text: >-
+      {profiteer.name} does not back down. "Supply and demand," they say. "Same as it has always
+      been." But the crowd is with you, and they feel it. Three other merchants quietly lower
+      their prices. {profiteer.name} watches this with visible calculation and does the same —
+      slightly. Not because they want to. Because the crowd is still watching.
+    choices:
+      - id: push_for_price_controls
+        label: Push for the council to set emergency price controls
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: faction
+            target: merchants_guild
+            value: -2
+        exhaustionCost: 3
+        nextNodeId: null
+      - id: accept_small_win
+        label: Accept the small win and move on
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  did_nothing:
+    id: did_nothing
+    text: >-
+      {poor_buyer.name} walks away empty-handed. The market settles into its new prices as if
+      they have always been this way. Tomorrow they will be higher. You know this. You did the
+      accounting and walked away. It was the rational choice.
+    choices:
+      - id: check_on_poor_buyer
+        label: Find {poor_buyer.name} later and quietly offer what you can
+        consequences:
+          - type: relationship
+            target: '{poor_buyer.id}'
+            value: 2
+            axis: trust
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: move_on
+        label: Move on. There will be more of this before it is over.
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null

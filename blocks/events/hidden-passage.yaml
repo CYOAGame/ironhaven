@@ -1,0 +1,157 @@
+id: hidden_passage
+name: The Hidden Passage
+tags:
+  - mystery
+  - exploration
+  - danger
+
+preconditions:
+  - type: world_fact
+    key: cellar_opened
+    value: true
+
+roles:
+  - id: companion
+    label: A Curious Companion
+    archetypeFilter:
+      - blacksmith
+      - farmer
+      - merchant
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      You return to the cellar alone, deeper this time. Behind the far wall of symbols, your
+      lantern catches something — a seam. A door, disguised as stone, fitted so precisely you
+      nearly missed it. A cold draft pushes through the gap. Something is on the other side.
+      {companion.name} was with you last time; you could fetch them, or go alone.
+    choices:
+      - id: go_alone
+        label: Go alone — this is your discovery
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: passage_found
+            value: true
+        exhaustionCost: 3
+        nextNodeId: went_alone
+      - id: fetch_companion
+        label: Fetch {companion.name} — you should not be alone down here
+        consequences:
+          - type: relationship
+            target: '{companion.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: passage_found
+            value: true
+        exhaustionCost: 2
+        nextNodeId: brought_companion
+      - id: seal_passage
+        label: Wedge it shut — whatever is down there should stay there
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: passage_sealed
+            value: true
+        exhaustionCost: 2
+        nextNodeId: sealed_passage
+
+  went_alone:
+    id: went_alone
+    text: >-
+      The passage runs straight for thirty paces, then opens. You are standing in a low
+      chamber beneath the town square — you can hear the muffled sound of carts above. The
+      walls here are older still, the stone black with age. A single carved plinth stands in
+      the center, empty. Whatever stood on it was removed, or escaped. You are alone with
+      the silence and what it implies.
+    choices:
+      - id: search_chamber
+        label: Search the chamber for evidence of what was here
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: chamber_searched
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: retreat_and_report
+        label: Retreat and report what you found to someone you trust
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: passage_reported
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+
+  brought_companion:
+    id: brought_companion
+    text: >-
+      {companion.name} follows you without asking too many questions — they trust you enough
+      for that. When you reach the chamber, you hear them draw a sharp breath. "This is under
+      the square," they say. "Right under it." The empty plinth casts a long shadow.
+      {companion.name} looks at you. "What do we do?"
+    choices:
+      - id: search_together
+        label: Search the chamber together
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{companion.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: chamber_searched
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: send_companion_back
+        label: Send {companion.name} back to keep watch above
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: relationship
+            target: '{companion.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 1
+        nextNodeId: null
+
+  sealed_passage:
+    id: sealed_passage
+    text: >-
+      You jam a broken beam across the gap and heap old stone against it. Your hands shake
+      slightly as you climb back out into the street. You do not know if you have been
+      cautious or cowardly. Maybe both.
+    choices:
+      - id: leave_marker
+        label: Leave a discreet marker so you can find it again
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: walk_away
+        label: Walk away and do not look back
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null

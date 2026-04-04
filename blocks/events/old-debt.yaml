@@ -1,0 +1,173 @@
+id: old_debt
+name: The Old Debt
+tags:
+  - social
+  - intrigue
+
+preconditions:
+  - type: relationship_axis
+    axis: trust
+    min: 3
+
+roles:
+  - id: debtor
+    label: Someone You Have Helped
+    traitRequirements:
+      charisma:
+        min: 2
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {debtor.name} comes to you in the early morning, before the market opens. They look like
+      they have not slept. "I would not ask if there was anyone else," they say. "You helped me
+      before — I have not forgotten. But what I need now is larger." They explain: they need
+      you to vouch for them before the council, cover a debt they cannot pay, and keep quiet
+      about a third thing they are not ready to say yet. "I know how it sounds."
+    choices:
+      - id: agree_fully
+        label: Agree to all of it — they have earned that trust
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{debtor.id}'
+            value: 3
+            axis: trust
+          - type: relationship_tag
+            target: '{debtor.id}'
+            value: owed_favor
+          - type: world_fact
+            target: vouched_for_debtor
+            value: true
+        exhaustionCost: 3
+        nextNodeId: agreed_fully
+      - id: agree_partial
+        label: Agree to the first two things, but not the third until you know what it is
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{debtor.id}'
+            value: 1
+            axis: trust
+          - type: world_fact
+            target: vouched_for_debtor
+            value: true
+        exhaustionCost: 2
+        nextNodeId: agreed_partial
+      - id: refuse
+        label: Say you cannot — the debt was freely given, not a contract
+        consequences:
+          - type: relationship
+            target: '{debtor.id}'
+            value: -2
+            axis: trust
+          - type: relationship
+            target: '{debtor.id}'
+            value: -1
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: refused
+
+  agreed_fully:
+    id: agreed_fully
+    text: >-
+      {debtor.name} exhales with their whole body. They finally explain the third thing: they
+      witnessed something they should not have — a meeting between a guild officer and someone
+      connected to the corruption investigation. They need you to keep that information safe. It
+      is more than you expected to carry. But you said yes.
+    choices:
+      - id: share_information
+        label: Decide this is too important to sit on — share it with the right people
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: corruption_reported
+            value: true
+          - type: relationship
+            target: '{debtor.id}'
+            value: -1
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: keep_the_secret
+        label: Keep it — you gave your word
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{debtor.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: null
+
+  agreed_partial:
+    id: agreed_partial
+    text: >-
+      {debtor.name} accepts that — they are grateful for what they can get. The third thing
+      stays unspoken. You vouch before the council and cover the debt. It costs you more than
+      you expected. When it is done, {debtor.name} grips your hand. "When I can tell you the
+      rest, I will."
+    choices:
+      - id: wait_patiently
+        label: Tell them you will be here when they are ready
+        consequences:
+          - type: relationship
+            target: '{debtor.id}'
+            value: 2
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: press_now
+        label: Press them — you need to know what you are involved in
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{debtor.id}'
+            value: -1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: null
+
+  refused:
+    id: refused
+    text: >-
+      {debtor.name} nods slowly, face carefully neutral. "I understand." They walk away without
+      another word. You tell yourself the debt was always freely given. The look on their face
+      suggests they see it differently. The weight of it sits with you through the morning.
+    choices:
+      - id: change_mind
+        label: Change your mind — go after them
+        consequences:
+          - type: relationship
+            target: '{debtor.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: vouched_for_debtor
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: accept_it
+        label: Accept the choice you made and live with it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null

@@ -1,0 +1,136 @@
+id: sealed_cellar
+name: The Sealed Cellar
+tags:
+  - intrigue
+  - exploration
+  - mystery
+
+preconditions:
+  - type: world_fact
+    key: knows_cellar_secret
+    value: true
+
+roles:
+  - id: local
+    label: A Neighboring Local
+    archetypeFilter:
+      - farmer
+      - blacksmith
+      - merchant
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      You find it at the end of Tanner's Row — a heavy door set flush with the ground, iron-banded,
+      sealed with a lock that has not been touched in years. The moss around the edges says it has
+      been shut a long time. {local.name} passes on the far side of the lane, pauses, and looks
+      deliberately away. They know something about this place.
+    choices:
+      - id: break_in
+        label: Force the lock — you have heard enough to justify it
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: world_fact
+            target: cellar_opened
+            value: true
+        exhaustionCost: 2
+        nextNodeId: broke_in
+      - id: ask_local
+        label: Ask {local.name} what they know about this door
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: cellar_investigated
+            value: true
+        exhaustionCost: 1
+        nextNodeId: asked_local
+      - id: leave_it
+        label: Leave it sealed — some doors are closed for good reason
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: left_it
+
+  broke_in:
+    id: broke_in
+    text: >-
+      The lock breaks with a sound like a bone snapping. Cold air rises from below — damp stone
+      and something older underneath. The stairs descend into darkness. Your eyes adjust slowly.
+      The walls are covered.
+    choices:
+      - id: descend_carefully
+        label: Descend with your lantern raised
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: cellar_explored
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: descend_quickly
+        label: Go quickly — in and out before anyone notices
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  asked_local:
+    id: asked_local
+    text: >-
+      {local.name} looks both ways. "Nobody opens that. Not since old Maren's grandfather sealed it.
+      He said the symbols inside were a warning." They lower their voice. "Three years back, a mason
+      tried to repurpose the space. He left town the same week. Wouldn't say why." They press a
+      key into your palm — warm, as though they have been carrying it ready. "Do what you need to.
+      But do not tell me about it after."
+    choices:
+      - id: use_key
+        label: Use the key and descend
+        consequences:
+          - type: world_fact
+            target: cellar_opened
+            value: true
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: return_key
+        label: Thank them and return the key — not today
+        consequences:
+          - type: relationship
+            target: '{local.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 0
+        nextNodeId: null
+
+  left_it:
+    id: left_it
+    text: >-
+      You walk away. The door sits there, flush and patient, as it has for years. But now you know
+      where it is. That is not nothing.
+    choices:
+      - id: mark_location
+        label: Note the location carefully for later
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: cellar_investigated
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null

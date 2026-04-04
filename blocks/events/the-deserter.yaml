@@ -1,0 +1,197 @@
+id: the_deserter
+name: The Deserter
+tags:
+  - danger
+  - questline
+  - intrigue
+
+preconditions:
+  - type: questline_stage
+    key: demon_invasion
+    value: border_falls
+    operator: gte
+
+roles:
+  - id: deserter
+    label: A Deserting Soldier
+    archetypeFilter:
+      - soldier
+  - id: guard_patrol
+    label: A Guard on Patrol
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      They are in your woodshed — you only found them because a board creaked wrong. {deserter.name}
+      is in partial armor, shaking, one hand raised. "Please." Their tabard still has the army's
+      mark on it. "I will not hurt anyone. I just — I cannot go back. You have no idea what is
+      happening at the front." Outside, {guard_patrol.name} is making their rounds. The next pass
+      is in ten minutes.
+    choices:
+      - id: hide_them
+        label: Pull the door shut and hide them properly
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: -2
+          - type: relationship
+            target: '{deserter.id}'
+            value: 3
+            axis: trust
+          - type: world_fact
+            target: hid_deserter
+            value: true
+        exhaustionCost: 2
+        nextNodeId: hid
+      - id: turn_in
+        label: Alert {guard_patrol.name} — desertion undermines the defense
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{deserter.id}'
+            value: -4
+            axis: trust
+          - type: world_fact
+            target: turned_in_deserter
+            value: true
+        exhaustionCost: 1
+        nextNodeId: turned_in
+      - id: listen_first
+        label: Hear them out before deciding
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{deserter.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: listened
+
+  hid:
+    id: hid
+    text: >-
+      {guard_patrol.name}'s footsteps pass. Then quiet. {deserter.name} lets out a long, shaking
+      breath. "Thank you." In the narrow dark of the woodshed, they tell you everything — the
+      front line position overrun, the officers abandoning their posts, the thing they saw tear
+      apart a fortified gate in under a minute. It is worse than the town knows.
+    choices:
+      - id: report_intelligence
+        label: Report what they told you — the town needs to know — without naming the deserter
+        consequences:
+          - type: questline
+            target: 'demon_invasion:border_intelligence'
+            value: 2
+          - type: world_fact
+            target: border_report_received
+            value: true
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: keep_secret
+        label: Keep it all quiet and help them get further away
+        consequences:
+          - type: relationship
+            target: '{deserter.id}'
+            value: 2
+            axis: trust
+          - type: relationship_tag
+            target: '{deserter.id}'
+            value: owed_favor
+          - type: faction
+            target: town_guard
+            value: -1
+        exhaustionCost: 2
+        nextNodeId: null
+
+  turned_in:
+    id: turned_in
+    text: >-
+      {guard_patrol.name} moves quickly. {deserter.name} does not fight. They look at you once
+      as they are led away — not with anger, which would be easier. The guard nods at you.
+      "Right thing to do." You stand in the empty woodshed and try to agree with them.
+    choices:
+      - id: advocate_for_leniency
+        label: Follow up with the captain and advocate for leniency
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: relationship
+            target: '{deserter.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: leave_it
+        label: Leave it. You did what was right.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  listened:
+    id: listened
+    text: >-
+      They talk fast. What they describe from the front is catastrophic — supply lines cut,
+      three senior commanders dead, the line retreating faster than anyone in town has been
+      told. "I am not a coward," {deserter.name} says. "I ran because there was nothing left
+      to stand in front of." You believe them. {guard_patrol.name} is on their next pass.
+      You have seconds.
+    choices:
+      - id: hide_after_hearing
+        label: Hide them — what they know is worth protecting
+        consequences:
+          - type: world_fact
+            target: hid_deserter
+            value: true
+          - type: world_fact
+            target: border_report_received
+            value: true
+          - type: questline
+            target: 'demon_invasion:border_intelligence'
+            value: 2
+          - type: relationship
+            target: '{deserter.id}'
+            value: 3
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: turn_in_after_hearing
+        label: Turn them in anyway — the army needs to know one of its own broke
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: turned_in_deserter
+            value: true
+          - type: relationship
+            target: '{deserter.id}'
+            value: -3
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: null

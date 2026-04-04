@@ -1,0 +1,163 @@
+id: recruitment_drive
+name: The Recruitment Drive
+tags:
+  - faction
+  - questline
+  - social
+
+preconditions:
+  - type: questline_stage
+    key: demon_invasion
+    value: heroes_rally
+    operator: gte
+
+roles:
+  - id: recruiter
+    label: An Army Recruiter
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+  - id: neighbor
+    label: A Young Neighbor
+    archetypeFilter:
+      - farmer
+      - blacksmith
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {recruiter.name} has set up a table in the square with a hand-painted sign: DEFENDERS
+      WANTED — GOOD PAY, THREE MEALS. {neighbor.name} is standing in front of it with the
+      particular expression of someone who has not quite decided yet. {recruiter.name} spots
+      you. "You look capable. The army needs capable people."
+    choices:
+      - id: volunteer
+        label: Step up and volunteer yourself
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: questline
+            target: 'demon_invasion:border_defense'
+            value: 2
+          - type: world_fact
+            target: volunteered_for_army
+            value: true
+        exhaustionCost: 2
+        nextNodeId: volunteered
+      - id: dodge
+        label: Claim you have essential work that keeps you here
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: town_guard
+            value: -1
+        exhaustionCost: 1
+        nextNodeId: dodged
+      - id: help_recruit_others
+        label: Decline for yourself, but help recruit others in town
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: questline
+            target: 'demon_invasion:border_defense'
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: helped_recruit
+
+  volunteered:
+    id: volunteered
+    text: >-
+      {recruiter.name} takes your name with businesslike efficiency. "Report to the garrison in
+      three days." {neighbor.name} watches you sign and seems to straighten slightly. "If you can
+      do it," they say quietly, half to themselves. The table looks different once your name is on it.
+    choices:
+      - id: encourage_neighbor
+        label: Encourage {neighbor.name} to join too
+        consequences:
+          - type: relationship
+            target: '{neighbor.id}'
+            value: 1
+            axis: trust
+          - type: questline
+            target: 'demon_invasion:border_defense'
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: wish_them_luck
+        label: Wish them well whatever they decide and go prepare
+        consequences:
+          - type: relationship
+            target: '{neighbor.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 0
+        nextNodeId: null
+
+  dodged:
+    id: dodged
+    text: >-
+      {recruiter.name} looks at you a beat too long. "Essential work," they repeat. "Right." They
+      mark something on their sheet that may or may not be your name. {neighbor.name} sees the
+      exchange and looks conflicted. You walk away feeling the weight of the lie, and the weight
+      of what you chose to protect.
+    choices:
+      - id: check_on_neighbor
+        label: Stop and talk to {neighbor.name} before you go
+        consequences:
+          - type: relationship
+            target: '{neighbor.id}'
+            value: 1
+            axis: trust
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: just_leave
+        label: Just leave
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  helped_recruit:
+    id: helped_recruit
+    text: >-
+      You spend the morning moving through the market, making the case — good pay, necessary work,
+      the town's survival. By midday, four names are on the sheet that would not have been otherwise.
+      {recruiter.name} nods at you with something like professional appreciation. {neighbor.name}
+      is one of the four.
+    choices:
+      - id: see_them_off
+        label: Make sure {neighbor.name} and the others know what they are walking into
+        consequences:
+          - type: relationship
+            target: '{neighbor.id}'
+            value: 2
+            axis: trust
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: step_away
+        label: Your work is done — step away
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null

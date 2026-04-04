@@ -1,0 +1,168 @@
+id: guard_corruption
+name: The Protection Fee
+tags:
+  - intrigue
+  - faction
+  - danger
+
+preconditions:
+  - type: world_fact
+    key: guild_dispute
+    value: true
+
+roles:
+  - id: corrupt_guard
+    label: A Corrupt Guard
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+  - id: captain
+    label: The Guard Captain
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {corrupt_guard.name} stops you near the workshop lane, one hand resting on their belt.
+      "Busy time, isn't it. All this guild trouble." They lower their voice. "Accidents happen to
+      folk who don't have friends in the guard. Call it... a protection fee. Ten silver — and I
+      make sure your door stays quiet."
+    choices:
+      - id: pay
+        label: Pay the ten silver and say nothing
+        consequences:
+          - type: stat
+            target: cunning
+            value: -1
+          - type: faction
+            target: town_guard
+            value: -1
+          - type: world_fact
+            target: corruption_paid
+            value: true
+        exhaustionCost: 1
+        nextNodeId: paid
+      - id: refuse
+        label: Refuse flatly and walk away
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: faction
+            target: town_guard
+            value: -2
+          - type: world_fact
+            target: corruption_refused
+            value: true
+        exhaustionCost: 1
+        nextNodeId: refused
+      - id: report_captain
+        label: Tell them you will be reporting this to {captain.name}
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{corrupt_guard.id}'
+            value: -3
+            axis: fear
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: reported
+
+  paid:
+    id: paid
+    text: >-
+      {corrupt_guard.name} palms the coins without blinking. "Smart choice. You have a good day
+      now." They stroll away, unhurried. You feel the lightness of ten silver missing from your
+      purse — and something heavier in its place.
+    choices:
+      - id: swallow_it
+        label: Swallow the humiliation and get on with the day
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: change_mind_report
+        label: Change your mind — go find {captain.name}
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+
+  refused:
+    id: refused
+    text: >-
+      {corrupt_guard.name} watches you go with flat eyes. "Your choice." That evening, you notice
+      a scratch on your door lock and a broken shutter latch. Nothing stolen — just a message. You
+      sleep lightly.
+    choices:
+      - id: document_damage
+        label: Document the damage in case you need it later
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: ignore_it
+        label: Fix it yourself and stay alert
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  reported:
+    id: reported
+    text: >-
+      {corrupt_guard.name} goes pale. They say nothing as you turn and walk toward the guardhouse.
+      {captain.name} listens without interrupting, face unreadable. "Leave it with me," they say
+      at last. "And thank you for your courage."
+    choices:
+      - id: give_full_account
+        label: Give a full account — name, time, exact words
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{captain.id}'
+            value: 3
+            axis: respect
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: vague_account
+        label: Give a general complaint and let the captain do the work
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null

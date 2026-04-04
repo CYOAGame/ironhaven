@@ -1,0 +1,216 @@
+id: the_last_stand
+name: The Last Stand
+tags:
+  - combat
+  - danger
+  - questline
+
+preconditions:
+  - type: questline_stage
+    key: demon_invasion
+    value: final_siege
+    operator: gte
+
+roles:
+  - id: captain
+    label: The Guard Captain
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+  - id: companion
+    label: Someone Fighting Beside You
+    archetypeFilter:
+      - blacksmith
+      - soldier
+      - farmer
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The horns are not a warning — they are a confirmation. The demon army arrives at dawn, and
+      it is larger than the worst estimate. {captain.name} stands at the gate with a face made
+      of stone. {companion.name} is beside you, weapon in hand, not saying anything because there
+      is nothing left to say that has not already been said. The wall behind you is as strong as
+      you could make it. The people behind you are as prepared as they can be. This is the moment
+      everything was leading toward.
+    choices:
+      - id: fight_at_wall
+        label: Take your place at the wall and fight
+        consequences:
+          - type: stat
+            target: strength
+            value: 2
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: questline
+            target: 'demon_invasion:last_stand'
+            value: 2
+          - type: relationship
+            target: '{companion.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 4
+        nextNodeId: at_the_wall
+      - id: flee
+        label: Take the escape route you found — get as many out as you can
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: town_guard
+            value: -2
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: world_fact
+            target: fled_the_siege
+            value: true
+        exhaustionCost: 2
+        nextNodeId: fled
+      - id: sacrifice
+        label: Volunteer to lead the diversion — buy time for the others
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: stat
+            target: strength
+            value: 2
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: faction
+            target: village_folk
+            value: 3
+          - type: questline
+            target: 'demon_invasion:last_stand'
+            value: 3
+          - type: death
+            target: self
+            value: possible
+        exhaustionCost: 4
+        nextNodeId: sacrificed
+
+  at_the_wall:
+    id: at_the_wall
+    text: >-
+      The first wave breaks on the wall. The second wave is worse. You fight beside {companion.name}
+      and {captain.name} until your arm stops feeling like an arm. Hours pass that feel like minutes
+      and minutes that feel like lifetimes. Then — the horns again. Reinforcements. The heroes have
+      held the road. The siege breaks. Not victory. But survival.
+    choices:
+      - id: check_on_companion
+        label: Find {companion.name} in the aftermath
+        consequences:
+          - type: relationship
+            target: '{companion.id}'
+            value: 3
+            axis: trust
+          - type: relationship
+            target: '{companion.id}'
+            value: 2
+            axis: affection
+          - type: relationship_tag
+            target: '{companion.id}'
+            value: trusted_ally
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: help_wounded
+        label: Start helping the wounded before anything else
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: faction
+            target: village_folk
+            value: 3
+        exhaustionCost: 2
+        nextNodeId: null
+
+  fled:
+    id: fled
+    text: >-
+      You lead a group of civilians through the tannery wall and into the drainage channel. Forty
+      people, moving fast and quiet. Behind you, the sounds of the battle diminish. You do not
+      look back until you are in the forest. The town is still standing — you can see the smoke
+      from here, but no flames. Whether that continues without you is not something you can know.
+    choices:
+      - id: return_to_help
+        label: Leave the civilians in safety and return to the fight
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: questline
+            target: 'demon_invasion:last_stand'
+            value: 1
+        exhaustionCost: 4
+        nextNodeId: null
+      - id: stay_with_civilians
+        label: Stay with the people you brought out — they still need a leader
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: relationship
+            target: '{companion.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 1
+        nextNodeId: null
+
+  sacrificed:
+    id: sacrificed
+    text: >-
+      You take a dozen volunteers and make enough noise and fire and chaos on the east flank to pull
+      a third of the demon force's attention for six critical minutes. Most of the volunteers survive.
+      You survive — barely, and differently than before. When it is over, {captain.name} looks at you
+      across the square with an expression that does not have a word in the common tongue. {companion.name}
+      does not let go of your arm for a long time.
+    choices:
+      - id: accept_what_happened
+        label: Sit with {companion.name} and let it land
+        consequences:
+          - type: relationship
+            target: '{companion.id}'
+            value: 4
+            axis: trust
+          - type: relationship
+            target: '{companion.id}'
+            value: 3
+            axis: affection
+          - type: relationship_tag
+            target: '{companion.id}'
+            value: trusted_ally
+          - type: stat
+            target: charisma
+            value: 2
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: report_to_captain
+        label: Report to {captain.name} — duty is not finished
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{captain.id}'
+            value: 3
+            axis: respect
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
