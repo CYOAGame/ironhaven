@@ -1,0 +1,139 @@
+id: strangers_asking
+name: Strangers Asking
+tags:
+  - intrigue
+  - danger
+
+preconditions:
+  - type: world_fact
+    key: traveler_hidden
+    value: true
+
+roles:
+  - id: stranger
+    label: A Suspicious Stranger
+    traitRequirements:
+      cunning:
+        min: 5
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      Two riders stop you on the road outside town. {stranger.name} leans from the saddle. "We are
+      looking for someone who came through here. Carries a leather satchel, travels alone." Their
+      smile does not reach their eyes. "You would remember someone like that."
+    choices:
+      - id: deny_knowledge
+        label: Shake your head — you have not seen anyone like that
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: denied_traveler_to_hunters
+            value: true
+        exhaustionCost: 1
+        nextNodeId: denied
+      - id: point_wrong_way
+        label: Send them toward the south road — wrong direction
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: misdirected_hunters
+            value: true
+        exhaustionCost: 1
+        nextNodeId: misdirected
+      - id: tell_truth
+        label: Tell them what you know — this is not your fight
+        consequences:
+          - type: world_fact
+            target: betrayed_traveler
+            value: true
+        exhaustionCost: 0
+        nextNodeId: told_truth
+
+  denied:
+    id: denied
+    text: >-
+      {stranger.name} studies you. A long silence. Then they nod once and ride on. You watch until
+      they are out of sight, then let out a slow breath. You hope that was enough.
+    choices:
+      - id: warn_traveler
+        label: Go warn the traveler immediately
+        consequences:
+          - type: relationship
+            target: '{stranger.id}'
+            value: -1
+            axis: trust
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: keep_watch
+        label: Watch the road for a while to make sure they have gone
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  misdirected:
+    id: misdirected
+    text: >-
+      The riders exchange a glance, then wheel their horses south. You watch them go, heart
+      hammering. You bought some time. Possibly a day, possibly less — depending on how long before
+      they figure out you lied.
+    choices:
+      - id: use_time_wisely
+        label: Use the time to help the traveler get clear of town
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 3
+        nextNodeId: null
+      - id: lay_low
+        label: Go home and act normal until the dust settles
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  told_truth:
+    id: told_truth
+    text: >-
+      {stranger.name}'s expression shifts — something colder underneath. "Good. We thought so." A
+      coin lands in the dirt at your feet. They ride back toward town without another word. You do
+      not pick up the coin.
+    choices:
+      - id: try_to_warn
+        label: Run to warn the traveler before the riders arrive
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: exhaustion
+            target: self
+            value: 2
+        exhaustionCost: 3
+        nextNodeId: null
+      - id: do_nothing
+        label: You told them what you knew. That is the end of it.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null

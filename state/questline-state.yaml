@@ -1,0 +1,7 @@
+demon_invasion:
+  currentStage: gathering
+  counters:
+    border_incidents: 0
+    border_defense: 0
+    border_failures: 0
+    siege_preparation: 0

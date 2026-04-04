@@ -1,0 +1,147 @@
+id: harvest_festival
+name: Harvest Festival
+tags:
+  - social
+  - crafting
+  - romance
+
+preconditions:
+  - type: season
+    key: season
+    value: autumn
+
+roles:
+  - id: festival_organizer
+    label: The Festival Organizer
+    traitRequirements:
+      charisma:
+        min: 5
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The village square is strung with lanterns. The smell of roasted apples and spiced cider fills
+      the air. {festival_organizer.name} waves you over from beside the bonfire.
+    choices:
+      - id: join_feast
+        label: Join the communal feast
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: feast_table
+      - id: enter_contest
+        label: Enter the crafting contest
+        preconditions:
+          - type: skill
+            key: forging
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: contest_result
+      - id: help_organize
+        label: Offer to help {festival_organizer.name} run the games
+        consequences:
+          - type: relationship
+            target: '{festival_organizer.id}'
+            value: 2
+            axis: affection
+          - type: faction
+            target: village_folk
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: organizing
+
+  feast_table:
+    id: feast_table
+    text: >-
+      The table is long and loud. Somebody passes you a cider, then another. As the evening settles,
+      a hooded figure slides onto the bench across from you. They glance around before leaning in.
+      "You look like someone who can keep a secret."
+    choices:
+      - id: listen_stranger
+        label: Lean in and listen
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: heard_festival_secret
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: brush_off
+        label: Politely excuse yourself — not tonight
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  contest_result:
+    id: contest_result
+    text: >-
+      {festival_organizer.name} examines your entry with raised eyebrows. "Impressive," they say.
+      "But old Henryk thinks his piece is better. The crowd will decide." The crowd gathers.
+      This is the moment.
+    choices:
+      - id: accept_gracefully
+        label: Accept the result with grace, win or lose
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: argue_quality
+        label: Point out the superior quality of your work
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  organizing:
+    id: organizing
+    text: >-
+      {festival_organizer.name} looks relieved. You spend the evening running the ring toss,
+      settling disputes over the apple-bobbing, and generally keeping things from descending into
+      chaos. By the end, {festival_organizer.name} clasps your shoulder. "Same time next year?"
+    choices:
+      - id: agree
+        label: Laugh and agree — you had a good time
+        consequences:
+          - type: relationship
+            target: '{festival_organizer.id}'
+            value: 2
+            axis: trust
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: noncommit
+        label: Make no promises, but smile
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null

@@ -1,0 +1,19 @@
+id: tavern
+name: Tavern
+tags:
+  - social
+  - rest
+  - information
+
+eventTags:
+  - social
+  - romance
+  - intrigue
+
+archetypeIds:
+  - merchant
+  - soldier
+
+flavorTexts:
+  - The fire crackles low.
+  - A bard tunes a lute in the corner.

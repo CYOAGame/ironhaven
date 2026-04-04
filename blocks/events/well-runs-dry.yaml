@@ -1,0 +1,168 @@
+id: well_runs_dry
+name: The Well Runs Dry
+tags:
+  - social
+  - exploration
+
+preconditions: []
+
+roles:
+  - id: elder
+    label: A Village Elder
+    traitRequirements:
+      charisma:
+        min: 4
+  - id: merchant
+    label: A Water Merchant
+    archetypeFilter:
+      - merchant
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The morning line at the well is gone — because there is no water to draw. {elder.name} stands
+      at the rim, looking down with a grim expression. "It has not been dry in my lifetime," they
+      say. Around the square, people look worried.
+    choices:
+      - id: investigate
+        label: Offer to climb down and see what is wrong
+        preconditions:
+          - type: trait
+            key: strength
+            min: 4
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: world_fact
+            target: investigated_well
+            value: true
+        exhaustionCost: 3
+        nextNodeId: down_the_well
+      - id: organize_party
+        label: Suggest organizing a work party to dig deeper
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 1
+          - type: world_fact
+            target: well_work_party
+            value: true
+        exhaustionCost: 2
+        nextNodeId: work_party
+      - id: buy_from_merchant
+        label: Go see {merchant.name} about buying water for today
+        consequences:
+          - type: faction
+            target: merchant_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: merchant_deal
+
+  down_the_well:
+    id: down_the_well
+    text: >-
+      You descend on a rope. The stone walls are damp but not wet — the water table has simply
+      dropped. At the bottom, you find something lodged in a crack: a bundle of cloth, deliberately
+      stuffed to block a secondary channel. Someone did this on purpose.
+    choices:
+      - id: clear_it
+        label: Clear the blockage and climb back up
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: world_fact
+            target: well_restored
+            value: true
+          - type: world_fact
+            target: well_sabotaged
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: leave_it_as_evidence
+        label: Leave it in place and report to the guard first
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: well_sabotaged
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+
+  work_party:
+    id: work_party
+    text: >-
+      By midday you have assembled six neighbors with shovels and strong backs. {elder.name}
+      coordinates. The work is heavy and slow, but communal. By evening the well is three feet
+      deeper and beginning to fill.
+    choices:
+      - id: stay_til_done
+        label: Stay until the work is finished
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: world_fact
+            target: well_restored
+            value: true
+        exhaustionCost: 3
+        nextNodeId: null
+      - id: leave_early
+        label: Head home when your back gives out
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  merchant_deal:
+    id: merchant_deal
+    text: >-
+      {merchant.name} already has barrels on a cart, ready to sell. "Terrible tragedy," they say,
+      not looking terribly troubled. "Supply and demand." They name a price that is almost
+      insultingly high.
+    choices:
+      - id: pay_it
+        label: Pay what they ask — the town needs water
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 1
+          - type: faction
+            target: merchant_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: haggle_hard
+        label: Refuse to be gouged — negotiate a fair price
+        preconditions:
+          - type: skill
+            key: haggling
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: world_fact
+            target: haggled_water_price
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null

@@ -1,0 +1,118 @@
+id: guards_questions
+name: The Guard's Questions
+tags:
+  - intrigue
+  - action
+
+preconditions:
+  - type: world_fact
+    key: traveler_reported
+    value: true
+
+roles:
+  - id: guard
+    label: The Questioning Guard
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      {guard.name} finds you the next morning. "That traveler you brought in," they say, keeping
+      their voice low. "They are not talking. But someone else says they saw you speaking with a
+      stranger near the gate around the same time. You see anything else?" Their eyes do not leave
+      your face.
+    choices:
+      - id: tell_everything
+        label: Tell them everything you know about the traveler
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{guard.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+        exhaustionCost: 1
+        nextNodeId: told_all
+      - id: lie_to_protect
+        label: Say you saw nothing unusual — the traveler seemed harmless
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: lied_to_guard
+            value: true
+        exhaustionCost: 1
+        nextNodeId: lied
+      - id: stay_vague
+        label: Tell them what you saw but leave out the satchel
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  told_all:
+    id: told_all
+    text: >-
+      {guard.name} listens carefully, noting things down in a small ledger. "You did well to come
+      forward." They close the ledger with a snap. "We will find out what was in that satchel."
+      Something about their certainty makes you slightly uneasy.
+    choices:
+      - id: ask_what_happens
+        label: Ask what will happen to the traveler
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: let_it_go
+        label: Nod and get on with your day
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+
+  lied:
+    id: lied
+    text: >-
+      {guard.name} watches you for a long moment. "Right," they say finally. "If you think of
+      anything else, you know where to find me." They leave. You are not sure they believed you.
+      The lie sits in your chest, small and heavy.
+    choices:
+      - id: commit_to_lie
+        label: Good. You made your choice. Stick to it.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: reconsider_confession
+        label: Go after the guard and tell them the truth
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: lied_to_guard
+            value: false
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null

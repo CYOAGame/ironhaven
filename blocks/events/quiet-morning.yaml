@@ -1,0 +1,93 @@
+id: quiet_morning
+name: A Quiet Morning
+tags:
+  - social
+  - exploration
+
+preconditions: []
+
+roles:
+  - id: neighbor
+    label: A Neighbor
+    archetypeFilter:
+      - blacksmith
+      - merchant
+      - soldier
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: You wake before dawn. The air is cool and the village is quiet. Pale light creeps through the shutters.
+    choices:
+      - id: visit_well
+        label: Head to the village well for fresh water
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: at_the_well
+      - id: stay_in
+        label: Sit by the window and watch the village wake
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: watching_window
+
+  at_the_well:
+    id: at_the_well
+    text: >-
+      At the well, you find {neighbor.name} already drawing water. They look tired but manage a
+      smile. "Could not sleep either? Strange lights on the ridge last night. Did you see them?"
+    choices:
+      - id: ask_lights
+        label: Ask what they saw exactly
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: offer_help
+        label: Offer to help carry their water back
+        consequences:
+          - type: relationship
+            target: '{neighbor.id}'
+            value: 2
+            axis: trust
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  watching_window:
+    id: watching_window
+    text: >-
+      The village stirs slowly. You see {neighbor.name} crossing the square, looking harried. They
+      glance up at your window and wave, then beckon you down urgently.
+    choices:
+      - id: go_down
+        label: Go see what they need
+        consequences:
+          - type: relationship
+            target: '{neighbor.id}'
+            value: 1
+            axis: affection
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: wave_back
+        label: Wave back but stay put
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null

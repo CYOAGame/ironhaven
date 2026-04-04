@@ -1,0 +1,8 @@
+town_guard:
+  mood: 5
+craftsmen_guild:
+  mood: 6
+merchant_guild:
+  mood: 7
+village_folk:
+  mood: 6

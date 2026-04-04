@@ -1,0 +1,19 @@
+id: market_quarter
+name: Market Quarter
+tags:
+  - commerce
+  - social
+  - crafting
+
+eventTags:
+  - action
+  - crafting
+  - social
+
+archetypeIds:
+  - merchant
+  - blacksmith
+
+flavorTexts:
+  - Stalls line both sides of the street.
+  - The air smells of fresh bread and leather.

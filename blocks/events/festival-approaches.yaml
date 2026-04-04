@@ -1,0 +1,103 @@
+id: festival_approaches
+name: A Festival Approaches
+tags:
+  - social
+  - commerce
+
+preconditions: []
+
+roles:
+  - id: organizer
+    label: Festival Organizer
+    traitRequirements:
+      charisma:
+        min: 4
+  - id: vendor
+    label: A Vendor Setting Up
+    archetypeFilter:
+      - merchant
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The square is half-transformed with bunting and stalls. {organizer.name} rushes past you with
+      an armful of lanterns, then stops. "You! Can you spare an hour? We are short-handed and the
+      lighting needs to go up before dark."
+    choices:
+      - id: help_lighting
+        label: Help string the lanterns
+        consequences:
+          - type: relationship
+            target: '{organizer.id}'
+            value: 2
+            axis: affection
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: lanterns_up
+      - id: browse_vendors
+        label: Excuse yourself and browse the vendors arriving
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: vendors_row
+
+  lanterns_up:
+    id: lanterns_up
+    text: >-
+      You spend the afternoon on ladders. When the lanterns finally blaze at dusk, {organizer.name}
+      stands back and lets out a long breath. "Every year I swear I will get more help in advance,"
+      they laugh. "Every year." They press a warm meal ticket into your hand.
+    choices:
+      - id: use_meal
+        label: Cash in the meal ticket tonight
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: give_meal_away
+        label: Give it to the first hungry-looking child you see
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: faction
+            target: village_folk
+            value: 2
+        exhaustionCost: 0
+        nextNodeId: null
+
+  vendors_row:
+    id: vendors_row
+    text: >-
+      {vendor.name} is unloading crates with practiced efficiency. "First time at this market," they
+      say when you stop to look. "Heard the festival crowd is good. Brought things you will not find
+      elsewhere." They gesture at a crate sealed with wax.
+    choices:
+      - id: ask_about_wax_crate
+        label: Ask what is in the sealed crate
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: buy_something_ordinary
+        label: Buy something ordinary and move on
+        consequences:
+          - type: faction
+            target: merchant_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null

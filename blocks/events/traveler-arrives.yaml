@@ -1,0 +1,164 @@
+id: traveler_arrives
+name: A Traveler Arrives
+tags:
+  - social
+  - intrigue
+
+preconditions: []
+
+roles:
+  - id: traveler
+    label: A Weary Traveler
+    traitRequirements:
+      cunning:
+        min: 3
+  - id: guard
+    label: A Town Guard
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      A stranger slips through the town gate just before dusk — dusty, limping, clutching a worn
+      leather satchel to their chest. {traveler.name} scans the square with wide, frightened eyes
+      and fixes on you. "Please," they rasp. "I need somewhere safe. Just for tonight."
+    choices:
+      - id: help_and_hide
+        label: Pull them inside and find a hiding place
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{traveler.id}'
+            value: 3
+            axis: trust
+          - type: relationship_tag
+            target: '{traveler.id}'
+            value: sheltered_traveler
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+        exhaustionCost: 2
+        nextNodeId: hidden_them
+      - id: take_to_guard
+        label: Bring them to {guard.name} for proper protection
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{guard.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: traveler_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: reported_to_guard
+      - id: turn_away
+        label: Tell them you cannot help and turn them away
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: traveler_turned_away
+            value: true
+        exhaustionCost: 0
+        nextNodeId: turned_away
+
+  hidden_them:
+    id: hidden_them
+    text: >-
+      You tuck {traveler.name} into the back of the cooperage, behind old barrel staves. They press
+      the satchel closer. "You have no idea what you have done for me," they whisper. "Or what is in
+      here." They do not say more — not yet.
+    choices:
+      - id: ask_whats_inside
+        label: Ask what they are carrying
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: leave_them_rest
+        label: Tell them to rest and ask no questions tonight
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: null
+
+  reported_to_guard:
+    id: reported_to_guard
+    text: >-
+      {guard.name} listens, nods, and takes {traveler.name} firmly by the arm. "You did right
+      bringing them in," the guard says to you. "We will look after this." {traveler.name} shoots
+      you a look you cannot quite read — fear, or something harder.
+    choices:
+      - id: stay_to_explain
+        label: Stay and explain what the traveler told you
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: leave_it_there
+        label: Leave them to it and go about your evening
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  turned_away:
+    id: turned_away
+    text: >-
+      {traveler.name} stares at you for a long moment — too tired even for anger — then turns and
+      limps back toward the gate. You watch them go. The satchel knocks against their hip with every
+      step. You wonder, briefly, what was in it.
+    choices:
+      - id: reconsider
+        label: Call them back — you have changed your mind
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: trust
+          - type: world_fact
+            target: traveler_turned_away
+            value: false
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+          - type: relationship_tag
+            target: '{traveler.id}'
+            value: sheltered_traveler
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: let_them_go
+        label: Let them go. It is not your concern.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null

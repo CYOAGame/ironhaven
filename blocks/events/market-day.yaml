@@ -1,0 +1,98 @@
+id: market_day
+name: Market Day
+tags:
+  - social
+  - commerce
+
+preconditions: []
+
+roles:
+  - id: trader
+    label: A Local Trader
+    archetypeFilter:
+      - merchant
+      - blacksmith
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: The market is busy today. {trader.name} calls out to you from behind a stall laden with goods.
+    choices:
+      - id: browse
+        label: Browse the wares
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: browse_artifact
+      - id: barter
+        label: Try to barter for a good deal
+        preconditions:
+          - type: skill
+            key: haggling
+        consequences:
+          - type: faction
+            target: merchant_guild
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: barter_result
+
+  browse_artifact:
+    id: browse_artifact
+    text: >-
+      Among the trinkets, something catches your eye: a tarnished bronze compass with strange
+      markings. {trader.name} notices your interest. "Found that in a shipment from the coast.
+      No idea what the symbols mean."
+    choices:
+      - id: examine_artifact
+        label: Examine the curious artifact more closely
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: found_compass
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: ask_rumors
+        label: Chat with {trader.name} about town rumors
+        consequences:
+          - type: faction
+            target: merchant_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  barter_result:
+    id: barter_result
+    text: >-
+      You haggle back and forth. {trader.name} narrows their eyes, then breaks into a grin. "You
+      drive a hard bargain." But then they pause. "Actually, I have something else in mind — it will
+      cost you a favor, not coin."
+    choices:
+      - id: accept_favor
+        label: Agree to the favor
+        consequences:
+          - type: faction
+            target: merchant_guild
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: owes_trader_favor
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: decline_favor
+        label: Decline and take the coin deal
+        consequences:
+          - type: faction
+            target: merchant_guild
+            value: -1
+        exhaustionCost: 1
+        nextNodeId: null

@@ -1,0 +1,183 @@
+id: night_watch
+name: Night Watch
+tags:
+  - action
+  - social
+  - danger
+
+preconditions: []
+
+roles:
+  - id: watch_captain
+    label: The Watch Captain
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+  - id: watch_partner
+    label: Your Watch Partner
+    archetypeFilter:
+      - soldier
+      - merchant
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The town watch is short-staffed. {watch_captain.name} asks if you will take a shift — four
+      hours on the east wall with {watch_partner.name}. The night is clear, cold, and apparently
+      quiet. Apparently.
+    choices:
+      - id: take_the_watch
+        label: Agree to take the shift
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: relationship
+            target: '{watch_captain.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: on_the_wall
+      - id: decline
+        label: Decline — you have your own affairs to attend to
+        consequences:
+          - type: faction
+            target: town_guard
+            value: -1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  on_the_wall:
+    id: on_the_wall
+    text: >-
+      The first two hours pass without event. {watch_partner.name} tells you about their childhood
+      in a city you have never visited. Then, around the third hour, you both see it: a light moving
+      in the lower fields, slow and deliberate. No lantern swings like that.
+    choices:
+      - id: raise_alarm
+        label: Call it in immediately — ring the watch bell
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: raised_night_alarm
+            value: true
+        exhaustionCost: 1
+        nextNodeId: alarm_raised
+      - id: investigate_quietly
+        label: Signal {watch_partner.name} and go investigate quietly
+        preconditions:
+          - type: trait
+            key: cunning
+            min: 4
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: investigated_night_light
+            value: true
+        exhaustionCost: 2
+        nextNodeId: into_the_dark
+      - id: watch_and_wait
+        label: Stay still and watch where the light goes
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: watched_the_light
+
+  alarm_raised:
+    id: alarm_raised
+    text: >-
+      The bell wakes half the town. The guard pours out. By the time they reach the field, there is
+      nothing — just trampled grass in a rough circle. {watch_captain.name} examines the marks, says
+      nothing for a long time. "Good that you called it in," they say finally. "Good."
+    choices:
+      - id: help_search
+        label: Join the search of the surrounding area
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: return_to_post
+        label: Return to the wall — your watch is not finished
+        consequences:
+          - type: relationship
+            target: '{watch_captain.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: null
+
+  into_the_dark:
+    id: into_the_dark
+    text: >-
+      You and {watch_partner.name} move low through the grass. The light is a hooded lantern, held
+      by a single figure who is burying something in the field. They do not hear you until you are
+      very close. When they turn, their face is familiar — someone you have seen in town.
+    choices:
+      - id: confront_figure
+        label: Step forward and demand to know what they are doing
+        preconditions:
+          - type: trait
+            key: strength
+            min: 4
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: confronted_night_figure
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: observe_and_report
+        label: Back away quietly and report what you saw
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  watched_the_light:
+    id: watched_the_light
+    text: >-
+      The light moves in a slow arc, then goes out. You mark the spot mentally. In the morning, you
+      could check it in daylight when it is safer — or forget it entirely. {watch_partner.name} says
+      nothing, watching your face.
+    choices:
+      - id: check_in_morning
+        label: Mark the spot and plan to check at first light
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: marked_night_spot
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: report_then_forget
+        label: Report it to {watch_captain.name} and let the guard handle it
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null

@@ -1,0 +1,100 @@
+id: strange_rumors
+name: Strange Rumors
+tags:
+  - intrigue
+  - social
+
+preconditions: []
+
+roles:
+  - id: barkeep
+    label: The Barkeep
+    traitRequirements:
+      charisma:
+        min: 3
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The tavern is quieter than usual. {barkeep.name} wipes the counter with a furrowed brow.
+      A few regulars huddle in the corner, speaking in low voices.
+    choices:
+      - id: ask_barkeep
+        label: Ask {barkeep.name} what the fuss is about
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: barkeep_explains
+      - id: eavesdrop
+        label: Sit nearby and eavesdrop on the corner table
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: overheard
+
+  barkeep_explains:
+    id: barkeep_explains
+    text: >-
+      {barkeep.name} leans close. "Folk have been going missing on the south road. Three this month.
+      Guards say bandits, but nobody has found a camp." They pause. "And last night, someone saw a
+      light in the old mill."
+    choices:
+      - id: investigate_mill
+        label: Decide to check out the old mill yourself
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: world_fact
+            target: investigating_mill
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: report_guard
+        label: Suggest telling the town guard about the light
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: null
+
+  overheard:
+    id: overheard
+    text: >-
+      You catch fragments: "...sealed cellar...", "...symbols on the walls...", "...do not tell the
+      guard." One of them notices you listening and goes silent.
+    choices:
+      - id: confront
+        label: Ask them directly what they know
+        preconditions:
+          - type: trait
+            key: charisma
+            min: 4
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 1
+          - type: world_fact
+            target: knows_cellar_secret
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: leave_quietly
+        label: Pretend you heard nothing and leave
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
