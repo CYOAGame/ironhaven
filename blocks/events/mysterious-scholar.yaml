@@ -26,7 +26,7 @@ nodes:
       {scholar.name} arrives at the inn with two mules and a cart loaded entirely with wooden
       chests. They ask no one for directions but find you anyway. "You have been in the cellar,"
       they say, without greeting. "I can tell by the chalk dust and the way you look at walls."
-      They sit across from you uninvited. "Show me what you copied. I will tell you what it means —
+      They sit across from you uninvited. "Show me what you copied. I will tell you what it means
       but you will not enjoy the answer."
     choices:
       - id: show_notes
@@ -50,7 +50,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: tested_scholar
       - id: refuse
-        label: Refuse — you do not know this person
+        label: Refuse you do not know this person
         consequences:
           - type: stat
             target: cunning
@@ -66,10 +66,10 @@ nodes:
     id: showed_notes
     text: >-
       {scholar.name} studies your notes for a long time. When they look up, their expression is
-      carefully controlled. "These are binding wards. Pre-Imperial. The third language is Karathi —
+      carefully controlled. "These are binding wards. Pre-Imperial. The third language is Karathi
       spoken by the precursor civilization that was destroyed by the first demon incursion, four
       hundred years ago." They tap the phrase. "This is a seal, not a warning. Something is
-      imprisoned beneath your town. And if the invasion continues—" They stop. "The seals weaken
+      imprisoned beneath your town. And if the invasion continues" They stop. "The seals weaken
       when fear and death accumulate. You need to know this."
     choices:
       - id: ask_more
@@ -121,11 +121,11 @@ nodes:
     id: tested_scholar
     text: >-
       You ask about the third script on your copied phrase. {scholar.name} does not hesitate.
-      "Karathi. It says: the form bound here must not walk again." They fold their hands. "Now —
+      "Karathi. It says: the form bound here must not walk again." They fold their hands. "Now
       your notes, if you please. We are wasting time."
     choices:
       - id: convinced_show
-        label: You are convinced — show them everything
+        label: You are convinced show them everything
         consequences:
           - type: relationship
             target: '{scholar.id}'
@@ -140,7 +140,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: learned_more
       - id: still_cautious
-        label: Show them only partial notes — trust is earned slowly
+        label: Show them only partial notes trust is earned slowly
         consequences:
           - type: stat
             target: cunning
@@ -176,7 +176,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: let_them_go
-        label: Thank them and let them go — you have what you need
+        label: Thank them and let them go you have what you need
         consequences:
           - type: stat
             target: cunning
@@ -188,11 +188,11 @@ nodes:
     id: refused
     text: >-
       {scholar.name} nods as though they expected this. "Caution is sensible." They slide a small
-      card across the table — a name, an inn in the next town. "When you change your mind, which
+      card across the table a name, an inn in the next town. "When you change your mind, which
       you will, come find me." They leave without touching their ale.
     choices:
       - id: follow_up
-        label: Decide to follow up — tuck the card away carefully
+        label: Decide to follow up tuck the card away carefully
         consequences:
           - type: stat
             target: cunning

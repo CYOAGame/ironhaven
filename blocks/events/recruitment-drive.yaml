@@ -31,7 +31,7 @@ nodes:
     id: start
     text: >-
       {recruiter.name} has set up a table in the square with a hand-painted sign: DEFENDERS
-      WANTED — GOOD PAY, THREE MEALS. {neighbor.name} is standing in front of it with the
+      WANTED GOOD PAY, THREE MEALS. {neighbor.name} is standing in front of it with the
       particular expression of someone who has not quite decided yet. {recruiter.name} spots
       you. "You look capable. The army needs capable people."
     choices:
@@ -139,7 +139,7 @@ nodes:
   helped_recruit:
     id: helped_recruit
     text: >-
-      You spend the morning moving through the market, making the case — good pay, necessary work,
+      You spend the morning moving through the market, making the case good pay, necessary work,
       the town's survival. By midday, four names are on the sheet that would not have been otherwise.
       {recruiter.name} nods at you with something like professional appreciation. {neighbor.name}
       is one of the four.
@@ -157,7 +157,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: step_away
-        label: Your work is done — step away
+        label: Your work is done step away
         consequences: []
         exhaustionCost: 0
         nextNodeId: null

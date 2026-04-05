@@ -19,7 +19,7 @@ nodes:
   start:
     id: start
     text: >-
-      You drop your goods in the mud — a full morning's worth of market supplies scattered across
+      You drop your goods in the mud a full morning's worth of market supplies scattered across
       the lane. You swear under your breath, crouching to gather what you can. Then {stranger.name}
       is there beside you without a word, picking up root vegetables with practiced efficiency.
       They hand you back a jar of oil you somehow did not notice rolling toward the gutter. They
@@ -51,7 +51,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: thanked_briefly
       - id: be_suspicious
-        label: Thank them but keep your guard up — why would a stranger bother?
+        label: Thank them but keep your guard up why would a stranger bother?
         consequences:
           - type: stat
             target: cunning
@@ -72,7 +72,7 @@ nodes:
       talk again."
     choices:
       - id: offer_to_return_favor
-        label: Offer to return the kindness — they should come to you if they need anything
+        label: Offer to return the kindness they should come to you if they need anything
         consequences:
           - type: relationship
             target: '{stranger.id}'
@@ -101,10 +101,10 @@ nodes:
     id: thanked_briefly
     text: >-
       {stranger.name} nods and walks away. You watch them for a moment, already wondering who
-      they are. A small thing — but the day feels slightly easier for it.
+      they are. A small thing but the day feels slightly easier for it.
     choices:
       - id: seek_them_out
-        label: Look for them later — you owe them a proper thank-you
+        label: Look for them later you owe them a proper thank-you
         consequences:
           - type: stat
             target: charisma
@@ -116,7 +116,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: carry_on
-        label: Carry on — it was a small thing
+        label: Carry on it was a small thing
         consequences: []
         exhaustionCost: 0
         nextNodeId: null
@@ -129,7 +129,7 @@ nodes:
       something, or of having been exactly right. Difficult to know.
     choices:
       - id: reconsider
-        label: Reconsider — being guarded cost you a kindness. Catch up with them.
+        label: Reconsider being guarded cost you a kindness. Catch up with them.
         consequences:
           - type: stat
             target: charisma

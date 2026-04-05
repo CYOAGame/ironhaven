@@ -27,11 +27,11 @@ nodes:
     text: >-
       {mentor.name} has been watching you work for three days. Today, they pull up a stool and say:
       "You have talent, but you are wasting it on the wrong habits. I could show you something
-      better — if you are willing to be taught." There is no flattery in it. Just the matter-of-fact
+      better if you are willing to be taught." There is no flattery in it. Just the matter-of-fact
       confidence of someone who has earned the right to say it.
     choices:
       - id: accept_eagerly
-        label: Accept — you have wanted a teacher for a long time
+        label: Accept you have wanted a teacher for a long time
         consequences:
           - type: stat
             target: strength
@@ -66,7 +66,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: pushed_back
       - id: decline
-        label: Decline — you have your own way of doing things
+        label: Decline you have your own way of doing things
         consequences:
           - type: stat
             target: cunning
@@ -81,7 +81,7 @@ nodes:
   accepted:
     id: accepted
     text: >-
-      {mentor.name} nods as if they expected nothing less. The lesson begins immediately — no
+      {mentor.name} nods as if they expected nothing less. The lesson begins immediately no
       ceremony, no preamble. By the end of the afternoon your back aches and your technique has
       changed in three small ways that feel, you suspect, enormous. "Same time tomorrow," they say,
       walking away before you can thank them.
@@ -101,7 +101,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: reflect_on_lesson
-        label: Sit with the lesson before practicing — absorb it properly
+        label: Sit with the lesson before practicing absorb it properly
         consequences:
           - type: stat
             target: cunning
@@ -135,7 +135,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: defer_going_forward
-        label: You have made your point — defer to their experience now
+        label: You have made your point defer to their experience now
         consequences:
           - type: stat
             target: strength
@@ -155,11 +155,11 @@ nodes:
     text: >-
       {mentor.name} shrugs with the ease of someone who has been declined before. "The offer stands
       until it doesn't." They return to their own work without another word. You go back to yours.
-      Around the third hour, you start noticing a habit they mentioned — the wrong grip, the wasted
+      Around the third hour, you start noticing a habit they mentioned the wrong grip, the wasted
       motion. You keep doing it anyway.
     choices:
       - id: reconsider
-        label: Go to them — tell them you reconsidered
+        label: Go to them tell them you reconsidered
         consequences:
           - type: relationship
             target: '{mentor.id}'
@@ -174,7 +174,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: stand_firm
-        label: Stand by the choice — your way is yours
+        label: Stand by the choice your way is yours
         consequences:
           - type: stat
             target: cunning

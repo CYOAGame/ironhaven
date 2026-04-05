@@ -36,7 +36,7 @@ nodes:
     id: start
     text: >-
       A crowd has gathered at the north gate. {exile.name} stands in the road with a single
-      pack, {guard_captain.name} behind them. The reading is brief and formal — conduct
+      pack, {guard_captain.name} behind them. The reading is brief and formal conduct
       unbecoming, threat to the town's peace, banishment effective immediately. {exile.name}
       does not beg. They look once at the crowd, finding faces, remembering who was silent.
       Their eyes find yours. You know what came before this moment.
@@ -125,7 +125,7 @@ nodes:
   protested:
     id: protested
     text: >-
-      {guard_captain.name} tells you the decision is final. You make your case anyway —
+      {guard_captain.name} tells you the decision is final. You make your case anyway
       loudly enough for the crowd to hear. {exile.name} does not look at you again, but
       their hands unclench slightly. It is not enough to stop anything. But it was said,
       and the crowd heard it, and {guard_captain.name} will remember your face.
@@ -145,7 +145,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: accept_defeat
-        label: Stop when the captain steps toward you — it is over
+        label: Stop when the captain steps toward you it is over
         consequences:
           - type: faction
             target: village_folk
@@ -158,12 +158,12 @@ nodes:
     text: >-
       You pass word through a boy you trust, who passes it to {exile.name}'s cousin.
       The route through the abandoned tannery and under the south wall is not comfortable
-      but it works. {exile.name} is gone before the gate closes — but not through it.
+      but it works. {exile.name} is gone before the gate closes but not through it.
       {guard_captain.name} counts heads afterward and comes up one short. They will
       look at you eventually.
     choices:
       - id: have_an_alibi
-        label: Make sure you were seen elsewhere — someone can vouch for you
+        label: Make sure you were seen elsewhere someone can vouch for you
         preconditions:
           - type: trait
             key: cunning
@@ -178,7 +178,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: do_not_hide
-        label: Do not hide it — if they ask, you will not lie
+        label: Do not hide it if they ask, you will not lie
         consequences:
           - type: stat
             target: charisma

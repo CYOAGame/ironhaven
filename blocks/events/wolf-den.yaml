@@ -24,13 +24,13 @@ nodes:
     id: start
     text: >-
       The tracks lead you to a slope in the Ashwood, a rocky hollow half-hidden by fallen
-      timber. You find the den at dusk — and the den is not empty. A grey she-wolf lies
+      timber. You find the den at dusk and the den is not empty. A grey she-wolf lies
       inside, three cubs pressed against her flank. She does not move toward you. She
       watches you with yellow eyes, perfectly still. {hunter.name} is behind you, bow
       raised. "Say the word," they say quietly.
     choices:
       - id: kill_them
-        label: Give the word — wolves near town are a threat, cubs or not
+        label: Give the word wolves near town are a threat, cubs or not
         consequences:
           - type: stat
             target: strength
@@ -59,7 +59,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: backed_away
       - id: find_another_way
-        label: Back off and think — there may be a way to move them without killing
+        label: Back off and think there may be a way to move them without killing
         consequences:
           - type: stat
             target: cunning
@@ -143,7 +143,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: keep_it_between_you
-        label: Keep it between you and {hunter.name} — no point explaining
+        label: Keep it between you and {hunter.name} no point explaining
         consequences:
           - type: relationship
             target: '{hunter.id}'

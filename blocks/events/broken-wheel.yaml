@@ -24,7 +24,7 @@ nodes:
     id: start
     text: >-
       The main lane into the square is blocked. {cart_driver.name}'s cart has lost a
-      wheel at the worst possible point — hub deep in the channel, load spilled across
+      wheel at the worst possible point hub deep in the channel, load spilled across
       the cobblestones, horse standing patient as a saint. {impatient_merchant.name}
       is already shouting from behind, their own cart unable to pass. {cart_driver.name}
       is kneeling in the road, staring at the broken spoke, looking like they are deciding
@@ -54,7 +54,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: went_around
       - id: charge_for_repair
-        label: Offer your skills — for a fee
+        label: Offer your skills for a fee
         consequences:
           - type: stat
             target: cunning
@@ -69,7 +69,7 @@ nodes:
     id: fixed
     text: >-
       The repair takes forty minutes and two pairs of hands. {cart_driver.name} knows their
-      way around a wheel — they are not helpless, just caught without tools. The lane opens.
+      way around a wheel they are not helpless, just caught without tools. The lane opens.
       {impatient_merchant.name} passes through without a word of thanks. {cart_driver.name}
       offers you a wrapped cheese from the back of their cart. "It is all I have handy,"
       they say. "But it is good."
@@ -84,7 +84,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: refuse_and_wave_off
-        label: Wave it off — you did not do it for payment
+        label: Wave it off you did not do it for payment
         consequences:
           - type: stat
             target: charisma
@@ -135,7 +135,7 @@ nodes:
       nobody's measuring.
     choices:
       - id: do_good_work
-        label: Do the best repair job you can — your name is on it
+        label: Do the best repair job you can your name is on it
         consequences:
           - type: stat
             target: strength
@@ -146,7 +146,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: quick_and_adequate
-        label: Make it hold and move on — it does not need to be beautiful
+        label: Make it hold and move on it does not need to be beautiful
         consequences:
           - type: stat
             target: cunning

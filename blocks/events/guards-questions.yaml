@@ -44,7 +44,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: told_all
       - id: lie_to_protect
-        label: Say you saw nothing unusual — the traveler seemed harmless
+        label: Say you saw nothing unusual the traveler seemed harmless
         consequences:
           - type: stat
             target: cunning

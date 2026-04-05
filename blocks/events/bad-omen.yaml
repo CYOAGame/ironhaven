@@ -25,13 +25,13 @@ nodes:
     id: start
     text: >-
       Three things in one morning: a crow lands on your windowsill and will not leave.
-      The milk {neighbor.name} left out has curdled solid, in summer. And at noon — high
-      summer noon — a dog howls from three streets over and is answered by two more. People
+      The milk {neighbor.name} left out has curdled solid, in summer. And at noon high
+      summer noon a dog howls from three streets over and is answered by two more. People
       stop in the street. {elder.name} draws a ward-sign in the dust with their boot. "That
       is the third sign this week," they say to nobody in particular.
     choices:
       - id: take_it_seriously
-        label: Take it seriously — ask the elder what the signs mean
+        label: Take it seriously ask the elder what the signs mean
         consequences:
           - type: stat
             target: cunning
@@ -46,7 +46,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: took_seriously
       - id: stay_rational
-        label: Explain the rational causes — it is just animals and weather
+        label: Explain the rational causes it is just animals and weather
         consequences:
           - type: stat
             target: cunning
@@ -57,7 +57,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: rationalized
       - id: feel_genuine_fear
-        label: Say nothing. You feel it too — something is wrong.
+        label: Say nothing. You feel it too something is wrong.
         consequences:
           - type: world_fact
             target: omen_felt
@@ -77,7 +77,7 @@ nodes:
       The elder looks at the horizon. "Nothing good. Prepare as you are able."
     choices:
       - id: make_preparations
-        label: Go home and quietly prepare — extra food, a blade near the door
+        label: Go home and quietly prepare extra food, a blade near the door
         consequences:
           - type: world_fact
             target: food_stockpiled
@@ -128,11 +128,11 @@ nodes:
     id: afraid
     text: >-
       You find yourself checking the windows twice that evening. The feeling does not have
-      a name — not quite dread, not quite warning — but it sits in your chest like a stone.
+      a name not quite dread, not quite warning but it sits in your chest like a stone.
       {neighbor.name} stops by after dark. "You felt it too," they say. It is not a question.
     choices:
       - id: admit_it
-        label: Admit it — yes, you felt it too
+        label: Admit it yes, you felt it too
         consequences:
           - type: relationship
             target: '{neighbor.id}'

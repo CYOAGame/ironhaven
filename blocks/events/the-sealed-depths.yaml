@@ -31,7 +31,7 @@ nodes:
   start:
     id: start
     text: >-
-      The cellar entrance on Tanner's Row is still open — the iron-banded door swings
+      The cellar entrance on Tanner's Row is still open the iron-banded door swings
       on its broken lock, moss-edged and patient. You have thought about it since you
       first forced it open. Now you are back, and the cold air rising from below carries
       that same old smell: damp stone and something underneath it, something older than
@@ -39,12 +39,12 @@ nodes:
       differently than they should.
     choices:
       - id: find_companion_choice
-        label: Find someone worth trusting — this should not be done alone
+        label: Find someone worth trusting this should not be done alone
         consequences: []
         exhaustionCost: 1
         nextNodeId: find_companion
       - id: descend_alone_choice
-        label: Light a torch and go alone — fewer people means fewer complications
+        label: Light a torch and go alone fewer people means fewer complications
         consequences:
           - type: stat
             target: cunning
@@ -57,7 +57,7 @@ nodes:
     text: >-
       You find {companion.name} and describe what little you have seen. They listen
       with the careful stillness of someone deciding how much to believe. Then: "I am in.
-      But when we come back up — you tell me everything you understand. No holding back."
+      But when we come back up you tell me everything you understand. No holding back."
       They say it with the particular weight of someone who has been kept in the dark before.
       You shake on it. They tuck a second lantern under their arm.
     choices:
@@ -76,7 +76,7 @@ nodes:
     text: >-
       The stairs spiral down in a tight corkscrew, the stone worn smooth by feet that
       stopped walking long ago. Your torch throws jumping orange light across walls packed
-      with carved text — not decorative, you think. Too dense, too urgent. The air grows
+      with carved text not decorative, you think. Too dense, too urgent. The air grows
       colder with each step. Whatever the builders sealed away, they wanted it to stay sealed.
     choices:
       - id: study_alone_symbols
@@ -88,7 +88,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: study_symbols
       - id: push_past_alone
-        label: Keep moving — the carvings can wait until you know the layout
+        label: Keep moving the carvings can wait until you know the layout
         consequences: []
         exhaustionCost: 1
         nextNodeId: first_chamber
@@ -98,7 +98,7 @@ nodes:
     text: >-
       Two torches push the darkness back further than one could. {companion.name} takes
       the lead on the stairs, moving with the careful step of someone who does not trust
-      old stonework. The walls press close. The carvings here are dense — warnings, you
+      old stonework. The walls press close. The carvings here are dense warnings, you
       both agree, though neither of you can read the script. At the base of the stairs
       the passage opens wide and cold air spills outward like a held breath finally released.
     choices:
@@ -111,7 +111,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: study_symbols
       - id: push_past_together
-        label: Note the carvings but keep moving — you are burning torch time
+        label: Note the carvings but keep moving you are burning torch time
         consequences: []
         exhaustionCost: 1
         nextNodeId: first_chamber
@@ -121,7 +121,7 @@ nodes:
     text: >-
       The script is not a language you recognise, but the images threaded through it
       tell enough of the story. A shape like a man, bound in chain. Hands from above
-      pressing a lid onto a container. Lines radiating outward from a central point —
+      pressing a lid onto a container. Lines radiating outward from a central point
       like a spider's web, or like anchors set in earth. Someone built this place as a
       seal. The carvings are not history. They are instructions for maintenance, and
       warnings for those who ignore them.
@@ -155,7 +155,7 @@ nodes:
     id: first_chamber
     text: >-
       A round room perhaps twenty feet across, with a domed ceiling. Four passages lead
-      outward at the compass points. The northern passage has collapsed — rubble fills it
+      outward at the compass points. The northern passage has collapsed rubble fills it
       floor to ceiling. The other three stand open and dark. Every surface of the room
       is covered in carvings, these ones more elaborate than the stairwell: geometric
       patterns, repeated faces, lines of script that spiral inward toward a central point
@@ -173,24 +173,24 @@ nodes:
   passage_hub:
     id: passage_hub
     text: >-
-      Three passages wait. From the left comes the distant sound of moving water — steady,
+      Three passages wait. From the left comes the distant sound of moving water steady,
       low, underground. From the center a warm draft breathes against your face, carrying
       a faint smell of minerals and something faintly sweet, like old wood preserved too
-      long. From the right, what looks like a soft glow — not firelight, not quite —
+      long. From the right, what looks like a soft glow not firelight, not quite
       a pale blue-white that does not flicker. You will need to choose one at a time.
     choices:
       - id: take_water_passage
-        label: Go left — follow the sound of water
+        label: Go left follow the sound of water
         consequences: []
         exhaustionCost: 1
         nextNodeId: water_passage
       - id: take_warm_passage
-        label: Go center — follow the warm draft
+        label: Go center follow the warm draft
         consequences: []
         exhaustionCost: 1
         nextNodeId: warm_passage
       - id: take_light_passage
-        label: Go right — follow the light
+        label: Go right follow the light
         consequences: []
         exhaustionCost: 1
         nextNodeId: light_passage
@@ -200,7 +200,7 @@ nodes:
     text: >-
       The left passage slopes downward for thirty paces, then opens onto a stone shelf
       above an underground river. The water is black and fast, channeled between carved
-      banks — this was engineered, deliberately guided beneath the rock. A bridge of
+      banks this was engineered, deliberately guided beneath the rock. A bridge of
       fitted stone spans the channel: narrow, no railing, the mortar around the joins
       cracked with age. On the far bank, carved shelves line a wide alcove packed with
       shapes you cannot make out clearly from here.
@@ -231,7 +231,7 @@ nodes:
       sealed with wax that has long since hardened to amber. Some have shattered; most are
       intact. You open one carefully. Inside: tightly rolled sheets of a material that is
       not quite paper and not quite leather, covered in dense writing and diagrams. Preserved
-      by the dry air and the cold. These are old texts — very old.
+      by the dry air and the cold. These are old texts very old.
     choices:
       - id: take_texts
         label: Take a selection carefully. These belong somewhere they can be read.
@@ -262,7 +262,7 @@ nodes:
   bridge_collapses:
     id: bridge_collapses
     text: >-
-      The stone holds your throw, then gives a low crack when you step onto it — one of the
+      The stone holds your throw, then gives a low crack when you step onto it one of the
       central spans separates and drops into the river. You throw yourself backward onto
       solid ground, one hand catching a root that has forced its way through the ceiling,
       hanging for a moment above black water before hauling yourself up. You are not crossing
@@ -270,7 +270,7 @@ nodes:
       running along the near bank to a crack in the far wall wide enough to squeeze through.
     choices:
       - id: take_the_ledge
-        label: Work along the ledge — it is risky but it gets you across
+        label: Work along the ledge it is risky but it gets you across
         consequences:
           - type: stat
             target: strength
@@ -278,7 +278,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: cross_bridge
       - id: abandon_water_passage
-        label: The bridge is gone — leave this passage and try another
+        label: The bridge is gone leave this passage and try another
         consequences: []
         exhaustionCost: 1
         nextNodeId: passage_hub
@@ -288,7 +288,7 @@ nodes:
     text: >-
       The center passage is wider than the others and angles steadily downward. The warm
       draft grows stronger as you go. The walls here are different: the carved script gives
-      way to fungus — plates of flat grey-white growth that extend from the stone like shelves,
+      way to fungus plates of flat grey-white growth that extend from the stone like shelves,
       and between them, smaller fungi that glow with a cold green light. Not fire. Not crystal.
       Something alive. The passage opens without warning into a space so large your torchlight
       does not reach the far wall.
@@ -305,7 +305,7 @@ nodes:
       The cavern is vast enough that the ceiling exists only as a darkness above the
       glowing fungi. What stops your breath is the structure at the center: columns of
       worked stone, forty feet high, carved with faces you have never seen in any human
-      church or market. Not animal faces. Not quite human either — the proportions are
+      church or market. Not animal faces. Not quite human either the proportions are
       slightly wrong in ways that are hard to name. The columns ring a central platform,
       and on the platform, partially fallen but still recognizable, the remains of a
       building. A temple. Built before the town, before the road, before any memory
@@ -320,7 +320,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: examine_ruins
       - id: study_columns
-        label: Study the column faces first — understanding what was worshipped here matters
+        label: Study the column faces first understanding what was worshipped here matters
         consequences:
           - type: stat
             target: cunning
@@ -334,11 +334,11 @@ nodes:
   examine_ruins:
     id: examine_ruins
     text: >-
-      The structure is a temple, unmistakably. An altar stands at its center — large,
+      The structure is a temple, unmistakably. An altar stands at its center large,
       pale stone, cracked across the middle but still upright. Around its base, lengths
       of chain are embedded in the stone, heavy as anchor cable, their ends cut or
       snapped. Whatever was held here was held for a very long time, and whatever broke
-      free did not go easily — the altar has been pushed six inches off its base and
+      free did not go easily the altar has been pushed six inches off its base and
       the stone beneath is scarred with something that burned. The altar is not empty.
       An impression in the stone shows the shape of something large that once rested here.
     choices:
@@ -365,7 +365,7 @@ nodes:
   light_passage:
     id: light_passage
     text: >-
-      The right passage is narrower than the others and perfectly level — whoever built
+      The right passage is narrower than the others and perfectly level whoever built
       this place cut this floor deliberately flat. The light grows slowly as you go,
       cold and blue-white, emanating from crystals embedded in the stone at shoulder
       height on both sides. Long ones, angled in, like ribs. They react when you pass:
@@ -388,13 +388,13 @@ nodes:
       The pedestal in the center of the room is waist-high, worked from a single piece of
       dark stone that does not match the walls. Set into its top face is a mechanism: a
       circular arrangement of interlocking rings, each engraved with symbols. It is a lock.
-      Or a puzzle. Or both. The rings can be turned — they move with a smooth resistance
+      Or a puzzle. Or both. The rings can be turned they move with a smooth resistance
       that suggests they have been maintained, or perhaps that nothing here ages the way
       it should. One section of wall behind the pedestal has a seam that does not quite
       line up with the crystal pattern. A door, waiting to be opened.
     choices:
       - id: solve_mechanism_choice
-        label: Work the mechanism carefully — turn rings, test combinations, think it through
+        label: Work the mechanism carefully turn rings, test combinations, think it through
         consequences:
           - type: stat
             target: cunning
@@ -414,7 +414,7 @@ nodes:
     id: solve_mechanism
     text: >-
       An hour of careful work. Trial, error, listening for the change in resistance that
-      means a ring has found its place. The symbols begin to feel almost familiar — they
+      means a ring has found its place. The symbols begin to feel almost familiar they
       echo the carvings on the stairwell, and on the lintel above the cellar door. When
       the last ring locks, there is a sound like a deep bell struck once underground, and
       the seamed section of wall slides inward on a counterweight. Cool air sighs out
@@ -437,7 +437,7 @@ nodes:
     id: force_mechanism
     text: >-
       The mechanism resists, then cracks. One of the inner rings shears off its pin and
-      the whole assembly sparks — a cold white light, not fire — and goes dark. The
+      the whole assembly sparks a cold white light, not fire and goes dark. The
       crystal room dims sharply, as though offended. The seamed door does not open.
       But the wall to its left shifts: a section you had not noticed tilts inward, pivoting
       on a central pin. A different passage. Not the way the builders wanted anyone to go.
@@ -461,16 +461,16 @@ nodes:
   hidden_chamber:
     id: hidden_chamber
     text: >-
-      The room is not large — twenty feet square, low-ceilinged. Every wall is covered
+      The room is not large twenty feet square, low-ceilinged. Every wall is covered
       in murals, painted in colors that should not have survived down here but have,
       preserved by the same wrongness that keeps the crystals lit. The paint is vivid:
       deep red, bone white, a blue so dark it reads as night sky. The murals show a war.
-      Not the kind fought with swords — the kind fought between things that were not
+      Not the kind fought with swords the kind fought between things that were not
       men, with weapons that look like pure intention made solid. You need to understand
       what you are looking at.
     choices:
       - id: study_murals_choice
-        label: Study the murals from beginning to end — take in the whole story
+        label: Study the murals from beginning to end take in the whole story
         consequences:
           - type: stat
             target: cunning
@@ -486,13 +486,13 @@ nodes:
   the_murals:
     id: the_murals
     text: >-
-      The story begins on the left wall and spirals inward. Beings of pale light — you
-      count seven — fighting against a single entity that fills more of the frame than
+      The story begins on the left wall and spirals inward. Beings of pale light you
+      count seven fighting against a single entity that fills more of the frame than
       it should: a figure of absolute shadow, neither human nor animal, drawn as absence
       rather than presence. The light-beings force it downward, into the earth, into
       a circle of runes. Chains. A seal pressed into place by seven pairs of hands. Then:
-      the town, built above. Generations of keepers. And the last panel — the one closest
-      to the door — shows the seal cracking. Three fractures. The shadow-figure pressing
+      the town, built above. Generations of keepers. And the last panel the one closest
+      to the door shows the seal cracking. Three fractures. The shadow-figure pressing
       upward from below. The date-marks in the lower margin of the final panel are not
       old. They were added within living memory.
     choices:
@@ -508,7 +508,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: find_the_key
       - id: absorb_murals_altar_room
-        label: Find the altar room — if the demon is bound here, you need to see it
+        label: Find the altar room if the demon is bound here, you need to see it
         consequences:
           - type: world_fact
             target: murals_read
@@ -525,7 +525,7 @@ nodes:
       In the far corner of the hidden chamber, set into a recess in the wall: a stone
       key, perhaps eight inches long, worked from the same dark material as the pedestal.
       The head of the key is carved with the same central symbol from the round chamber
-      above — the one incised deep into the floor. It fits a lock somewhere further down.
+      above the one incised deep into the floor. It fits a lock somewhere further down.
       You can feel that certainty the way you feel the direction of north: not reasoned,
       just known. The key is cold until you close your hand around it, and then it is
       not cold at all.
@@ -554,7 +554,7 @@ nodes:
     id: the_altar_room
     text: >-
       A passage from the hidden chamber leads down, and down again, to a room that feels
-      like the bottom of something. An altar of black stone dominates the space —
+      like the bottom of something. An altar of black stone dominates the space
       larger than the one in the ruined temple above, intact, un-cracked, placed with
       total deliberate purpose at the center of a floor carved with runes. Chains ring
       it, heavy as ship cable, bolted into the stone. They are all broken. The ends are
@@ -569,7 +569,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: feel_the_presence
       - id: go_to_deeper_door
-        label: Ignore the feeling — find the door the key belongs to
+        label: Ignore the feeling find the door the key belongs to
         consequences:
           - type: stat
             target: strength
@@ -581,7 +581,7 @@ nodes:
     id: feel_the_presence
     text: >-
       You stop breathing and listen with something that is not your ears. It comes:
-      not words, not a voice — impressions, arriving like heat or pressure. Pain. Very
+      not words, not a voice impressions, arriving like heat or pressure. Pain. Very
       old pain, the kind that has had time to calcify into something colder. Rage at
       the edges, banked down to coals. And underneath both of those, a patience so vast
       it makes your own life feel like an afternoon. The demon lord did not die here.
@@ -589,7 +589,7 @@ nodes:
       than anyone above knows.
     choices:
       - id: resist_presence_choice
-        label: Push back — this thing does not get to be inside your head
+        label: Push back this thing does not get to be inside your head
         consequences:
           - type: stat
             target: strength
@@ -597,7 +597,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: resist_presence
       - id: listen_to_presence_choice
-        label: Stay open — let it show you what it wants you to know
+        label: Stay open let it show you what it wants you to know
         consequences:
           - type: stat
             target: cunning
@@ -609,11 +609,11 @@ nodes:
     id: resist_presence
     text: >-
       You hold the edges of your own mind the way you hold a door against wind. The
-      presence pushes — not violently, with the specific patience of something that has
+      presence pushes not violently, with the specific patience of something that has
       outlasted everything that has ever opposed it. Your torch gutters despite the still
       air. If {companion.name} came down with you, they are at your shoulder now, hand
       on your arm, voice low: "Whatever you are doing, stop. We should leave." Whether
-      alone or not, you feel it withdraw — not retreat, only step back. It will wait.
+      alone or not, you feel it withdraw not retreat, only step back. It will wait.
       It is very good at waiting.
     choices:
       - id: find_deeper_door_after_resist
@@ -641,16 +641,16 @@ nodes:
     id: listen_to_presence
     text: >-
       You open the door in your mind that you usually keep closed. The images come fast:
-      a map, roughly, of the region — not your map, one far older, with different names
+      a map, roughly, of the region not your map, one far older, with different names
       for the hills and rivers. Seven points marked on it, connected by lines of force.
       Seals. Each one an anchor. The one beneath this town was not the first to crack.
-      Two others are already broken. The demon lord does not need to come here — it is
+      Two others are already broken. The demon lord does not need to come here it is
       already here in pieces, filtering up through the fractures, waiting for enough of
       itself to coalesce. The presence withdraws and takes the map with it. You are left
       with the shape of what you saw pressed into your memory like a brand.
     choices:
       - id: use_key_after_listen
-        label: Use the stone key — find the binding circle before you lose your courage
+        label: Use the stone key find the binding circle before you lose your courage
         consequences:
           - type: world_fact
             target: presence_felt
@@ -669,9 +669,9 @@ nodes:
     text: >-
       The door is in the base of the altar room's far wall, set so flush with the stone
       that you might have missed it without looking. The lock is the same dark material
-      as the key. It fits without forcing — a quarter turn, a sound like a held breath
+      as the key. It fits without forcing a quarter turn, a sound like a held breath
       released, and the wall swings inward on counterweights so finely balanced that a
-      child could move it. Steps descend. There is no more warmth below, only heat —
+      child could move it. Steps descend. There is no more warmth below, only heat
       dry, pressurised, the kind of heat that comes from stone that has been something's
       floor for a very long time. Your torch shortens in the draft from below. You go.
     choices:
@@ -689,10 +689,10 @@ nodes:
     text: >-
       The deepest chamber is not large. It does not need to be. The floor is one continuous
       rune, forty feet across, incised so deep that the lines are almost channels. A binding
-      circle — the largest piece of intentional craft you have ever seen. It would be
+      circle the largest piece of intentional craft you have ever seen. It would be
       beautiful if it were not so clearly made out of emergency. Three cracks run across
       it, each one roughly following a line of runes, interrupting the pattern. Along
-      the crack edges, the stone is not just broken — it is consumed, dissolved, as though
+      the crack edges, the stone is not just broken it is consumed, dissolved, as though
       something acidic has been eating upward from below. The circle is failing. Slowly,
       but unmistakably, failing.
     choices:
@@ -720,10 +720,10 @@ nodes:
     id: touch_the_circle
     text: >-
       Pain, immediate and sharp, runs from your fingertip to your shoulder, not quite
-      like touching flame — more like grabbing a chain attached to something moving.
+      like touching flame more like grabbing a chain attached to something moving.
       You feel the circle's purpose: not a barrier, exactly, but a drain. It was meant
       to continuously unmake whatever it contained, grinding it down across centuries.
-      The cracks are not just structural damage — they are reversals. The circle is
+      The cracks are not just structural damage they are reversals. The circle is
       beginning to unmake itself. You understand now: the seal can be repaired, but it
       would require someone to sit at its center and push back against whatever is
       coming through. Not for an hour. For a lifetime.
@@ -744,7 +744,7 @@ nodes:
     id: choice_hub
     text: >-
       You stand at the top of the stairs, or just inside the entrance, or somewhere
-      between the depths and the daylight — and you hold everything you have learned
+      between the depths and the daylight and you hold everything you have learned
       like a stone in both hands, feeling its weight. The town is above you: the market,
       the guard house, the temple, the houses of people who do not know what their
       streets are built over. There is the old keeper, {old_keeper.name}, who might know
@@ -757,17 +757,17 @@ nodes:
         exhaustionCost: 2
         nextNodeId: attempt_repair
       - id: tell_captain_choice
-        label: Report everything to the guard captain — they need to know
+        label: Report everything to the guard captain they need to know
         consequences: []
         exhaustionCost: 1
         nextNodeId: tell_the_captain
       - id: tell_priest_choice
-        label: Find {old_keeper.name} — they have been carrying a piece of this
+        label: Find {old_keeper.name} they have been carrying a piece of this
         consequences: []
         exhaustionCost: 1
         nextNodeId: tell_the_priest
       - id: seal_entrance_choice
-        label: Collapse the passage behind you — let no one else stumble into this
+        label: Collapse the passage behind you let no one else stumble into this
         consequences: []
         exhaustionCost: 2
         nextNodeId: seal_the_entrance
@@ -788,11 +788,11 @@ nodes:
       crack for hours, tracing the interrupted runes, trying to close the gap in the
       pattern by completing what the crack broke. It is not enough. You know it is
       not enough even as you do it. But when you finally climb back out, the crack
-      has not grown. Whatever you did, it bought something — a season, maybe. Perhaps
+      has not grown. Whatever you did, it bought something a season, maybe. Perhaps
       a year. Not a solution. A delay.
     choices:
       - id: after_repair_tell_captain
-        label: It won't hold forever — tell the captain what you've done and why
+        label: It won't hold forever tell the captain what you've done and why
         consequences:
           - type: world_fact
             target: seal_repaired
@@ -803,7 +803,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: tell_the_captain
       - id: after_repair_tell_priest
-        label: Find {old_keeper.name} — a proper repair needs someone who understands the runes
+        label: Find {old_keeper.name} a proper repair needs someone who understands the runes
         consequences:
           - type: world_fact
             target: seal_repaired
@@ -839,7 +839,7 @@ nodes:
       yet how large."
     choices:
       - id: companion_captain_disagrees
-        label: "{companion.name} pulls you aside after — they think the captain will bury this"
+        label: "{companion.name} pulls you aside after they think the captain will bury this"
         consequences:
           - type: world_fact
             target: captain_knows_seal
@@ -851,7 +851,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: companion_disagrees
       - id: captain_and_return
-        label: Thank the captain and take your leave — the news is now in the right hands
+        label: Thank the captain and take your leave the news is now in the right hands
         consequences:
           - type: world_fact
             target: captain_knows_seal
@@ -870,7 +870,7 @@ nodes:
       come through their door with exactly this news. They listen to every word. They do
       not look surprised. When you describe the murals, they close their eyes and nod,
       slowly, the way a person nods when something they feared turns out to be confirmed.
-      "I always suspected. The old texts speak of anchors — seven of them, set across the
+      "I always suspected. The old texts speak of anchors seven of them, set across the
       whole of the valley. I thought they were metaphor. I thought I was being literal
       where the writers were being poetic." They open their eyes. "You have found the first.
       We must find the others before the seals collapse entirely."
@@ -888,7 +888,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: return_to_surface
       - id: priest_share_texts
-        label: Give {old_keeper.name} the ancient texts — they can read what you cannot
+        label: Give {old_keeper.name} the ancient texts they can read what you cannot
         consequences:
           - type: world_fact
             target: priest_knows_seal
@@ -906,7 +906,7 @@ nodes:
   seal_the_entrance:
     id: seal_the_entrance
     text: >-
-      You bring down the stairwell the only way available to you — prying out the
+      You bring down the stairwell the only way available to you prying out the
       keystone of the arch where the cellar joins the passage below. It takes three
       hours and more effort than you thought your body had left in it. The collapse
       is satisfying in the way that sealing something dangerous is satisfying: not
@@ -1008,10 +1008,10 @@ nodes:
       You step out of the cellar onto Tanner's Row. The sky is the same colour it
       always is this time of day. A dog crosses the far end of the lane. Somewhere
       past the rooflines, the market bell rings. The town is entirely ordinary from
-      up here — the same stones, the same sounds, the same rhythms. You know what
+      up here the same stones, the same sounds, the same rhythms. You know what
       is under it now. That knowledge does not make you safer, exactly. But it makes
       the ordinary feel like a choice someone made a very long time ago, and held,
-      at great cost, and is still holding — barely.
+      at great cost, and is still holding barely.
     choices:
       - id: to_aftermath
         label: Go into the town. Live with what you know.

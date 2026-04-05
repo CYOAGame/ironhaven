@@ -49,11 +49,11 @@ nodes:
       month. The guard says bandits, but no one has found a camp, a fire, a body. And last
       night, old Pern the miller swore he saw a light moving inside the sealed old mill.
       "The one that has been locked since the fire, six years back," {barkeep.name} says.
-      "I would not tell you this, except — you are the sort who asks the next question."
+      "I would not tell you this, except you are the sort who asks the next question."
       They refill your cup without being asked.
     choices:
       - id: ask_about_missing_people
-        label: Ask who specifically went missing — names, details
+        label: Ask who specifically went missing names, details
         consequences:
           - type: stat
             target: cunning
@@ -65,7 +65,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: missing_details
       - id: ask_about_mill
-        label: Ask about the mill — what was in there before it was sealed?
+        label: Ask about the mill what was in there before it was sealed?
         consequences:
           - type: stat
             target: cunning
@@ -97,7 +97,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: corner_table_opens
       - id: play_innocent
-        label: Look away and pretend you heard nothing — give them a moment to relax
+        label: Look away and pretend you heard nothing give them a moment to relax
         consequences:
           - type: stat
             target: cunning
@@ -126,7 +126,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: mill_approach
       - id: ask_corner_table
-        label: Approach the corner table — they clearly know something too
+        label: Approach the corner table they clearly know something too
         consequences:
           - type: stat
             target: cunning
@@ -138,12 +138,12 @@ nodes:
     id: mill_history
     text: >-
       {barkeep.name} thinks. "Before the fire it was old Cassant's mill. He was... unusual.
-      Kept odd hours. Scholars would visit him — not the sort of scholars you see at harvest
+      Kept odd hours. Scholars would visit him not the sort of scholars you see at harvest
       festivals. After the fire, the guild sealed it rather than clearing it. I always thought
       that was strange. You seal a place because you want what is inside to stay inside."
     choices:
       - id: go_to_old_mill
-        label: Go to the mill — now, while you are thinking about it
+        label: Go to the mill now, while you are thinking about it
         consequences:
           - type: stat
             target: strength
@@ -154,7 +154,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: mill_approach
       - id: report_guard
-        label: Bring all of this to the town guard — officially
+        label: Bring all of this to the town guard officially
         consequences:
           - type: faction
             target: town_guard
@@ -168,15 +168,15 @@ nodes:
   corner_table_opens:
     id: corner_table_opens
     text: >-
-      After a long moment, the eldest of the three — a woman with a face like cracked
-      leather — gestures you to a chair. She tells you quickly and flatly: there is a
+      After a long moment, the eldest of the three a woman with a face like cracked
+      leather gestures you to a chair. She tells you quickly and flatly: there is a
       cellar beneath the granary that the town records do not mention. Symbols on the
       walls. A smell of old smoke. Someone has been using it recently. They found fresh
       tallow drippings on the floor. "We are not going to the guard," she says. "Half
       the guard drinks at this table. We do not know who to trust yet."
     choices:
       - id: offer_to_investigate
-        label: Offer to go down into the cellar and look — you have less to lose than they do
+        label: Offer to go down into the cellar and look you have less to lose than they do
         consequences:
           - type: stat
             target: strength
@@ -193,7 +193,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: mill_approach
       - id: ask_them_to_wait
-        label: Ask them to wait — you need to think before acting
+        label: Ask them to wait you need to think before acting
         consequences:
           - type: stat
             target: cunning
@@ -207,15 +207,15 @@ nodes:
   mill_approach:
     id: mill_approach
     text: >-
-      You find the place as the last light is going — or the cellar access, or the mill
+      You find the place as the last light is going or the cellar access, or the mill
       depending on which thread brought you here. Either way, what you find is the same:
       evidence that someone has been here regularly, recently, and carefully. A cleared
       space. Chalk markings on the floor, geometric and precise. A small iron box, empty,
-      but with a lock that has been opened and closed many times — the metal worn bright.
+      but with a lock that has been opened and closed many times the metal worn bright.
       And on the wall, written in a hand you do not recognise: a date. Tomorrow's date.
     choices:
       - id: take_the_box
-        label: Take the iron box — whoever is using this space will know someone was here
+        label: Take the iron box whoever is using this space will know someone was here
         consequences:
           - type: world_fact
             target: mill_iron_box_taken
@@ -240,14 +240,14 @@ nodes:
   rumor_aftermath:
     id: rumor_aftermath
     text: >-
-      You find yourself back in the ordinary world — tavern, street, or bed — with
+      You find yourself back in the ordinary world tavern, street, or bed with
       something that was not there this morning: a date, a symbol, a box, a name, or
       simply the knowledge that something is moving beneath the surface of this town.
       {barkeep.name} catches your eye as you pass the counter, and asks nothing. Which
       is, in its own way, an answer.
     choices:
       - id: tell_barkeep
-        label: Tell {barkeep.name} what you found — they shared their information, you should share yours
+        label: Tell {barkeep.name} what you found they shared their information, you should share yours
         consequences:
           - type: relationship
             target: '{barkeep.id}'
@@ -259,7 +259,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: say_nothing
-        label: Say nothing yet — wait, and watch, and let it develop
+        label: Say nothing yet wait, and watch, and let it develop
         consequences:
           - type: stat
             target: cunning

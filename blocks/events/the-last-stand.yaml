@@ -31,7 +31,7 @@ nodes:
   start:
     id: start
     text: >-
-      The horns are not a warning — they are a confirmation. The demon army arrives at dawn, and
+      The horns are not a warning they are a confirmation. The demon army arrives at dawn, and
       it is larger than the worst estimate. {captain.name} stands at the gate with a face made
       of stone. {companion.name} is beside you, weapon in hand, not saying anything because there
       is nothing left to say that has not already been said. The wall behind you is as strong as
@@ -57,7 +57,7 @@ nodes:
         exhaustionCost: 4
         nextNodeId: at_the_wall
       - id: flee
-        label: Take the escape route you found — get as many out as you can
+        label: Take the escape route you found get as many out as you can
         consequences:
           - type: stat
             target: cunning
@@ -74,7 +74,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: fled
       - id: sacrifice
-        label: Volunteer to lead the diversion — buy time for the others
+        label: Volunteer to lead the diversion buy time for the others
         consequences:
           - type: stat
             target: charisma
@@ -102,7 +102,7 @@ nodes:
     text: >-
       The first wave breaks on the wall. The second wave is worse. You fight beside {companion.name}
       and {captain.name} until your arm stops feeling like an arm. Hours pass that feel like minutes
-      and minutes that feel like lifetimes. Then — the horns again. Reinforcements. The heroes have
+      and minutes that feel like lifetimes. Then the horns again. Reinforcements. The heroes have
       held the road. The siege breaks. Not victory. But survival.
     choices:
       - id: check_on_companion
@@ -138,7 +138,7 @@ nodes:
     text: >-
       You lead a group of civilians through the tannery wall and into the drainage channel. Forty
       people, moving fast and quiet. Behind you, the sounds of the battle diminish. You do not
-      look back until you are in the forest. The town is still standing — you can see the smoke
+      look back until you are in the forest. The town is still standing you can see the smoke
       from here, but no flames. Whether that continues without you is not something you can know.
     choices:
       - id: return_to_help
@@ -156,7 +156,7 @@ nodes:
         exhaustionCost: 4
         nextNodeId: null
       - id: stay_with_civilians
-        label: Stay with the people you brought out — they still need a leader
+        label: Stay with the people you brought out they still need a leader
         consequences:
           - type: stat
             target: charisma
@@ -176,7 +176,7 @@ nodes:
     text: >-
       You take a dozen volunteers and make enough noise and fire and chaos on the east flank to pull
       a third of the demon force's attention for six critical minutes. Most of the volunteers survive.
-      You survive — barely, and differently than before. When it is over, {captain.name} looks at you
+      You survive barely, and differently than before. When it is over, {captain.name} looks at you
       across the square with an expression that does not have a word in the common tongue. {companion.name}
       does not let go of your arm for a long time.
     choices:
@@ -200,7 +200,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: report_to_captain
-        label: Report to {captain.name} — duty is not finished
+        label: Report to {captain.name} duty is not finished
         consequences:
           - type: faction
             target: town_guard

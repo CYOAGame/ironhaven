@@ -24,12 +24,12 @@ nodes:
     text: >-
       {debtor.name} comes to you in the early morning, before the market opens. They look like
       they have not slept. "I would not ask if there was anyone else," they say. "You helped me
-      before — I have not forgotten. But what I need now is larger." They explain: they need
+      before I have not forgotten. But what I need now is larger." They explain: they need
       you to vouch for them before the council, cover a debt they cannot pay, and keep quiet
       about a third thing they are not ready to say yet. "I know how it sounds."
     choices:
       - id: agree_fully
-        label: Agree to all of it — they have earned that trust
+        label: Agree to all of it they have earned that trust
         consequences:
           - type: stat
             target: charisma
@@ -62,7 +62,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: agreed_partial
       - id: refuse
-        label: Say you cannot — the debt was freely given, not a contract
+        label: Say you cannot the debt was freely given, not a contract
         consequences:
           - type: relationship
             target: '{debtor.id}'
@@ -79,12 +79,12 @@ nodes:
     id: agreed_fully
     text: >-
       {debtor.name} exhales with their whole body. They finally explain the third thing: they
-      witnessed something they should not have — a meeting between a guild officer and someone
+      witnessed something they should not have a meeting between a guild officer and someone
       connected to the corruption investigation. They need you to keep that information safe. It
       is more than you expected to carry. But you said yes.
     choices:
       - id: share_information
-        label: Decide this is too important to sit on — share it with the right people
+        label: Decide this is too important to sit on share it with the right people
         consequences:
           - type: stat
             target: charisma
@@ -102,7 +102,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: keep_the_secret
-        label: Keep it — you gave your word
+        label: Keep it you gave your word
         consequences:
           - type: stat
             target: cunning
@@ -117,7 +117,7 @@ nodes:
   agreed_partial:
     id: agreed_partial
     text: >-
-      {debtor.name} accepts that — they are grateful for what they can get. The third thing
+      {debtor.name} accepts that they are grateful for what they can get. The third thing
       stays unspoken. You vouch before the council and cover the debt. It costs you more than
       you expected. When it is done, {debtor.name} grips your hand. "When I can tell you the
       rest, I will."
@@ -132,7 +132,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: press_now
-        label: Press them — you need to know what you are involved in
+        label: Press them you need to know what you are involved in
         consequences:
           - type: stat
             target: cunning
@@ -152,7 +152,7 @@ nodes:
       suggests they see it differently. The weight of it sits with you through the morning.
     choices:
       - id: change_mind
-        label: Change your mind — go after them
+        label: Change your mind go after them
         consequences:
           - type: relationship
             target: '{debtor.id}'

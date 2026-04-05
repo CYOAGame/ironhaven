@@ -24,15 +24,15 @@ nodes:
   start:
     id: start
     text: >-
-      Beyond the chamber with the empty plinth, the passage continues. It was not visible before —
+      Beyond the chamber with the empty plinth, the passage continues. It was not visible before
       the angle of the lantern had to be just right. You follow it another fifty paces and step
       through a low arch into a shrine. Intact. Alive, in a way that has nothing to do with
-      candlelight — the carvings seem to move at the edge of your vision. An altar stone holds a
+      candlelight the carvings seem to move at the edge of your vision. An altar stone holds a
       single artifact: a disc of dark metal, inscribed in Karathi, warm to the touch though the
       air down here is freezing. {companion.name} stands beside you, saying nothing.
     choices:
       - id: pray_at_altar
-        label: Kneel and pray — whatever this place is, show it respect
+        label: Kneel and pray whatever this place is, show it respect
         consequences:
           - type: stat
             target: charisma
@@ -46,7 +46,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: prayed
       - id: take_artifact
-        label: Take the disc — it may be the key to something larger
+        label: Take the disc it may be the key to something larger
         consequences:
           - type: stat
             target: cunning
@@ -57,7 +57,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: took_artifact
       - id: destroy_shrine
-        label: Destroy the shrine — this is demon-touched ground
+        label: Destroy the shrine this is demon-touched ground
         consequences:
           - type: stat
             target: strength
@@ -71,7 +71,7 @@ nodes:
         exhaustionCost: 4
         nextNodeId: destroyed
       - id: observe_only
-        label: Touch nothing — observe and leave
+        label: Touch nothing observe and leave
         consequences:
           - type: stat
             target: cunning
@@ -82,7 +82,7 @@ nodes:
   prayed:
     id: prayed
     text: >-
-      Something shifts in the quality of the silence. Not threatening — attentive. As if the
+      Something shifts in the quality of the silence. Not threatening attentive. As if the
       shrine has noticed you. When you rise, your hands are trembling slightly, and {companion.name}
       puts a steadying hand on your shoulder. "Did you feel that?" they whisper. Whatever it was,
       it felt like an answer.
@@ -102,7 +102,7 @@ nodes:
         exhaustionCost: 3
         nextNodeId: null
       - id: leave_respectfully
-        label: Leave respectfully — you have what you came for
+        label: Leave respectfully you have what you came for
         consequences:
           - type: relationship
             target: '{companion.id}'
@@ -114,8 +114,8 @@ nodes:
   took_artifact:
     id: took_artifact
     text: >-
-      The disc is heavier than it looks. The moment it leaves the altar stone, a sound — low,
-      sustained, felt more than heard — moves through the passage. {companion.name} grabs your
+      The disc is heavier than it looks. The moment it leaves the altar stone, a sound low,
+      sustained, felt more than heard moves through the passage. {companion.name} grabs your
       arm. "We need to go. Now." You both run. Behind you, the sound fades. But you are holding
       something you cannot name, and you feel it pulse faintly against your palm all the way home.
     choices:
@@ -147,7 +147,7 @@ nodes:
     text: >-
       You bring your hammer down on the altar stone. The disc shatters with a sound like a scream
       heard underwater. The carvings go dark. {companion.name} backs toward the passage. Something
-      cold and purposeful moves through the air — not wind. Then nothing. The shrine is rubble.
+      cold and purposeful moves through the air not wind. Then nothing. The shrine is rubble.
       You do not feel victorious.
     choices:
       - id: bury_rubble

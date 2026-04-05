@@ -27,7 +27,7 @@ nodes:
     id: start
     text: >-
       A robed figure stands on the well's rim in the square, one hand raised, voice carrying
-      over the noise of the market. {priest.name} speaks of signs — cattle restless at night,
+      over the noise of the market. {priest.name} speaks of signs cattle restless at night,
       stars out of place, a darkness moving in the east. "The old darkness is returning," they
       call out. "And we are not ready." {townsperson.name} stands nearby rolling their eyes.
       Others look uncertain. A few look afraid.
@@ -63,7 +63,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: debated
       - id: ignore_and_walk_on
-        label: Keep walking — town squares always have someone predicting the end
+        label: Keep walking town squares always have someone predicting the end
         consequences:
           - type: stat
             target: cunning
@@ -75,8 +75,8 @@ nodes:
     id: listened
     text: >-
       After the crowd thins, {priest.name} steps down and finds you. Up close their eyes are
-      calm — not feverish, not mad. "You heard me," they say simply. "Most do not. They will."
-      They offer you a small token — a carved wooden disc with a sun-and-crown symbol. "If
+      calm not feverish, not mad. "You heard me," they say simply. "Most do not. They will."
+      They offer you a small token a carved wooden disc with a sun-and-crown symbol. "If
       the darkness comes to your door, this is a reminder of what you are defending."
     choices:
       - id: accept_token
@@ -107,7 +107,7 @@ nodes:
   debated:
     id: debated
     text: >-
-      The crowd leans in. You make reasonable points — correlation is not prophecy, fear
+      The crowd leans in. You make reasonable points correlation is not prophecy, fear
       serves the powerful, and cattle are always restless when the weather turns. {priest.name}
       listens carefully and then says: "You argue well. I hope you are right." They say it
       without malice. {townsperson.name} nods vigorously in your direction.
@@ -125,7 +125,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: stand_by_your_words
-        label: Stand by what you said — you believe it
+        label: Stand by what you said you believe it
         consequences:
           - type: stat
             target: charisma
@@ -136,7 +136,7 @@ nodes:
   ignored:
     id: ignored
     text: >-
-      You are twenty paces away when a child's voice cuts through — "But what if they are
+      You are twenty paces away when a child's voice cuts through "But what if they are
       right?" You do not stop. But the question follows you the rest of the day.
     choices:
       - id: find_priest_later

@@ -24,13 +24,13 @@ nodes:
   start:
     id: start
     text: >-
-      You find it at the end of Tanner's Row — a heavy door set flush with the ground, iron-banded,
+      You find it at the end of Tanner's Row a heavy door set flush with the ground, iron-banded,
       sealed with a lock that has not been touched in years. The moss around the edges says it has
       been shut a long time. {local.name} passes on the far side of the lane, pauses, and looks
       deliberately away. They know something about this place.
     choices:
       - id: break_in
-        label: Force the lock — you have heard enough to justify it
+        label: Force the lock you have heard enough to justify it
         consequences:
           - type: stat
             target: strength
@@ -52,7 +52,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: asked_local
       - id: leave_it
-        label: Leave it sealed — some doors are closed for good reason
+        label: Leave it sealed some doors are closed for good reason
         consequences:
           - type: stat
             target: cunning
@@ -63,7 +63,7 @@ nodes:
   broke_in:
     id: broke_in
     text: >-
-      The lock breaks with a sound like a bone snapping. Cold air rises from below — damp stone
+      The lock breaks with a sound like a bone snapping. Cold air rises from below damp stone
       and something older underneath. The stairs descend into darkness. Your eyes adjust slowly.
       The walls are covered.
     choices:
@@ -79,7 +79,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: descend_quickly
-        label: Go quickly — in and out before anyone notices
+        label: Go quickly in and out before anyone notices
         consequences:
           - type: stat
             target: strength
@@ -93,7 +93,7 @@ nodes:
       {local.name} looks both ways. "Nobody opens that. Not since old Maren's grandfather sealed it.
       He said the symbols inside were a warning." They lower their voice. "Three years back, a mason
       tried to repurpose the space. He left town the same week. Wouldn't say why." They press a
-      key into your palm — warm, as though they have been carrying it ready. "Do what you need to.
+      key into your palm warm, as though they have been carrying it ready. "Do what you need to.
       But do not tell me about it after."
     choices:
       - id: use_key
@@ -108,7 +108,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: return_key
-        label: Thank them and return the key — not today
+        label: Thank them and return the key not today
         consequences:
           - type: relationship
             target: '{local.id}'

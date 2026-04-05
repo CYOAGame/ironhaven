@@ -23,7 +23,7 @@ nodes:
   start:
     id: start
     text: >-
-      A small figure is sitting on the edge of the well in the square, crying quietly —
+      A small figure is sitting on the edge of the well in the square, crying quietly
       the kind of crying that has been going on long enough to run out of sound. {child.name}
       is perhaps seven years old, their face red and wet. When you stop, they look up.
       "I cannot find my mother," they say. Around you, the market crowd flows on without
@@ -57,7 +57,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: asked_child
       - id: keep_walking
-        label: Keep walking — someone else will sort it
+        label: Keep walking someone else will sort it
         consequences:
           - type: faction
             target: village_folk
@@ -100,12 +100,12 @@ nodes:
     id: asked_child
     text: >-
       The child tells you their parent is "tall with a blue hat" and they last saw them
-      "near the loud place" — which turns out to be the forge. You take them there.
+      "near the loud place" which turns out to be the forge. You take them there.
       {parent.name} is sitting against the forge wall, head in their hands, having
       searched the whole wrong side of the square. The child runs the last ten feet.
     choices:
       - id: leave_quietly
-        label: Leave without making a fuss — they have what they need
+        label: Leave without making a fuss they have what they need
         consequences:
           - type: stat
             target: cunning
@@ -116,7 +116,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: speak_to_parent
-        label: Speak to {parent.name} for a moment — make sure the child is all right
+        label: Speak to {parent.name} for a moment make sure the child is all right
         consequences:
           - type: relationship
             target: '{parent.id}'
@@ -132,7 +132,7 @@ nodes:
     id: walked_on
     text: >-
       Fifty paces later you can still hear the faint crying. You do not go back. An hour
-      later, someone else must have helped — the well is empty. The child's face stays
+      later, someone else must have helped the well is empty. The child's face stays
       with you longer than the hour does.
     choices:
       - id: let_it_go

@@ -83,7 +83,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: brush_off
-        label: Politely excuse yourself — not tonight
+        label: Politely excuse yourself not tonight
         consequences:
           - type: faction
             target: village_folk
@@ -126,7 +126,7 @@ nodes:
       chaos. By the end, {festival_organizer.name} clasps your shoulder. "Same time next year?"
     choices:
       - id: agree
-        label: Laugh and agree — you had a good time
+        label: Laugh and agree you had a good time
         consequences:
           - type: relationship
             target: '{festival_organizer.id}'

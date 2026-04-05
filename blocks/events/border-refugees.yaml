@@ -29,14 +29,14 @@ nodes:
   start:
     id: start
     text: >-
-      They arrive at dawn — forty, maybe fifty people. Families with loaded carts, soldiers
+      They arrive at dawn forty, maybe fifty people. Families with loaded carts, soldiers
       without armor. {refugee_leader.name} leads them, exhausted but upright. "The border is
       gone," they say to whoever will listen. "Three villages in two days. We had nowhere else
       to come." {town_elder.name} stands at the gate and looks at you, waiting for someone
       else to decide.
     choices:
       - id: help_them
-        label: Step up — help get the refugees settled inside the walls
+        label: Step up help get the refugees settled inside the walls
         consequences:
           - type: stat
             target: charisma
@@ -78,7 +78,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: exploited
       - id: ignore_them
-        label: Stay out of it — let the town elder deal with it
+        label: Stay out of it let the town elder deal with it
         consequences:
           - type: faction
             target: village_folk
@@ -92,7 +92,7 @@ nodes:
       You find floor space in the warehouse, negotiate with the baker for bread, and help a young
       family carry a bed frame they should not have tried to bring. {refugee_leader.name} finds
       you at the end of it. "You did not have to do that." They press something small into your
-      hand — a carved token, worn smooth. "Where we came from, this means you are kin."
+      hand a carved token, worn smooth. "Where we came from, this means you are kin."
     choices:
       - id: ask_about_the_border
         label: Ask {refugee_leader.name} exactly what they saw at the border
@@ -109,7 +109,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: let_them_rest
-        label: Tell them to rest — there will be time for questions later
+        label: Tell them to rest there will be time for questions later
         consequences:
           - type: relationship
             target: '{refugee_leader.id}'
@@ -121,12 +121,12 @@ nodes:
   exploited:
     id: exploited
     text: >-
-      {refugee_leader.name} agrees — they have no other options. You profit. The transaction is
+      {refugee_leader.name} agrees they have no other options. You profit. The transaction is
       clean. But the warehouse that night is quiet in a way that weighs on you, and you catch
       {refugee_leader.name} watching you with an expression that is not gratitude.
     choices:
       - id: feel_regret
-        label: Feel the wrongness of it — consider making it right
+        label: Feel the wrongness of it consider making it right
         consequences:
           - type: stat
             target: charisma

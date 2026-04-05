@@ -23,7 +23,7 @@ nodes:
       You wake before dawn. The air is cool, the village is quiet, and pale light creeps
       through the shutters. You lie still for a moment, listening to the town breathe.
       Somewhere outside: a dog barking twice and then stopping. The well-rope groaning
-      in the wind. A morning like any other — except for something you cannot name, a
+      in the wind. A morning like any other except for something you cannot name, a
       low-grade alertness behind your sternum.
     choices:
       - id: visit_well
@@ -50,10 +50,10 @@ nodes:
       motions with the particular economy of someone who has not slept. They manage a
       smile when they see you. "Could not sleep either? Strange lights on the ridge last
       night. Did you see them?" They set their bucket down and lower their voice. "Three
-      of them. Moving slow. Not lanterns — lanterns swing. These floated."
+      of them. Moving slow. Not lanterns lanterns swing. These floated."
     choices:
       - id: ask_lights
-        label: Ask what exactly they saw — press for details
+        label: Ask what exactly they saw press for details
         consequences:
           - type: stat
             target: cunning
@@ -87,7 +87,7 @@ nodes:
       urgently, then hold a finger to their lips.
     choices:
       - id: go_down
-        label: Go down — something is wrong
+        label: Go down something is wrong
         consequences:
           - type: relationship
             target: '{neighbor.id}'
@@ -99,7 +99,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: neighbor_describes
       - id: signal_wait
-        label: Hold up a hand — wait there — and pull on your boots first
+        label: Hold up a hand wait there and pull on your boots first
         consequences:
           - type: stat
             target: cunning
@@ -113,7 +113,7 @@ nodes:
       {neighbor.name} speaks in a low, rapid rush. Last night, just past the second
       watch-bell, they saw three lights moving across the ridge above the Ashwood. Slow,
       deliberate, too evenly spaced to be animals. They came down toward the old shepherd
-      track and then simply — stopped. Went out one by one. "I went up this morning
+      track and then simply stopped. Went out one by one. "I went up this morning
       before you were awake," {neighbor.name} says. "There is something there. Marks in
       the ground. I did not go close." They are watching your face carefully.
     choices:
@@ -148,7 +148,7 @@ nodes:
       walk past."
     choices:
       - id: accept_the_trust
-        label: Accept that — go up to the ridge with them
+        label: Accept that go up to the ridge with them
         consequences:
           - type: relationship
             target: '{neighbor.id}'
@@ -160,7 +160,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: at_the_ridge
       - id: suggest_guard
-        label: Suggest they take this to the night watch — carefully
+        label: Suggest they take this to the night watch carefully
         consequences:
           - type: faction
             target: town_guard
@@ -179,7 +179,7 @@ nodes:
       three shallow circles, each about a foot across, pressed into the soft earth in a
       perfect equilateral triangle. The grass inside each circle is yellowed. Dead, but
       not burned. In the centre of the triangle, a single smooth stone that was not there
-      before — you can see the undisturbed moss around where it was placed. {neighbor.name}
+      before you can see the undisturbed moss around where it was placed. {neighbor.name}
       grips your arm. "Someone put that there on purpose."
     choices:
       - id: take_the_stone
@@ -194,7 +194,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: morning_reflection
       - id: leave_stone_in_place
-        label: Leave everything as you found it — you want to watch this spot
+        label: Leave everything as you found it you want to watch this spot
         consequences:
           - type: stat
             target: cunning
@@ -230,7 +230,7 @@ nodes:
       you with its ordinary noise, the ridge behind the roofline, out of sight.
     choices:
       - id: stay_alert
-        label: Keep this to yourself and stay alert — wait and see what comes next
+        label: Keep this to yourself and stay alert wait and see what comes next
         consequences:
           - type: stat
             target: cunning

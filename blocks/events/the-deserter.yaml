@@ -29,9 +29,9 @@ nodes:
   start:
     id: start
     text: >-
-      They are in your woodshed — you only found them because a board creaked wrong. {deserter.name}
+      They are in your woodshed you only found them because a board creaked wrong. {deserter.name}
       is in partial armor, shaking, one hand raised. "Please." Their tabard still has the army's
-      mark on it. "I will not hurt anyone. I just — I cannot go back. You have no idea what is
+      mark on it. "I will not hurt anyone. I just I cannot go back. You have no idea what is
       happening at the front." Outside, {guard_patrol.name} is making their rounds. The next pass
       is in ten minutes.
     choices:
@@ -54,7 +54,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: hid
       - id: turn_in
-        label: Alert {guard_patrol.name} — desertion undermines the defense
+        label: Alert {guard_patrol.name} desertion undermines the defense
         consequences:
           - type: stat
             target: cunning
@@ -88,12 +88,12 @@ nodes:
     id: hid
     text: >-
       {guard_patrol.name}'s footsteps pass. Then quiet. {deserter.name} lets out a long, shaking
-      breath. "Thank you." In the narrow dark of the woodshed, they tell you everything — the
+      breath. "Thank you." In the narrow dark of the woodshed, they tell you everything the
       front line position overrun, the officers abandoning their posts, the thing they saw tear
       apart a fortified gate in under a minute. It is worse than the town knows.
     choices:
       - id: report_intelligence
-        label: Report what they told you — the town needs to know — without naming the deserter
+        label: Report what they told you the town needs to know without naming the deserter
         consequences:
           - type: questline
             target: 'demon_invasion:border_intelligence'
@@ -126,7 +126,7 @@ nodes:
     id: turned_in
     text: >-
       {guard_patrol.name} moves quickly. {deserter.name} does not fight. They look at you once
-      as they are led away — not with anger, which would be easier. The guard nods at you.
+      as they are led away not with anger, which would be easier. The guard nods at you.
       "Right thing to do." You stand in the empty woodshed and try to agree with them.
     choices:
       - id: advocate_for_leniency
@@ -156,14 +156,14 @@ nodes:
   listened:
     id: listened
     text: >-
-      They talk fast. What they describe from the front is catastrophic — supply lines cut,
+      They talk fast. What they describe from the front is catastrophic supply lines cut,
       three senior commanders dead, the line retreating faster than anyone in town has been
       told. "I am not a coward," {deserter.name} says. "I ran because there was nothing left
       to stand in front of." You believe them. {guard_patrol.name} is on their next pass.
       You have seconds.
     choices:
       - id: hide_after_hearing
-        label: Hide them — what they know is worth protecting
+        label: Hide them what they know is worth protecting
         consequences:
           - type: world_fact
             target: hid_deserter
@@ -181,7 +181,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: turn_in_after_hearing
-        label: Turn them in anyway — the army needs to know one of its own broke
+        label: Turn them in anyway the army needs to know one of its own broke
         consequences:
           - type: faction
             target: town_guard

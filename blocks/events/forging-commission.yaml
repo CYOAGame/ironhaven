@@ -24,13 +24,13 @@ nodes:
     id: start
     text: >-
       {noble.name} arrives at your workshop door with two attendants and a folded drawing.
-      They unroll it on your workbench without asking — a ceremonial blade, long and complex,
+      They unroll it on your workbench without asking a ceremonial blade, long and complex,
       with inlaid knotwork along the fuller and a lion-head pommel. "I want this done in two
-      weeks," they say. "In the best steel you can source. The price is negotiable — within
+      weeks," they say. "In the best steel you can source. The price is negotiable within
       reason." Their tone suggests reason has narrow limits.
     choices:
       - id: accept_challenge
-        label: Accept the commission — the work will be difficult but worth it
+        label: Accept the commission the work will be difficult but worth it
         consequences:
           - type: stat
             target: strength
@@ -48,7 +48,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: accepted
       - id: negotiate_terms
-        label: Negotiate — two weeks is too short, and you need better materials
+        label: Negotiate two weeks is too short, and you need better materials
         consequences:
           - type: stat
             target: charisma
@@ -59,7 +59,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: negotiated
       - id: refuse
-        label: Decline — you work on your own terms, not a lord's schedule
+        label: Decline you work on your own terms, not a lord's schedule
         consequences:
           - type: stat
             target: cunning
@@ -114,7 +114,7 @@ nodes:
       me," they say. It sounds like both a warning and an invitation.
     choices:
       - id: begin_with_confidence
-        label: Begin immediately — you have earned better terms, now earn the result
+        label: Begin immediately you have earned better terms, now earn the result
         consequences:
           - type: stat
             target: strength
@@ -149,7 +149,7 @@ nodes:
       between sympathy and admiration.
     choices:
       - id: call_after
-        label: Call after them — offer a counteroffer before they reach the door
+        label: Call after them offer a counteroffer before they reach the door
         consequences:
           - type: stat
             target: charisma

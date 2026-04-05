@@ -21,7 +21,7 @@ nodes:
     text: >-
       The market square is thick with noise and color. Cartloads of turnips, bolts of wool,
       caged geese. {trader.name} catches your eye from behind a stall spread with an unusual
-      jumble — quality pieces mixed with outright junk, as if two estates were emptied at
+      jumble quality pieces mixed with outright junk, as if two estates were emptied at
       once. "Fresh stock," they call out. "Come have a look."
     choices:
       - id: browse
@@ -47,7 +47,7 @@ nodes:
   browse_artifact:
     id: browse_artifact
     text: >-
-      You work slowly through the stall. Most of it is ordinary — until your hand closes
+      You work slowly through the stall. Most of it is ordinary until your hand closes
       on a tarnished bronze compass half-buried under a fold of cloth. The markings on the
       face are not any alphabet you recognise. When you turn it over, there is a name
       scratched into the back: a name you know. {trader.name} watches your face. "Found
@@ -81,7 +81,7 @@ nodes:
     id: barter_opens
     text: >-
       You pitch an offer on a good-quality knife in the front row. {trader.name} counters
-      without hesitation — they know prices well. But mid-negotiation, you notice their
+      without hesitation they know prices well. But mid-negotiation, you notice their
       eyes keep flicking toward a covered box on the back shelf. Something there they do not
       want to sell. Or perhaps something they want to sell very much to the right buyer.
     choices:
@@ -94,7 +94,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: compass_story
       - id: press_knife_deal
-        label: Push the knife deal to a close — you came to buy, not to pry
+        label: Push the knife deal to a close you came to buy, not to pry
         consequences:
           - type: faction
             target: merchant_guild
@@ -106,7 +106,7 @@ nodes:
     id: compass_story
     text: >-
       {trader.name} leans across the stall, voice dropping. The lot came from a sealed
-      house on the coast road — one of three houses cleared after a family disappeared
+      house on the coast road one of three houses cleared after a family disappeared
       last winter. No bodies found. The guild had the goods auctioned quickly, quietly.
       "I asked around," the trader says. "Apparently the father worked for someone in this
       town. Someone who did not want the work talked about." They let that sit.
@@ -124,7 +124,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: trader_reveals
       - id: buy_compass_quietly
-        label: Buy the compass without pressing further — some threads are dangerous to pull
+        label: Buy the compass without pressing further some threads are dangerous to pull
         consequences:
           - type: world_fact
             target: compass_purchased
@@ -138,14 +138,14 @@ nodes:
   trader_reveals:
     id: trader_reveals
     text: >-
-      {trader.name} glances over their shoulder — a small, involuntary thing. "I should
+      {trader.name} glances over their shoulder a small, involuntary thing. "I should
       not say a name in the square," they murmur. "But if you come by the back of the
       stall at the end of market day, I will show you the ledger page I kept. It has
       a seal on it you will recognise." Then they straighten up, voice returning to
       its normal register. "So. The compass. Shall we say two silver?"
     choices:
       - id: agree_to_meeting
-        label: Agree to come back at close of market — and pay for the compass
+        label: Agree to come back at close of market and pay for the compass
         consequences:
           - type: relationship
             target: '{trader.id}'
@@ -160,7 +160,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: decision_node
       - id: decline_meeting
-        label: Pay for the compass but decline the meeting — you are not ready for that trouble
+        label: Pay for the compass but decline the meeting you are not ready for that trouble
         consequences:
           - type: world_fact
             target: compass_purchased
@@ -177,11 +177,11 @@ nodes:
       You haggle back and forth until {trader.name} narrows their eyes, then breaks into
       a reluctant grin. "You drive a hard bargain." They wrap the knife. But before you
       leave, they pull the cloth off that back-shelf box. Inside is a bronze compass
-      with strange markings. "Tell you what," they say. "You take this too — no charge.
+      with strange markings. "Tell you what," they say. "You take this too no charge.
       But I want something in return. Not coin. A small favour, when the time comes."
     choices:
       - id: accept_favor
-        label: Agree to the favour — you are curious enough
+        label: Agree to the favour you are curious enough
         consequences:
           - type: faction
             target: merchant_guild
@@ -198,7 +198,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: decision_node
       - id: decline_favor
-        label: Decline — the knife deal was enough
+        label: Decline the knife deal was enough
         consequences:
           - type: faction
             target: merchant_guild
@@ -209,7 +209,7 @@ nodes:
   decision_node:
     id: decision_node
     text: >-
-      You tuck the compass into your coat. The square churns on around you — arguments
+      You tuck the compass into your coat. The square churns on around you arguments
       over weights, a dog loose among the chickens, the smell of frying onions from
       somewhere near the gate. You have a choice of how you spend the rest of your time
       here. The compass sits warm and strange against your ribs.
@@ -240,7 +240,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: market_end
       - id: say_nothing
-        label: Say nothing to anyone — sit with what you know
+        label: Say nothing to anyone sit with what you know
         consequences:
           - type: stat
             target: cunning
@@ -253,7 +253,7 @@ nodes:
     text: >-
       The market thins in the late afternoon. Stalls fold up, carthorses are led away,
       children chase scraps left by the butcher. {trader.name} gives you a small nod as
-      they pack their goods — a nod that means something, though you are not yet sure what.
+      they pack their goods a nod that means something, though you are not yet sure what.
       The compass is in your pocket. Whatever name is scratched into its back, you have
       time to decide what to do about it.
     choices:

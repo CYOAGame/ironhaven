@@ -22,7 +22,7 @@ nodes:
     id: start
     text: >-
       {caravan_master.name} finds you near the market and leans close. "I kept back some
-      items not for the public stalls. Southern ironwood. A jar of starfire flux — alchemist
+      items not for the public stalls. Southern ironwood. A jar of starfire flux alchemist
       grade. A length of wyvern-gut string." Their voice drops. "These do not come through
       here often. First offer gets them." They name a price that would strain your coin but
       is not impossible.
@@ -43,7 +43,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: bought
       - id: barter
-        label: Offer to barter — you have skills or goods worth trading
+        label: Offer to barter you have skills or goods worth trading
         consequences:
           - type: stat
             target: charisma
@@ -54,7 +54,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: bartered
       - id: pass
-        label: The price is too steep — let this one go
+        label: The price is too steep let this one go
         consequences:
           - type: stat
             target: cunning
@@ -90,8 +90,8 @@ nodes:
     id: bartered
     text: >-
       You spend half an hour going back and forth. {caravan_master.name} is sharp but fair.
-      In the end you trade your labour — a repair job on two wagon wheels and a sharpening
-      of three of their tools — for the ironwood and the flux. Both of you walk away satisfied.
+      In the end you trade your labour a repair job on two wagon wheels and a sharpening
+      of three of their tools for the ironwood and the flux. Both of you walk away satisfied.
     choices:
       - id: start_work_now
         label: Start the repairs immediately to seal the deal
@@ -119,7 +119,7 @@ nodes:
       Some opportunities do not wait.
     choices:
       - id: reconsider
-        label: Turn back — find the coin somehow
+        label: Turn back find the coin somehow
         consequences:
           - type: stat
             target: cunning

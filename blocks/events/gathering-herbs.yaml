@@ -23,14 +23,14 @@ nodes:
   start:
     id: start
     text: >-
-      You head into the forest south of town with a basket and a purpose — the healer's
+      You head into the forest south of town with a basket and a purpose the healer's
       list, a commission for {apothecary.name}, or just the need to get out of walls for
       a while. The Ashwood in morning is another world: mist between the roots, birds you
       cannot see. You find the first patch of what you came for. Then the path splits in
       three directions and you realise you have not paid attention for twenty minutes.
     choices:
       - id: search_carefully
-        label: Move slowly and look for landmarks — find the right herbs first
+        label: Move slowly and look for landmarks find the right herbs first
         consequences:
           - type: stat
             target: cunning
@@ -41,7 +41,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: searched_carefully
       - id: follow_child
-        label: Follow {child.name} — you spotted them darting through the trees
+        label: Follow {child.name} you spotted them darting through the trees
         consequences:
           - type: relationship
             target: '{child.id}'
@@ -53,7 +53,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: followed_child
       - id: venture_deeper
-        label: Go deeper — the good herbs are never near the path
+        label: Go deeper the good herbs are never near the path
         consequences:
           - type: stat
             target: strength
@@ -68,7 +68,7 @@ nodes:
     id: searched_carefully
     text: >-
       An hour of patient work fills half the basket. You find yarrow, a cluster of dried
-      weld, and — pressed against a mossy log — something you do not recognise: dark leaves
+      weld, and pressed against a mossy log something you do not recognise: dark leaves
       shaped like hands, smelling faintly of copper. {apothecary.name} will either know
       it or want to.
     choices:
@@ -84,7 +84,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: leave_it
-        label: Leave the unknown plant alone — you know better
+        label: Leave the unknown plant alone you know better
         consequences:
           - type: stat
             target: cunning
@@ -96,7 +96,7 @@ nodes:
     id: followed_child
     text: >-
       {child.name} knows this forest better than anyone. They lead you to a hollow where
-      the herbs grow thick — feverfew, meadowsweet, and a clump of something purple you
+      the herbs grow thick feverfew, meadowsweet, and a clump of something purple you
       fill both hands with before the child says: "My grandmother says not to eat that one."
       You stop with your hands full.
     choices:
@@ -116,7 +116,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: take_it_anyway
-        label: Take it anyway — eating it and studying it are different
+        label: Take it anyway eating it and studying it are different
         consequences:
           - type: stat
             target: strength
@@ -131,12 +131,12 @@ nodes:
     id: went_deeper
     text: >-
       Half an hour into the deep wood, the path disappears. The trees are older here,
-      bark grey and rough as stone. Your basket is nearly full — you found everything
+      bark grey and rough as stone. Your basket is nearly full you found everything
       and more. Then you hear something large move in the undergrowth ahead. It stops.
       You stop. The forest waits.
     choices:
       - id: back_away_slowly
-        label: Back away without making noise — you have what you need
+        label: Back away without making noise you have what you need
         consequences:
           - type: stat
             target: cunning
@@ -144,7 +144,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: investigate_sound
-        label: Creep forward — you need to know what that was
+        label: Creep forward you need to know what that was
         preconditions:
           - type: trait
             key: cunning

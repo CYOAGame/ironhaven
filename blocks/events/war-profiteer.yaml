@@ -37,7 +37,7 @@ nodes:
       holding out coins that are not enough. The crowd watches, muttering. Nobody is doing anything.
     choices:
       - id: hoard_goods
-        label: Quietly buy as much as you can afford — you will need it
+        label: Quietly buy as much as you can afford you will need it
         consequences:
           - type: stat
             target: cunning
@@ -87,7 +87,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: confronted_profiteer
       - id: do_nothing
-        label: Walk past — this is how war economies work
+        label: Walk past this is how war economies work
         consequences:
           - type: stat
             target: cunning
@@ -106,7 +106,7 @@ nodes:
       else depends on who is doing the judging.
     choices:
       - id: share_some
-        label: Reconsider — share some of what you bought
+        label: Reconsider share some of what you bought
         consequences:
           - type: faction
             target: village_folk
@@ -131,7 +131,7 @@ nodes:
   shared:
     id: shared
     text: >-
-      By evening, word has spread. People come to you — not with money, but with labor, with
+      By evening, word has spread. People come to you not with money, but with labor, with
       small gifts, with the specific gratitude of people who did not expect to be helped. It
       costs you materially. The look on {poor_buyer.name}'s face when you handed them the bread
       stays with you longer than the silver you lost.
@@ -151,7 +151,7 @@ nodes:
         exhaustionCost: 3
         nextNodeId: null
       - id: set_limits
-        label: Help where you can, but set limits — you have your own needs
+        label: Help where you can, but set limits you have your own needs
         consequences:
           - type: faction
             target: village_folk
@@ -167,7 +167,7 @@ nodes:
     text: >-
       {profiteer.name} does not back down. "Supply and demand," they say. "Same as it has always
       been." But the crowd is with you, and they feel it. Three other merchants quietly lower
-      their prices. {profiteer.name} watches this with visible calculation and does the same —
+      their prices. {profiteer.name} watches this with visible calculation and does the same
       slightly. Not because they want to. Because the crowd is still watching.
     choices:
       - id: push_for_price_controls

@@ -30,8 +30,8 @@ nodes:
   start:
     id: start
     text: >-
-      After dark, someone falls into step beside you on a quiet lane. {contact.name} —
-      someone you have seen at the edges of market days — speaks without looking at you.
+      After dark, someone falls into step beside you on a quiet lane. {contact.name}
+      someone you have seen at the edges of market days speaks without looking at you.
       "The guilds tax everything. Guard levies on top of that. Some of us move goods outside
       all that." A pause. "Better prices. No records. You look like someone who understands
       the value of discretion."
@@ -64,7 +64,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: refused
       - id: feign_interest
-        label: Play along — you want to know who else is involved
+        label: Play along you want to know who else is involved
         consequences:
           - type: stat
             target: cunning
@@ -79,13 +79,13 @@ nodes:
     id: heard_out
     text: >-
       {contact.name} describes a network of buyers and sellers operating out of three
-      locations in town — a back room in the tanner's yard, the lower cellars of the
+      locations in town a back room in the tanner's yard, the lower cellars of the
       old mill, a wagon that moves every week. "We have things the caravans do not declare.
       You buy, you sell, you keep quiet." They press a folded note into your hand. "Think
       about it."
     choices:
       - id: join_network
-        label: Agree to participate — the opportunity is real
+        label: Agree to participate the opportunity is real
         consequences:
           - type: relationship
             target: '{contact.id}'
@@ -127,7 +127,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: keep_it_to_yourself
-        label: Say nothing to no one — it is not your problem
+        label: Say nothing to no one it is not your problem
         consequences:
           - type: stat
             target: cunning
@@ -138,13 +138,13 @@ nodes:
   feigned:
     id: feigned
     text: >-
-      You play it well. {contact.name} gives you two names — a grain merchant with a second
+      You play it well. {contact.name} gives you two names a grain merchant with a second
       ledger and a dock hand who runs sealed crates. Real names. Real details. You smile and
       say you will be in touch. When you are alone again, you have a choice about what to do
       with what you know.
     choices:
       - id: use_info_against_them
-        label: Take the names to the guild masters — this is leverage
+        label: Take the names to the guild masters this is leverage
         consequences:
           - type: faction
             target: merchants_guild

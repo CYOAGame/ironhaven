@@ -31,7 +31,7 @@ nodes:
     id: start
     text: >-
       The market square hums with the ordinary noise of a market morning. Bread smells.
-      Argument over change. A child weaving between legs. You have no particular errand —
+      Argument over change. A child weaving between legs. You have no particular errand
       just time to spend and a bit of coin in your pocket. The stalls stretch in two long
       rows toward the well.
     choices:
@@ -41,7 +41,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: browse_stalls
       - id: go_direct
-        label: Head straight to {merchant_a.name}'s stall — you know the stock there
+        label: Head straight to {merchant_a.name}'s stall you know the stock there
         consequences: []
         exhaustionCost: 1
         nextNodeId: specific_stall
@@ -50,7 +50,7 @@ nodes:
     id: browse_stalls
     text: >-
       You work slowly down the first row. Leather goods, dried herbs, cheap tin work.
-      Then you stop. Grain. Four stalls in a row, unrelated sellers — and every one of them
+      Then you stop. Grain. Four stalls in a row, unrelated sellers and every one of them
       is charging exactly twelve copper a bushel. Not eleven, not thirteen. Twelve.
       Every board. Every chalk mark. The same.
     choices:
@@ -66,7 +66,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: notice_prices
       - id: stay_quiet
-        label: Say nothing — just keep walking and watch
+        label: Say nothing just keep walking and watch
         consequences:
           - type: stat
             target: cunning
@@ -82,12 +82,12 @@ nodes:
     text: >-
       {merchant_a.name}'s stall is well-stocked as always. But something is off.
       They are watching the square instead of their customers, and when you pick up a
-      sack of grain and ask the price, they name it without hesitation — twelve copper —
+      sack of grain and ask the price, they name it without hesitation twelve copper
       then look away before you can react. No haggling offered. No charm. As if the
       number were already decided for them.
     choices:
       - id: ask_merchant_a_direct
-        label: Ask {merchant_a.name} why they are not haggling today — that is not like them
+        label: Ask {merchant_a.name} why they are not haggling today that is not like them
         consequences: []
         exhaustionCost: 1
         nextNodeId: ask_merchant_a
@@ -106,18 +106,18 @@ nodes:
   notice_prices:
     id: notice_prices
     text: >-
-      You check three more stalls. Wool prices differ, spice prices differ — but grain,
+      You check three more stalls. Wool prices differ, spice prices differ but grain,
       every time: twelve copper. The number is too clean, too consistent to be coincidence.
       Either someone called a meeting, or someone sent word, or someone made threats.
       {merchant_a.name}'s stall is visible from here.
     choices:
       - id: confront_merchant_a
-        label: Go and confront {merchant_a.name} — they have always been in the thick of things
+        label: Go and confront {merchant_a.name} they have always been in the thick of things
         consequences: []
         exhaustionCost: 1
         nextNodeId: ask_merchant_a
       - id: find_merchant_b
-        label: Look for a smaller seller who might talk — someone with less to lose
+        label: Look for a smaller seller who might talk someone with less to lose
         consequences: []
         exhaustionCost: 1
         nextNodeId: ask_merchant_b
@@ -126,13 +126,13 @@ nodes:
     id: ask_merchant_a
     text: >-
       {merchant_a.name} straightens when you raise the prices. "Supply and demand," they
-      say — too quickly, too flatly. "Grain is short this season. Everyone knows it."
+      say too quickly, too flatly. "Grain is short this season. Everyone knows it."
       You point out that four stalls all arrived at the same number independently. A muscle
       in their jaw tightens. "I set my prices. That is my right." They start rearranging
       a stack of sacks that did not need rearranging.
     choices:
       - id: push_harder
-        label: Push harder — "That is not an explanation, that is a deflection"
+        label: Push harder "That is not an explanation, that is a deflection"
         consequences:
           - type: relationship
             target: merchant_a
@@ -141,7 +141,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: merchant_a_snaps
       - id: back_off
-        label: Back off — you have enough from their reaction alone. Find {merchant_b.name} instead.
+        label: Back off you have enough from their reaction alone. Find {merchant_b.name} instead.
         consequences:
           - type: stat
             target: cunning
@@ -156,15 +156,15 @@ nodes:
       a plea. "You are asking questions about things that are not your business. I would
       strongly suggest you spend your coin and move on." Then they step back, composure
       restored, and give you a merchant's smile. It does not reach their eyes. Someone
-      is watching from a stall across the square — you notice before they look away.
+      is watching from a stall across the square you notice before they look away.
     choices:
       - id: find_merchant_b_after
-        label: Let it go for now. Find {merchant_b.name} — a quieter corner of the market.
+        label: Let it go for now. Find {merchant_b.name} a quieter corner of the market.
         consequences: []
         exhaustionCost: 1
         nextNodeId: ask_merchant_b
       - id: tail_merchant_a_early
-        label: Watch {merchant_a.name} — wait to see if they signal whoever was watching
+        label: Watch {merchant_a.name} wait to see if they signal whoever was watching
         consequences:
           - type: stat
             target: cunning
@@ -176,12 +176,12 @@ nodes:
     id: ask_merchant_b
     text: >-
       You find {merchant_b.name} in the far corner of the square, far from the main
-      rows. Their stall is quiet — deliberately placed, you think, away from the
+      rows. Their stall is quiet deliberately placed, you think, away from the
       others. They are arranging loaves of bread with more attention than the task
       deserves. When you mention the grain prices, their hands stop moving.
     choices:
       - id: press_gently
-        label: Speak gently — "I am not here to cause trouble. I just want to understand."
+        label: Speak gently "I am not here to cause trouble. I just want to understand."
         consequences:
           - type: relationship
             target: merchant_b
@@ -209,7 +209,7 @@ nodes:
       evening. Both axles. At the same time."
     choices:
       - id: ask_about_note
-        label: Ask if they still have the note — or if anyone kept one
+        label: Ask if they still have the note or if anyone kept one
         consequences:
           - type: world_fact
             target: merchant_b_informed
@@ -233,7 +233,7 @@ nodes:
     id: overhear_argument
     text: >-
       Behind a canvas partition, two men are arguing in angry whispers. "The arrangement
-      is already straining — Dorwick is talking." "Dorwick knows better than to talk.
+      is already straining Dorwick is talking." "Dorwick knows better than to talk.
       If he does not, remind him what happened to Farlen's cart." A pause. "The next
       shipment comes through tonight. Make sure the count is right or he will know."
       They separate before you can see their faces. One walks toward the guild hall.
@@ -250,7 +250,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: guild_hall
       - id: note_and_plan
-        label: Do not follow — you might be seen. File it away and think.
+        label: Do not follow you might be seen. File it away and think.
         consequences:
           - type: stat
             target: cunning
@@ -267,7 +267,7 @@ nodes:
       You know enough to know something is wrong. The question is where to pull.
       {merchant_a.name} is still at their stall, watching the square with guarded eyes.
       The guild hall is a short walk. {guard_contact.name} passes the market square on
-      their patrol route — you have spoken to them before. And there is a large warehouse
+      their patrol route you have spoken to them before. And there is a large warehouse
       near the east gate that services most of the market's bulk goods.
     choices:
       - id: follow_merchant_a_choice
@@ -297,7 +297,7 @@ nodes:
       You keep your distance and watch. Mid-morning, {merchant_a.name} hands the stall
       to a boy and slips into the alley that runs behind the tanner's shop. You follow
       at a gap. The alley smells of hide and old water. At the far end, {merchant_a.name}
-      stops and waits, arms folded. Someone else arrives from the other direction —
+      stops and waits, arms folded. Someone else arrives from the other direction
       a figure with a hood up despite the mild weather.
     choices:
       - id: confront_alley_choice
@@ -327,7 +327,7 @@ nodes:
   confront_alley:
     id: confront_alley
     text: >-
-      You step forward. The hooded figure sees you and bolts — fast, practiced, gone
+      You step forward. The hooded figure sees you and bolts fast, practiced, gone
       around the corner before you can move. {merchant_a.name} turns slowly. Their
       expression is not fear. It is something colder. "You have no idea what you have
       done," they say, voice very quiet. "That person keeps things orderly. Without them,
@@ -346,7 +346,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: follow_the_trail
       - id: back_away_alley
-        label: Step back. You have spooked something — regroup.
+        label: Step back. You have spooked something regroup.
         consequences:
           - type: world_fact
             target: merchant_a_warned_you
@@ -358,7 +358,7 @@ nodes:
     id: watch_alley
     text: >-
       {merchant_a.name} takes a small purse and hands it over. The hooded figure tucks
-      it away and produces a sealed letter, thick with something inside — not just paper.
+      it away and produces a sealed letter, thick with something inside not just paper.
       They exchange a few words you cannot hear. You catch one phrase clearly: "the next
       shipment clears tonight." The figure leaves the way they came. {merchant_a.name}
       stands alone for a moment, then pockets the letter and walks back toward the stalls.
@@ -402,7 +402,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: talk_to_clerk
       - id: wait_guild
-        label: Find a chair and wait — see who else comes in
+        label: Find a chair and wait see who else comes in
         consequences:
           - type: stat
             target: cunning
@@ -414,7 +414,7 @@ nodes:
     id: search_records
     text: >-
       The third ledger you pull is the one. Recent entries, past three months. The
-      totals do not add up — not by accident. Someone has added a column to the right
+      totals do not add up not by accident. Someone has added a column to the right
       in a different ink, smaller hand, subtracting amounts before the official total
       is entered. It is not sloppy. It is a system. Whoever is doing this has been
       doing it for a long time. The clerk has not looked up.
@@ -431,7 +431,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: evidence_gathered
       - id: take_ledger
-        label: Take the ledger — this is evidence that might vanish otherwise
+        label: Take the ledger this is evidence that might vanish otherwise
         consequences:
           - type: world_fact
             target: ledger_evidence
@@ -448,15 +448,15 @@ nodes:
   talk_to_clerk:
     id: talk_to_clerk
     text: >-
-      The clerk stops writing when you approach. They are young — mid-twenties at most —
+      The clerk stops writing when you approach. They are young mid-twenties at most
       and there is a tightness around their eyes that has nothing to do with poor light.
       When you ask about recent commodity pricing records, they say the usual forms require
       a guild member's signature to access. Then, very quietly, they add: "If you wanted
-      to speak somewhere less public — the well, at dusk — I am sometimes there.
+      to speak somewhere less public the well, at dusk I am sometimes there.
       For reasons unrelated to work."
     choices:
       - id: agree_well_meeting
-        label: Nod once and leave — you will be at the well at dusk
+        label: Nod once and leave you will be at the well at dusk
         consequences:
           - type: world_fact
             target: clerk_meeting_arranged
@@ -468,7 +468,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: follow_the_trail
       - id: press_clerk_now
-        label: Press them now — "I do not have until dusk. What do you know?"
+        label: Press them now "I do not have until dusk. What do you know?"
         consequences:
           - type: world_fact
             target: clerk_spooked
@@ -484,13 +484,13 @@ nodes:
     id: talk_to_guard
     text: >-
       {guard_contact.name} slows when you fall into step beside them. You mention
-      what you have noticed — the identical prices, the nerves on the sellers. They
+      what you have noticed the identical prices, the nerves on the sellers. They
       keep walking. After a moment: "Grain prices are set by the market. That is not
       a guard matter." But they glance sideways at you. "Who have you spoken to?"
-      There is something in how they ask — careful, not curious.
+      There is something in how they ask careful, not curious.
     choices:
       - id: tell_guard_merchant_b
-        label: Mention {merchant_b.name} — they were more candid than most
+        label: Mention {merchant_b.name} they were more candid than most
         consequences:
           - type: world_fact
             target: guard_informed_of_conspiracy
@@ -517,7 +517,7 @@ nodes:
     id: guard_response
     text: >-
       {guard_contact.name} stops walking. "This is above my rank," they say quietly.
-      "I want you to understand that plainly. But — the captain has been asking questions
+      "I want you to understand that plainly. But the captain has been asking questions
       about the warehouse near the east gate for two weeks. Nothing official. Just questions."
       They resume their patrol. "I have not spoken to you this morning."
     choices:
@@ -543,7 +543,7 @@ nodes:
     text: >-
       The warehouse near the east gate is a squat building with iron fittings on the
       doors and no windows on the ground floor. The main entrance is padlocked. You
-      circle the building. On the north side, a smaller door — a loading entrance —
+      circle the building. On the north side, a smaller door a loading entrance
       sits ajar on one hinge, just enough to squeeze through. Inside, you can hear
       nothing.
     choices:
@@ -556,7 +556,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: break_into_warehouse
       - id: come_back_night
-        label: Come back tonight — if a shipment clears then, the evidence will be fresh
+        label: Come back tonight if a shipment clears then, the evidence will be fresh
         consequences:
           - type: stat
             target: cunning
@@ -570,7 +570,7 @@ nodes:
       The square empties as daylight fades. The clerk arrives at the well a few minutes
       after you, hood up, carrying nothing. They speak without preamble. "A consortium
       of six merchants controls the grain supply into this town. They have been holding
-      back stock in the warehouse to keep prices high. The guild elders know — three of
+      back stock in the warehouse to keep prices high. The guild elders know three of
       them are shareholders. This has been running for two seasons." A pause. "I keep
       the secondary ledger. I can hand it to the right person. The question is who
       that person is."
@@ -591,7 +591,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: evidence_gathered
       - id: suggest_captain
-        label: Suggest the guard captain — you have heard they are already looking at the warehouse
+        label: Suggest the guard captain you have heard they are already looking at the warehouse
         consequences:
           - type: world_fact
             target: clerk_meeting_attended
@@ -606,14 +606,14 @@ nodes:
     id: break_into_warehouse
     text: >-
       Inside, the light is dim and the air smells of old sacking and sawdust. What you
-      find is not an empty building. Crates and sacks are stacked to the rafters —
+      find is not an empty building. Crates and sacks are stacked to the rafters
       grain, mostly, but also dried goods, salt, barrels of preserved meat. Far more than
       any legitimate seasonal buffer would require. Scrawled manifests tacked to the
       stacks list arrival dates going back four months. There is no exit record. None of
       this has moved.
     choices:
       - id: take_manifest
-        label: Take one of the manifests — dates, quantities, no names, but it is evidence
+        label: Take one of the manifests dates, quantities, no names, but it is evidence
         consequences:
           - type: world_fact
             target: warehouse_evidence
@@ -624,7 +624,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: evidence_gathered
       - id: memorise_and_leave
-        label: Memorise what you can and leave the manifest in place — no trace of your visit
+        label: Memorise what you can and leave the manifest in place no trace of your visit
         consequences:
           - type: world_fact
             target: warehouse_evidence
@@ -642,9 +642,9 @@ nodes:
     id: night_warehouse
     text: >-
       After dark, the warehouse is different. Torchlight moves inside. You count four
-      workers shifting crates from one stack to another — not loading for distribution,
+      workers shifting crates from one stack to another not loading for distribution,
       just rearranging, obscuring the count. A man in a grey coat stands at the entrance,
-      watching. He does not help. He supervises. You recognise the grey coat — you have
+      watching. He does not help. He supervises. You recognise the grey coat you have
       seen it near {merchant_a.name}'s stall before.
     choices:
       - id: watch_night
@@ -662,7 +662,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: evidence_gathered
       - id: sabotage_night
-        label: While they are distracted, slip in and spoil a stack of grain — cost them something
+        label: While they are distracted, slip in and spoil a stack of grain cost them something
         consequences:
           - type: world_fact
             target: warehouse_sabotaged
@@ -698,7 +698,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: go_to_captain
       - id: confront_guild_choice
-        label: Go directly to the guild — confront the elders in their own hall
+        label: Go directly to the guild confront the elders in their own hall
         consequences: []
         exhaustionCost: 3
         nextNodeId: confront_guild
@@ -716,7 +716,7 @@ nodes:
   go_to_captain:
     id: go_to_captain
     text: >-
-      The guard captain's office is spare — a desk, a map pinned to the wall, a lamp
+      The guard captain's office is spare a desk, a map pinned to the wall, a lamp
       burning low. They listen without interrupting. When you finish, they sit back and
       look at you for a long moment. "I have been trying to get traction on this for
       three weeks," they say finally. "I kept running into walls. Now I have something to
@@ -724,7 +724,7 @@ nodes:
       And stay away from the market for the next few days."
     choices:
       - id: ask_captain_protection
-        label: Ask if there is any protection on offer — you are the one who handed them the thread
+        label: Ask if there is any protection on offer you are the one who handed them the thread
         consequences:
           - type: faction
             target: town_guard
@@ -735,7 +735,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: captain_acts
       - id: leave_captain_quietly
-        label: Leave without asking for anything — just hand over the evidence and go
+        label: Leave without asking for anything just hand over the evidence and go
         consequences:
           - type: faction
             target: town_guard
@@ -752,7 +752,7 @@ nodes:
       The guild elders meet twice a week in the back chamber. You arrive unannounced
       and push the door open before the clerk can stop you. Five faces turn toward you.
       Two go pale. One reaches for something under the table. You lay out everything
-      you know — the prices, the warehouse, the ledger, the letters. The room is
+      you know the prices, the warehouse, the ledger, the letters. The room is
       completely silent when you finish.
     choices:
       - id: demand_reform
@@ -771,7 +771,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: guild_splits
       - id: let_them_respond
-        label: Say your piece and let them respond — see who speaks first
+        label: Say your piece and let them respond see who speaks first
         consequences:
           - type: world_fact
             target: guild_confronted
@@ -792,7 +792,7 @@ nodes:
       are not threatening. You are simply explaining, very calmly, what you know and
       what you could do with it. Their eyes track from you to the door and back. When
       you finish, they are quiet for a moment. "What is it you want?" they ask at last.
-      "Or — what would it take for you to walk away from this?"
+      "Or what would it take for you to walk away from this?"
     choices:
       - id: accept_cut_choice
         label: Name a price. Coin, and a regular cut of the arrangement.
@@ -810,7 +810,7 @@ nodes:
     text: >-
       {merchant_a.name} names a figure. You counter. They accept, which means you
       should have asked for more. A handshake that means something you will not forget.
-      Walking back through the market, the stalls look different — you know which of
+      Walking back through the market, the stalls look different you know which of
       these people are paying into whose pocket, including now your own. It sits strange.
       Not as bad as it probably should.
     choices:
@@ -835,8 +835,8 @@ nodes:
     text: >-
       {merchant_a.name}'s expression does not change, but something goes out behind
       their eyes. "That is a disappointment," they say. "I had hoped we could be
-      reasonable." They turn back to their stall. On your way home, you become aware —
-      gradually, and then all at once — that you are being followed. Not closely. Just
+      reasonable." They turn back to their stall. On your way home, you become aware
+      gradually, and then all at once that you are being followed. Not closely. Just
       enough to make sure you know.
     choices:
       - id: refuse_ending
@@ -857,7 +857,7 @@ nodes:
     text: >-
       The manifests and notes burn quickly in the hearth of the inn where you have
       been lodging. You watch until every corner is ash. The conspiracy will continue
-      — probably for years, probably until someone better-placed than you brings it
+      probably for years, probably until someone better-placed than you brings it
       down. But it is not your thread to pull, and you are clean. For now, that is enough.
     choices:
       - id: destroy_ending
@@ -873,13 +873,13 @@ nodes:
     id: captain_acts
     text: >-
       By afternoon, the captain has moved. A squad of guards arrives at the warehouse
-      — no announcement, just boots and iron. The arrests start in the early evening:
+      no announcement, just boots and iron. The arrests start in the early evening:
       two guild elders, the man in the grey coat, and a merchant whose name you heard
       in the alley. The market square fills with onlookers. {merchant_a.name} is nowhere
       to be seen. Word spreads quickly that someone talked.
     choices:
       - id: stay_visible
-        label: Stay in the square. Let people see you — you are not hiding.
+        label: Stay in the square. Let people see you you are not hiding.
         consequences:
           - type: world_fact
             target: warehouse_raided
@@ -908,7 +908,7 @@ nodes:
     id: guild_splits
     text: >-
       The guild chamber does not stay quiet long. Two of the elders leave the room
-      without speaking. One — older, white-haired — stands and formally calls for an
+      without speaking. One older, white-haired stands and formally calls for an
       emergency review of the accounts. The youngest elder is already arguing that nothing
       has been proven. The fracture runs clean down the middle, and both sides will
       remember which way you pushed it. {merchant_b.name} will hear about this by morning.
@@ -940,12 +940,12 @@ nodes:
     id: morning_after
     text: >-
       Morning comes. The market opens, quieter than usual. A few stalls are empty.
-      The grain is still twelve copper — it will take time for that to change, if it
+      The grain is still twelve copper it will take time for that to change, if it
       ever does. But the shape of the town feels different. Something has shifted.
       Whether that shift holds, and who it holds for, depends on what you did yesterday.
     choices:
       - id: check_merchant_b
-        label: Stop by {merchant_b.name}'s stall — see how they are holding up
+        label: Stop by {merchant_b.name}'s stall see how they are holding up
         consequences:
           - type: relationship
             target: merchant_b
@@ -970,7 +970,7 @@ nodes:
     text: >-
       {merchant_b.name} is at their stall. They look tired but something has lifted
       from their shoulders. "Word is going around about what happened," they say.
-      "Prices will come down. Not today, but soon." They hand you a small parcel —
+      "Prices will come down. Not today, but soon." They hand you a small parcel
       bread, good quality, wrapped in cloth. "People remember who did what." The town
       thanks you in the way towns do: not loudly, but in small increments over time.
       Somewhere, the conspirators' allies are remembering too.
@@ -995,7 +995,7 @@ nodes:
     text: >-
       The market carries on. The grain is still twelve copper, and now you know why,
       and now it is partly yours. {merchant_a.name} gives you the smallest of nods when
-      your eyes meet across the square. An acknowledgement — nothing more. You are
+      your eyes meet across the square. An acknowledgement nothing more. You are
       richer and you are careful and you are looking over your shoulder in a way that
       will probably become habit. Whether that is a price worth paying is a question
       you have already answered.
@@ -1018,7 +1018,7 @@ nodes:
       The market goes on. Prices stay high. No one gets arrested. No guild elder loses
       their seat. On some level you understand that this is what most of the world looks
       like when nobody presses on it. You know the truth of this particular corner of
-      things, and you carry it the way people carry uncomfortable knowledge — quietly,
+      things, and you carry it the way people carry uncomfortable knowledge quietly,
       and out of habit, looking for where the same pattern shows up somewhere else.
     choices:
       - id: quiet_end

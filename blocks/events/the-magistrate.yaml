@@ -26,9 +26,9 @@ nodes:
     id: start
     text: >-
       Two days after the meeting, a sealed note arrives at your door. The seal is the
-      magistrate's — an unfamiliar hand pressed it. The note is brief: "If you have
+      magistrate's an unfamiliar hand pressed it. The note is brief: "If you have
       further thoughts on the town's direction, I would welcome them. Come at your
-      convenience. — {magistrate.name}." You know {magistrate.name} by reputation:
+      convenience. {magistrate.name}." You know {magistrate.name} by reputation:
       careful, powerful, and not in the habit of wasting their attention on anyone.
     choices:
       - id: accept_invitation
@@ -47,7 +47,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: went
       - id: delay_and_prepare
-        label: Wait two days — you want to think before you speak
+        label: Wait two days you want to think before you speak
         consequences:
           - type: stat
             target: cunning
@@ -55,7 +55,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: prepared
       - id: ignore_the_note
-        label: Leave the note unanswered — powerful people's interest is a trap
+        label: Leave the note unanswered powerful people's interest is a trap
         consequences:
           - type: stat
             target: cunning
@@ -70,14 +70,14 @@ nodes:
   went:
     id: went
     text: >-
-      {magistrate.name}'s office is spare and deliberate — everything placed to tell you
+      {magistrate.name}'s office is spare and deliberate everything placed to tell you
       something about who you are dealing with. They offer wine. They ask three questions
       about the town that are actually one question: where do your loyalties sit? You
       answer as honestly as you dare. They listen in the manner of someone who already
       knows and wants to see if you do.
     choices:
       - id: speak_plainly
-        label: Speak plainly — you are not one for games
+        label: Speak plainly you are not one for games
         consequences:
           - type: stat
             target: charisma
@@ -115,7 +115,7 @@ nodes:
     id: prepared
     text: >-
       When you arrive, {magistrate.name} notes the delay with a half-smile. "Cautious,"
-      they say. "Good." They ask fewer questions than you expected — they already have
+      they say. "Good." They ask fewer questions than you expected they already have
       answers to most of them. What they want is your read on the craftsmen's guild.
       They want it honestly and they are paying attention.
     choices:
@@ -135,7 +135,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: deflect_the_question
-        label: Give a vague answer — the guild is nobody's friend to antagonise
+        label: Give a vague answer the guild is nobody's friend to antagonise
         consequences:
           - type: stat
             target: cunning
@@ -155,7 +155,7 @@ nodes:
       an accusation. "I wondered what that meant." They are still deciding. So are you.
     choices:
       - id: explain_yourself
-        label: Explain — you needed time, not avoidance
+        label: Explain you needed time, not avoidance
         consequences:
           - type: relationship
             target: '{magistrate.id}'

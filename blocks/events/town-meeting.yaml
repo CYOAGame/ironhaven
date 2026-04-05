@@ -29,7 +29,7 @@ nodes:
   start:
     id: start
     text: >-
-      The bell rings three times — the town meeting summons. The hall is packed. {elder_leader.name}
+      The bell rings three times the town meeting summons. The hall is packed. {elder_leader.name}
       stands at the front with a map and a grim expression. The agenda: the town's defences,
       the failing eastern trade route, and the question of whether to send an envoy to the
       capital for help. {concerned_citizen.name} is already on their feet before anyone is
@@ -50,7 +50,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: spoke
       - id: listen_and_assess
-        label: Sit quietly and listen — you want to understand who stands where
+        label: Sit quietly and listen you want to understand who stands where
         consequences:
           - type: stat
             target: cunning
@@ -73,7 +73,7 @@ nodes:
     id: spoke
     text: >-
       The hall goes quiet when you stand. {elder_leader.name} gives you the floor with a
-      slight nod. You make your case — clear, short, direct. {concerned_citizen.name} nods
+      slight nod. You make your case clear, short, direct. {concerned_citizen.name} nods
       vigorously. A merchant in the back crosses their arms. When you sit, the room has
       shifted slightly. Not everyone agrees. But they heard you.
     choices:
@@ -104,7 +104,7 @@ nodes:
       You learn more in two hours of quiet watching than most people learn in a week.
       {elder_leader.name} is hedging. {concerned_citizen.name} is afraid and covering it
       with anger. The merchants want protection for their routes above all else. And someone
-      in the back row is writing everything down — not taking notes. Recording.
+      in the back row is writing everything down not taking notes. Recording.
     choices:
       - id: identify_the_recorder
         label: Find out who is recording the meeting and why
@@ -118,7 +118,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: approach_elder_after
-        label: Speak to {elder_leader.name} after — you have something useful to offer
+        label: Speak to {elder_leader.name} after you have something useful to offer
         consequences:
           - type: relationship
             target: '{elder_leader.id}'
@@ -133,13 +133,13 @@ nodes:
   pushed_agenda:
     id: pushed_agenda
     text: >-
-      You wait until the debate gets circular — it always does — then you speak. Your
+      You wait until the debate gets circular it always does then you speak. Your
       point is targeted and lands at the right moment. The discussion pivots. People
       walk away thinking the outcome was inevitable rather than managed. {elder_leader.name}
       watches you with new attention as the hall empties.
     choices:
       - id: acknowledge_the_move
-        label: Catch the elder's eye and give a small nod — an acknowledgement
+        label: Catch the elder's eye and give a small nod an acknowledgement
         consequences:
           - type: relationship
             target: '{elder_leader.id}'

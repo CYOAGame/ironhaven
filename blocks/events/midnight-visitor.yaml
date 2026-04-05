@@ -23,13 +23,13 @@ nodes:
   start:
     id: start
     text: >-
-      Three knocks. Not loud — careful. It is two hours past midnight and you were
+      Three knocks. Not loud careful. It is two hours past midnight and you were
       not sleeping well anyway. The candle is still burning. Outside: silence between
       each knock. Not drunk. Not panicking. Whoever {visitor.name} is, they chose this
       hour deliberately, and they know you are awake.
     choices:
       - id: open_door
-        label: Open the door — you want to know what this is
+        label: Open the door you want to know what this is
         consequences:
           - type: stat
             target: cunning
@@ -41,7 +41,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: opened
       - id: call_out_first
-        label: Call out without opening — ask who is there
+        label: Call out without opening ask who is there
         consequences:
           - type: stat
             target: cunning
@@ -66,12 +66,12 @@ nodes:
     text: >-
       {visitor.name} steps inside quickly and closes the door behind them. Their hands
       are shaking but their voice is steady. "I need you to hold something for me. Just
-      for two days. I cannot explain why, not fully. But if you are searched — and you
-      will not be, I promise — you need to say you found it. Not that I gave it to you."
+      for two days. I cannot explain why, not fully. But if you are searched and you
+      will not be, I promise you need to say you found it. Not that I gave it to you."
       They press a sealed packet into your hands. It is warm and heavier than it looks.
     choices:
       - id: agree_to_hold
-        label: Agree — two days is not forever, and something about this feels important
+        label: Agree two days is not forever, and something about this feels important
         consequences:
           - type: relationship
             target: '{visitor.id}'
@@ -98,7 +98,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: demanded_answers
       - id: refuse_outright
-        label: Refuse — no explanation means no deal
+        label: Refuse no explanation means no deal
         consequences:
           - type: relationship
             target: '{visitor.id}'
@@ -110,11 +110,11 @@ nodes:
   called_out:
     id: called_out
     text: >-
-      A voice, low: "{visitor.name}. You know me." You do — not well, but enough. The
+      A voice, low: "{visitor.name}. You know me." You do not well, but enough. The
       fact that they came here means something. You weigh the door between you.
     choices:
       - id: open_after_all
-        label: Open the door — the voice tells you enough
+        label: Open the door the voice tells you enough
         consequences:
           - type: stat
             target: cunning
@@ -169,11 +169,11 @@ nodes:
     id: agreed
     text: >-
       {visitor.name} is gone in seconds. You sit with the packet in your lap. You do not
-      open it. The seal is unfamiliar — wax, no crest. It weighs like a decision. Two days,
+      open it. The seal is unfamiliar wax, no crest. It weighs like a decision. Two days,
       they said.
     choices:
       - id: hide_it_well
-        label: Find a secure hiding place — behind the flue, under the floorboard
+        label: Find a secure hiding place behind the flue, under the floorboard
         consequences:
           - type: stat
             target: cunning
@@ -181,7 +181,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: open_it
-        label: Open the seal — you need to know what you are holding
+        label: Open the seal you need to know what you are holding
         consequences:
           - type: stat
             target: cunning
@@ -199,12 +199,12 @@ nodes:
   demanded_answers:
     id: demanded_answers
     text: >-
-      {visitor.name} hesitates. Then they tell you part of it — enough to understand the
+      {visitor.name} hesitates. Then they tell you part of it enough to understand the
       shape of the danger without naming it. Someone important wants this. {visitor.name}
       cannot keep it themselves. "Two days," they say again. "Then it is gone from your life."
     choices:
       - id: agree_with_knowledge
-        label: With that much known — agree to hold it
+        label: With that much known agree to hold it
         consequences:
           - type: world_fact
             target: hidden_packet_held

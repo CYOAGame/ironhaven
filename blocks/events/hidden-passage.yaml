@@ -25,12 +25,12 @@ nodes:
     id: start
     text: >-
       You return to the cellar alone, deeper this time. Behind the far wall of symbols, your
-      lantern catches something — a seam. A door, disguised as stone, fitted so precisely you
+      lantern catches something a seam. A door, disguised as stone, fitted so precisely you
       nearly missed it. A cold draft pushes through the gap. Something is on the other side.
       {companion.name} was with you last time; you could fetch them, or go alone.
     choices:
       - id: go_alone
-        label: Go alone — this is your discovery
+        label: Go alone this is your discovery
         consequences:
           - type: stat
             target: strength
@@ -44,7 +44,7 @@ nodes:
         exhaustionCost: 3
         nextNodeId: went_alone
       - id: fetch_companion
-        label: Fetch {companion.name} — you should not be alone down here
+        label: Fetch {companion.name} you should not be alone down here
         consequences:
           - type: relationship
             target: '{companion.id}'
@@ -56,7 +56,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: brought_companion
       - id: seal_passage
-        label: Wedge it shut — whatever is down there should stay there
+        label: Wedge it shut whatever is down there should stay there
         consequences:
           - type: stat
             target: cunning
@@ -71,7 +71,7 @@ nodes:
     id: went_alone
     text: >-
       The passage runs straight for thirty paces, then opens. You are standing in a low
-      chamber beneath the town square — you can hear the muffled sound of carts above. The
+      chamber beneath the town square you can hear the muffled sound of carts above. The
       walls here are older still, the stone black with age. A single carved plinth stands in
       the center, empty. Whatever stood on it was removed, or escaped. You are alone with
       the silence and what it implies.
@@ -102,7 +102,7 @@ nodes:
   brought_companion:
     id: brought_companion
     text: >-
-      {companion.name} follows you without asking too many questions — they trust you enough
+      {companion.name} follows you without asking too many questions they trust you enough
       for that. When you reach the chamber, you hear them draw a sharp breath. "This is under
       the square," they say. "Right under it." The empty plinth casts a long shadow.
       {companion.name} looks at you. "What do we do?"

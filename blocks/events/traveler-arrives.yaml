@@ -25,9 +25,9 @@ nodes:
   start:
     id: start
     text: >-
-      A stranger slips through the town gate just before dusk — dusty, limping, clutching
+      A stranger slips through the town gate just before dusk dusty, limping, clutching
       a worn leather satchel to their chest. {traveler.name} scans the square with wide,
-      frightened eyes and fixes on you. Not on the nearest face. On yours — specifically.
+      frightened eyes and fixes on you. Not on the nearest face. On yours specifically.
       "Please," they rasp. "I need somewhere safe. Just for tonight." Behind them, {guard.name}
       is watching from the gatehouse. The gate will close in minutes.
     choices:
@@ -79,7 +79,7 @@ nodes:
       You tuck {traveler.name} into the back of the cooperage, behind old barrel staves.
       They press the satchel against their body with both arms. "You have no idea what you
       have done for me," they whisper. "Or what is in here." They look exhausted down to
-      the bone — but their eyes are sharp and calculating. This is someone who thinks
+      the bone but their eyes are sharp and calculating. This is someone who thinks
       even when they are afraid. After a moment: "Do you want to know? I will tell you,
       if you want. You have earned the right to know what you are protecting."
     choices:
@@ -96,7 +96,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: traveler_explains
       - id: leave_them_rest
-        label: Tell them to rest — you will talk in the morning
+        label: Tell them to rest you will talk in the morning
         consequences:
           - type: relationship
             target: '{traveler.id}'
@@ -110,9 +110,9 @@ nodes:
     text: >-
       {guard.name} listens, nods, and takes {traveler.name} firmly by the arm. "You did
       right bringing them in," the guard says to you. "We will look after this." {traveler.name}
-      shoots you a look you cannot quite read — not quite betrayal, not quite anger, something
+      shoots you a look you cannot quite read not quite betrayal, not quite anger, something
       cooler and more considered. As they are led away, the satchel still tucked under their
-      arm, they say quietly — to you specifically: "If they open the satchel, tell them not
+      arm, they say quietly to you specifically: "If they open the satchel, tell them not
       to open it alone."
     choices:
       - id: pass_on_warning
@@ -131,7 +131,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: morning_check_in
       - id: stay_to_observe
-        label: Stay and observe — find out what the guard makes of them
+        label: Stay and observe find out what the guard makes of them
         consequences:
           - type: faction
             target: town_guard
@@ -145,7 +145,7 @@ nodes:
   turned_away:
     id: turned_away
     text: >-
-      {traveler.name} stares at you for a long moment — too tired even for anger — then
+      {traveler.name} stares at you for a long moment too tired even for anger then
       turns and limps back toward the gate. The gate closes at dusk; they will have nowhere
       to go. You watch them go. The satchel knocks against their hip with every step. Two
       hours later, you hear from a neighbor: there was a disturbance at the south postern.
@@ -153,7 +153,7 @@ nodes:
       in the guardhouse now.
     choices:
       - id: reconsider
-        label: Go to the guardhouse — tell them you know this person and vouch for them
+        label: Go to the guardhouse tell them you know this person and vouch for them
         consequences:
           - type: stat
             target: charisma
@@ -185,11 +185,11 @@ nodes:
   traveler_explains:
     id: traveler_explains
     text: >-
-      {traveler.name} speaks in a low, rapid voice. The satchel contains documents —
+      {traveler.name} speaks in a low, rapid voice. The satchel contains documents
       account ledgers, correspondence, and a list of names. Evidence of a systematic
       fraud running through three towns, including Ironhaven. Money diverted from the
       road-tax fund, the building fund for the new mill, charitable donations. The money
-      went to a single account. The name on the account is recognisable — someone with
+      went to a single account. The name on the account is recognisable someone with
       standing in this town. "They sent men after me when I copied the ledgers," the
       traveler says. "The men are a day behind, at most."
     choices:
@@ -209,7 +209,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: complication
       - id: hide_documents_separately
-        label: Separate the documents from the traveler — safer if they are apart
+        label: Separate the documents from the traveler safer if they are apart
         consequences:
           - type: stat
             target: cunning
@@ -223,7 +223,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: complication
       - id: step_back
-        label: This is too large — step back and let the traveler find another way
+        label: This is too large step back and let the traveler find another way
         consequences:
           - type: stat
             target: cunning
@@ -237,11 +237,11 @@ nodes:
   morning_check_in:
     id: morning_check_in
     text: >-
-      Morning. You go to check on {traveler.name} — wherever you stashed them, or in
+      Morning. You go to check on {traveler.name} wherever you stashed them, or in
       the guardhouse waiting room if the guard is the more cooperative sort. They look
       rested in the way of someone who was truly desperate for sleep. The satchel is in
       their lap. They have been awake for a while, thinking. When they see you, something
-      in their posture shifts — the decision to trust you is made, or renewed. They begin
+      in their posture shifts the decision to trust you is made, or renewed. They begin
       to speak.
     choices:
       - id: listen_fully
@@ -254,7 +254,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: traveler_explains
       - id: tell_them_to_stay_put
-        label: Tell them to stay out of sight and wait — you will arrange something
+        label: Tell them to stay out of sight and wait you will arrange something
         consequences:
           - type: relationship
             target: '{traveler.id}'
@@ -272,12 +272,12 @@ nodes:
       By mid-morning, two riders are in the square. Well-dressed, unhurried, asking quiet
       questions of stall-holders. Not guards. Not merchants. Their horses are good and their
       hands say they know how to use what is at their belts. Someone has pointed them in
-      your direction already — you can see it in the way one of them scans the square and
+      your direction already you can see it in the way one of them scans the square and
       pauses when their eyes find you. {traveler.name} is not in sight. The riders have
       not yet spoken to you. You have perhaps a minute.
     choices:
       - id: confront_riders
-        label: Walk directly to the riders and introduce yourself — own the moment
+        label: Walk directly to the riders and introduce yourself own the moment
         preconditions:
           - type: trait
             key: charisma
@@ -292,7 +292,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: resolution
       - id: slip_away_to_traveler
-        label: Turn away before they see you look at them — go warn {traveler.name}
+        label: Turn away before they see you look at them go warn {traveler.name}
         consequences:
           - type: stat
             target: cunning
@@ -303,7 +303,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: resolution
       - id: go_to_guard
-        label: Go directly to {guard.name} — you need the law on your side now
+        label: Go directly to {guard.name} you need the law on your side now
         consequences:
           - type: faction
             target: town_guard
@@ -317,7 +317,7 @@ nodes:
   resolution:
     id: resolution
     text: >-
-      The riders leave at dusk — with or without what they came for, depending on what
+      The riders leave at dusk with or without what they came for, depending on what
       you did. {traveler.name} is either gone, safe, in custody, or sitting at a table
       across from a very uncomfortable town official. The documents are somewhere: in hand,
       in hiding, or destroyed. The name on the account is known to you now. Whether it
@@ -325,7 +325,7 @@ nodes:
       shape of this for a while.
     choices:
       - id: pursue_the_fraud
-        label: Decide to pursue the fraud — this does not end here
+        label: Decide to pursue the fraud this does not end here
         consequences:
           - type: world_fact
             target: pursuing_ironhaven_fraud
@@ -336,7 +336,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: let_it_rest
-        label: Let it settle — you have done what you could for now
+        label: Let it settle you have done what you could for now
         consequences:
           - type: relationship
             target: '{traveler.id}'

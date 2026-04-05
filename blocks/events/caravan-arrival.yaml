@@ -23,7 +23,7 @@ nodes:
   start:
     id: start
     text: >-
-      A line of laden wagons rolls through the gate just after midday — dust-caked canvas,
+      A line of laden wagons rolls through the gate just after midday dust-caked canvas,
       foreign horses, and the smell of spices you cannot name. {caravan_master.name} stands
       on the footboard of the lead wagon calling out the goods in a voice like a town crier.
       {exotic_vendor.name} is already unrolling bolts of southern cloth from the second cart.
@@ -74,13 +74,13 @@ nodes:
   browsed:
     id: browsed
     text: >-
-      The carts hold things you have not seen in Ironhaven before — dark spices in clay jars,
+      The carts hold things you have not seen in Ironhaven before dark spices in clay jars,
       a cage of songbirds with red-tipped wings, blades with a strange rippled grain to the
       steel. {exotic_vendor.name} watches you handle a small bronze mirror, their expression
       professionally neutral. "Interest without coin is just looking," they say pleasantly.
     choices:
       - id: make_a_purchase
-        label: Buy something small — a spice, a curiosity
+        label: Buy something small a spice, a curiosity
         consequences:
           - type: relationship
             target: '{exotic_vendor.id}'
@@ -107,12 +107,12 @@ nodes:
     id: helped_unload
     text: >-
       You spend an hour heaving crates and bundles. {caravan_master.name} passes you a small
-      pouch — a few coins and a paper of dried southern pepper. "You work without complaint,"
+      pouch a few coins and a paper of dried southern pepper. "You work without complaint,"
       they say, looking you over. "We will be here three days. If you want first pick of the
       rare stock before it hits the stalls, come find me at dusk."
     choices:
       - id: accept_offer
-        label: Accept — first pick of the rare stock is worth knowing about
+        label: Accept first pick of the rare stock is worth knowing about
         consequences:
           - type: relationship
             target: '{caravan_master.id}'
@@ -136,7 +136,7 @@ nodes:
     id: met_master
     text: >-
       {caravan_master.name} looks you up and down with the practiced eye of someone who has
-      assessed a thousand strangers. "You live here?" they ask. "Good. Tell me — is the
+      assessed a thousand strangers. "You live here?" they ask. "Good. Tell me is the
       cloth merchant on the corner honest? We had trouble with short-weighing on the last
       run." They have a question, and they are offering something in return.
     choices:
@@ -153,7 +153,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: be_vague
-        label: Keep your answer vague — no sense making enemies either way
+        label: Keep your answer vague no sense making enemies either way
         consequences:
           - type: stat
             target: cunning

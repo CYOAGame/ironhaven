@@ -29,7 +29,7 @@ nodes:
   start:
     id: start
     text: >-
-      You see it clearly: {thief.name} — young, maybe fourteen — slides a hand into
+      You see it clearly: {thief.name} young, maybe fourteen slides a hand into
       {victim.name}'s coat pocket as they browse the bread stall. A purse, small, comes
       out and vanishes into {thief.name}'s sleeve in one smooth motion. {victim.name}
       notices nothing. {guard.name} is on the far side of the square with their back turned.
@@ -60,7 +60,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: alerted
       - id: let_it_go
-        label: Let it go — you have no idea what drives a person to this
+        label: Let it go you have no idea what drives a person to this
         consequences:
           - type: stat
             target: cunning
@@ -82,7 +82,7 @@ nodes:
   chased:
     id: chased
     text: >-
-      {thief.name} runs like a cat — over the bread cart, through the alley, up a wall
+      {thief.name} runs like a cat over the bread cart, through the alley, up a wall
       you do not entirely clear. You catch them at the dead end behind the tanner's.
       They are breathing hard. So are you. The purse is in their hand. They are younger
       up close. And they are frightened.
@@ -133,7 +133,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: move_on
-        label: Your part is done — move on
+        label: Your part is done move on
         consequences: []
         exhaustionCost: 0
         nextNodeId: null
@@ -142,7 +142,7 @@ nodes:
     id: let_go
     text: >-
       {thief.name} is gone in three seconds. {victim.name} browses on. The purse is
-      probably already a street away. You wonder, briefly, what drove them to it —
+      probably already a street away. You wonder, briefly, what drove them to it
       hunger, desperation, habit. You wonder if that matters. You go about your day.
     choices:
       - id: check_on_victim
@@ -165,11 +165,11 @@ nodes:
     text: >-
       {thief.name} leads you three blocks before ducking into a cellar entrance. You wait.
       After a few minutes you realise there are at least two other children down there.
-      A small operation — not theft for pleasure. You can see the bones of their situation
+      A small operation not theft for pleasure. You can see the bones of their situation
       from here without seeing their faces.
     choices:
       - id: report_location
-        label: Report the location to {guard.name} — this is more organised than one kid
+        label: Report the location to {guard.name} this is more organised than one kid
         consequences:
           - type: faction
             target: town_guard

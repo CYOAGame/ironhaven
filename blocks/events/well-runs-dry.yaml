@@ -23,7 +23,7 @@ nodes:
   start:
     id: start
     text: >-
-      The morning line at the well is gone — because there is no water to draw. {elder.name} stands
+      The morning line at the well is gone because there is no water to draw. {elder.name} stands
       at the rim, looking down with a grim expression. "It has not been dry in my lifetime," they
       say. Around the square, people look worried.
     choices:
@@ -71,7 +71,7 @@ nodes:
   down_the_well:
     id: down_the_well
     text: >-
-      You descend on a rope. The stone walls are damp but not wet — the water table has simply
+      You descend on a rope. The stone walls are damp but not wet the water table has simply
       dropped. At the bottom, you find something lodged in a crack: a bundle of cloth, deliberately
       stuffed to block a secondary channel. Someone did this on purpose.
     choices:
@@ -139,7 +139,7 @@ nodes:
       insultingly high.
     choices:
       - id: pay_it
-        label: Pay what they ask — the town needs water
+        label: Pay what they ask the town needs water
         consequences:
           - type: faction
             target: village_folk
@@ -150,7 +150,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: haggle_hard
-        label: Refuse to be gouged — negotiate a fair price
+        label: Refuse to be gouged negotiate a fair price
         preconditions:
           - type: skill
             key: haggling

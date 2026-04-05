@@ -27,7 +27,7 @@ nodes:
       smile does not reach their eyes. "You would remember someone like that."
     choices:
       - id: deny_knowledge
-        label: Shake your head — you have not seen anyone like that
+        label: Shake your head you have not seen anyone like that
         consequences:
           - type: stat
             target: cunning
@@ -38,7 +38,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: denied
       - id: point_wrong_way
-        label: Send them toward the south road — wrong direction
+        label: Send them toward the south road wrong direction
         consequences:
           - type: stat
             target: cunning
@@ -49,7 +49,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: misdirected
       - id: tell_truth
-        label: Tell them what you know — this is not your fight
+        label: Tell them what you know this is not your fight
         consequences:
           - type: world_fact
             target: betrayed_traveler
@@ -88,7 +88,7 @@ nodes:
     id: misdirected
     text: >-
       The riders exchange a glance, then wheel their horses south. You watch them go, heart
-      hammering. You bought some time. Possibly a day, possibly less — depending on how long before
+      hammering. You bought some time. Possibly a day, possibly less depending on how long before
       they figure out you lied.
     choices:
       - id: use_time_wisely
@@ -114,7 +114,7 @@ nodes:
   told_truth:
     id: told_truth
     text: >-
-      {stranger.name}'s expression shifts — something colder underneath. "Good. We thought so." A
+      {stranger.name}'s expression shifts something colder underneath. "Good. We thought so." A
       coin lands in the dirt at your feet. They ride back toward town without another word. You do
       not pick up the coin.
     choices:

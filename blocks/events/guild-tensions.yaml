@@ -27,7 +27,7 @@ nodes:
       The argument spills out of the guild hall and into the lane. {craftsman.name} jabs a
       finger at {merchant.name}, face red. "You import shoddy foreign goods and call it trade!
       You are strangling every skilled hand in this town!" The merchant crosses their arms.
-      "I sell what the market demands — unlike your guild, which demands without producing."
+      "I sell what the market demands unlike your guild, which demands without producing."
       A crowd is forming. Neither of them has noticed you yet, which means you still have
       a choice about how you enter this.
     choices:
@@ -85,7 +85,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: mediated
       - id: watch_and_leave
-        label: Watch in silence — you want to understand before acting
+        label: Watch in silence you want to understand before acting
         consequences:
           - type: stat
             target: cunning
@@ -103,7 +103,7 @@ nodes:
       "Another guild lapdog." They walk away with the deliberate pace of someone who is not
       finished, only postponing. The craftsman grips your arm. "We will remember our friends
       when it matters." The crowd disperses. {craftsman.name} lowers their voice. "The import
-      ledgers the merchant is hiding — I have seen copies. Come to the hall tonight. There
+      ledgers the merchant is hiding I have seen copies. Come to the hall tonight. There
       is more to this than a street argument."
     choices:
       - id: agree_to_hall_meeting
@@ -131,11 +131,11 @@ nodes:
     id: sided_merchant
     text: >-
       {merchant.name} gives you a thin, satisfied smile. {craftsman.name} spits on the
-      cobblestones and storms off — "You will regret this," they call back. The merchant
+      cobblestones and storms off "You will regret this," they call back. The merchant
       smooths their coat. "Sensible. Come walk with me. There is opportunity for people
       who understand how trade actually works. The guild is trying to force a new levy on
       imports. If it passes, half the market stalls will empty within the year. I need
-      someone to carry a message to the alderman — a private message. No names. You would
+      someone to carry a message to the alderman a private message. No names. You would
       be doing the whole town a service."
     choices:
       - id: agree_to_carry_message
@@ -167,15 +167,15 @@ nodes:
     id: mediated
     text: >-
       Both parties glare at you, then at each other. The crowd disperses, muttering.
-      Neither is truly satisfied — but the shouting stops. {craftsman.name} shakes their
+      Neither is truly satisfied but the shouting stops. {craftsman.name} shakes their
       head. "Pretty words do not fix a broken market." {merchant.name} straightens their
       coat. "At least someone here has some sense." Before they separate, you catch
-      something pass between them — not a word, but a look. The look of two people who
+      something pass between them not a word, but a look. The look of two people who
       have had this conversation before, who know exactly where it ends, and who are
       playing to a different audience than the crowd.
     choices:
       - id: press_for_meeting
-        label: Suggest they meet formally with a neutral party present — you
+        label: Suggest they meet formally with a neutral party present you
         consequences:
           - type: stat
             target: charisma
@@ -189,7 +189,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: learns_stakes
       - id: follow_the_merchant
-        label: Let them go — but follow the merchant at a distance
+        label: Let them go but follow the merchant at a distance
         consequences:
           - type: stat
             target: cunning
@@ -206,7 +206,7 @@ nodes:
       You drift to the edge of the crowd and keep still. You hear it all. Trade rights.
       Import fees. An alderman who has been taking payments from both guilds. A vote
       scheduled for the end of the month that could reshape commerce in Ironhaven for
-      a generation. Neither {craftsman.name} nor {merchant.name} notices you watching —
+      a generation. Neither {craftsman.name} nor {merchant.name} notices you watching
       or if they do, they do not care. You are just another face. That is useful.
     choices:
       - id: approach_craftsman_alone
@@ -237,17 +237,17 @@ nodes:
   learns_stakes:
     id: learns_stakes
     text: >-
-      Whatever thread brought you here — the guild hall, a private conversation, or a
-      quiet piece of information gathered from the edge of a crowd — the core of the
+      Whatever thread brought you here the guild hall, a private conversation, or a
+      quiet piece of information gathered from the edge of a crowd the core of the
       dispute is the same: there is a vote in three days before the town aldermen. The
       craftsmen's guild wants a protective levy on imported goods. The merchants want it
       blocked. The alderman who will cast the deciding vote is a man who has taken money
-      from both sides. He is, at this moment, undecided — or rather, waiting to see
+      from both sides. He is, at this moment, undecided or rather, waiting to see
       which side applies more pressure. You have been handed the shape of the lever.
       The question is what you do with it.
     choices:
       - id: approach_alderman
-        label: Go to the alderman directly — let them know you understand the situation
+        label: Go to the alderman directly let them know you understand the situation
         consequences:
           - type: stat
             target: cunning
@@ -284,7 +284,7 @@ nodes:
     id: confrontation
     text: >-
       Whatever move you made, the board shifts. {craftsman.name} and {merchant.name}
-      both know something has changed by the end of the day — you can read it in the
+      both know something has changed by the end of the day you can read it in the
       way they each give you a slightly longer look when your paths cross in the square.
       The vote will happen. The outcome is no longer certain. And your position in
       the space between these two factions has been established, whether you intended
@@ -321,7 +321,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: stay_neutral
-        label: Stay neutral — your value is precisely that you have not committed
+        label: Stay neutral your value is precisely that you have not committed
         consequences:
           - type: stat
             target: cunning

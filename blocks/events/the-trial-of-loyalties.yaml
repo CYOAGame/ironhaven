@@ -43,7 +43,7 @@ nodes:
     id: start
     text: >-
       Morning light falls flat across the square. You are barely awake when the shouting
-      begins — {accuser.name}'s voice cutting through the ordinary noise like a blade.
+      begins {accuser.name}'s voice cutting through the ordinary noise like a blade.
       A crowd forms fast, the way crowds do when there is something sharp to gather around.
       At the center: {accuser.name}, red-faced and righteous, dragging {accused.name}
       toward the steps where {judge.name} sits in a chair carried out for the purpose.
@@ -56,7 +56,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: watch_the_scene
       - id: push_forward
-        label: Push through the crowd to get closer — you know {accused.name}
+        label: Push through the crowd to get closer you know {accused.name}
         consequences: []
         exhaustionCost: 1
         nextNodeId: watch_the_scene
@@ -64,7 +64,7 @@ nodes:
   watch_the_scene:
     id: watch_the_scene
     text: >-
-      {accused.name} is protesting — voice cracked, hands out, the posture of someone
+      {accused.name} is protesting voice cracked, hands out, the posture of someone
       trying not to seem desperate and failing. {accuser.name} holds up a sack of grain
       and turns it in the air so the crowd can see the store mark stamped on the burlap.
       "Found in their home. In their cellar." The crowd murmurs and shifts. Some faces
@@ -72,7 +72,7 @@ nodes:
       watching everything, giving nothing away.
     choices:
       - id: speak_for_accused
-        label: Step forward — "I know {accused.name}. This is wrong."
+        label: Step forward "I know {accused.name}. This is wrong."
         consequences:
           - type: relationship
             target: accused
@@ -85,7 +85,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: speak_for_accused
       - id: speak_for_accuser
-        label: Nod along — the evidence is plain. Say so to the person beside you.
+        label: Nod along the evidence is plain. Say so to the person beside you.
         consequences:
           - type: relationship
             target: accuser
@@ -112,7 +112,7 @@ nodes:
       You step forward and the crowd parts slightly, the way crowds do when someone
       commits to a position. "I know {accused.name}. They have lived in this town for
       years. They fed people during the last shortage, not stole from them." {accuser.name}
-      turns to you with a look you will remember — patient, almost amused. "Then explain
+      turns to you with a look you will remember patient, almost amused. "Then explain
       the grain," they say. "Explain the store mark. Explain why it was in their cellar."
       The crowd waits. {judge.name} is watching you now.
     choices:
@@ -130,7 +130,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: stay_silent
       - id: retreat_gracefully
-        label: Falter — you have nothing to counter with. Step back.
+        label: Falter you have nothing to counter with. Step back.
         consequences:
           - type: relationship
             target: accused
@@ -146,7 +146,7 @@ nodes:
     id: speak_for_accuser
     text: >-
       You agree with the man beside you, loudly enough for {accuser.name} to hear.
-      They find you afterward in the press of bodies and grip your arm — grateful, warm,
+      They find you afterward in the press of bodies and grip your arm grateful, warm,
       the handshake of someone collecting allies. "Good. The town needs people who can
       see clearly." You feel a small flush of satisfaction before something quieter
       asks whether clarity was what you were actually practicing.
@@ -164,7 +164,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: investigation_hub
       - id: feel_uncertain
-        label: Pull away slightly — you are not sure you meant to be recruited.
+        label: Pull away slightly you are not sure you meant to be recruited.
         consequences:
           - type: stat
             target: cunning
@@ -176,14 +176,14 @@ nodes:
     id: stay_silent
     text: >-
       You hold your ground and hold your tongue. {judge.name} calls for anyone with
-      knowledge of the matter to come forward before the trial proper — which will be
+      knowledge of the matter to come forward before the trial proper which will be
       held at noon. The crowd begins to break apart, people taking their interpretations
       with them. As the square empties you see {witness.name} still standing near the
       well, not moving, arms wrapped around themselves despite the warmth of the morning.
       They look at you. It lasts a second longer than a stranger's glance would.
     choices:
       - id: approach_witness
-        label: Walk toward {witness.name} — that look meant something
+        label: Walk toward {witness.name} that look meant something
         consequences:
           - type: relationship
             target: witness
@@ -205,7 +205,7 @@ nodes:
     text: >-
       {witness.name} does not run, but they hold themselves very still as you close
       the distance, the way an animal stays still hoping not to be seen. When you are
-      close enough to speak quietly, they speak first — barely above a breath. "I saw
+      close enough to speak quietly, they speak first barely above a breath. "I saw
       something that night. What they said about {accused.name}." A pause. They look
       at the ground, then back at you. "It wasn't them. But I cannot say it here.
       Not in the open. Not where people would hear who said it."
@@ -234,7 +234,7 @@ nodes:
     text: >-
       {witness.name} shakes their head and takes a small step back. "My family works
       the guard rotation schedule. Three of us. If I open my mouth and {accuser.name}
-      hears about it — and they will — that ends." They say it flatly, the way someone
+      hears about it and they will that ends." They say it flatly, the way someone
       describes weather. Not a threat, just a fact they have been carrying for hours.
       "I am not a coward. I just need it to matter if I speak. I need to know
       someone will do something with what I say."
@@ -288,7 +288,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: find_witness_privately
       - id: talk_to_accuser_choice
-        label: Approach {accuser.name} — gauge them directly
+        label: Approach {accuser.name} gauge them directly
         consequences: []
         exhaustionCost: 1
         nextNodeId: confront_accuser
@@ -303,7 +303,7 @@ nodes:
     text: >-
       The guard post smells of woodsmoke and old boots. {accused.name} is sitting
       against the back wall on a bench worn smooth by years of people sitting on it
-      in exactly this kind of trouble. They look up when you enter — something shifts
+      in exactly this kind of trouble. They look up when you enter something shifts
       in their face, hope or the fear of hope, it is hard to tell the difference.
       "I was at home that night. Alone." They say it like a confession, knowing
       how it sounds. "I have no proof of that. I know how that sounds."
@@ -337,14 +337,14 @@ nodes:
     text: >-
       {accused.name} is quiet for a moment, and then: "There is something. I did not
       mention it because it sounds like nothing." They pull at a loose thread on their
-      sleeve. "I heard {accuser.name} outside my window that night. Late — after the
+      sleeve. "I heard {accuser.name} outside my window that night. Late after the
       second bell. Moving something. I thought they were on patrol. I thought it was
       crates being shifted at the store. I thought it was nothing." They look at you.
       "I should have looked. I did not look." The silence that follows is the exact
       shape of hindsight.
     choices:
       - id: note_accuser_timing
-        label: Thank them and go — that timing matters.
+        label: Thank them and go that timing matters.
         consequences:
           - type: world_fact
             target: accused_heard_accuser
@@ -355,7 +355,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: investigation_hub
       - id: ask_about_guilt
-        label: Ask the question you have been sitting with — "Have you ever taken anything? Even small?"
+        label: Ask the question you have been sitting with "Have you ever taken anything? Even small?"
         consequences:
           - type: relationship
             target: accused
@@ -390,7 +390,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: investigation_hub
       - id: judge_admission
-        label: Step back — you are not sure what to do with that.
+        label: Step back you are not sure what to do with that.
         consequences:
           - type: relationship
             target: accused
@@ -406,7 +406,7 @@ nodes:
     id: investigate_stores
     text: >-
       The town stores are a long, low building with thick walls built to keep cool.
-      The door is open — a guard waved you in when you explained you were looking
+      The door is open a guard waved you in when you explained you were looking
       into things. Inside: grain bins, salt barrels, cured meat hanging from hooks.
       You go to the door itself and crouch down. The lock is intact. No damage, no
       gouge marks, no sign of forcing. Whoever opened this used a key.
@@ -423,7 +423,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: who_has_keys
       - id: look_around_more
-        label: Keep looking before you talk to anyone — check the bins, the floor
+        label: Keep looking before you talk to anyone check the bins, the floor
         consequences:
           - type: world_fact
             target: investigated_stores
@@ -488,7 +488,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: witness_refuses_at_first
       - id: thank_witness_carefully
-        label: Thank them and ask them to stay quiet for now — you need to think
+        label: Thank them and ask them to stay quiet for now you need to think
         consequences:
           - type: world_fact
             target: witness_told_player
@@ -502,7 +502,7 @@ nodes:
       {witness.name} closes their eyes for a moment. "I want to. I keep telling myself
       I should." They open them again. "But {accuser.name} controls who gets put on the
       harvest detail. My son is eighteen. He needs that work. If I stand up in that
-      square and point my finger and nothing comes of it —" They stop. They do not
+      square and point my finger and nothing comes of it" They stop. They do not
       finish the sentence. They do not need to. The consequences of failure are a
       thing they have already mapped out in full.
     choices:
@@ -538,10 +538,10 @@ nodes:
     id: examine_evidence
     text: >-
       The grain sack sits on the edge of the magistrate's table, alone in the way that
-      pieces of evidence are always alone — suddenly significant, loaded with meaning
+      pieces of evidence are always alone suddenly significant, loaded with meaning
       they did not have an hour ago. You pick it up. Turn it. The store mark is clear.
       Then something else: near the bottom of the burlap, a smudge pressed into the
-      weave. It took a moment to read. A seal impression — partial, blurred, but the
+      weave. It took a moment to read. A seal impression partial, blurred, but the
       shape is there. A ring pressed into wet grain dust. The shape of it matches the
       kind of ring a guard officer wears on their right hand.
     choices:
@@ -557,7 +557,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: investigation_hub
       - id: take_sack_to_judge
-        label: Take the sack directly to {judge.name} right now — before the trial
+        label: Take the sack directly to {judge.name} right now before the trial
         consequences:
           - type: world_fact
             target: found_seal_impression
@@ -600,7 +600,7 @@ nodes:
   accuser_threatens:
     id: accuser_threatens
     text: >-
-      {accuser.name} moves closer — not aggressive, just intimate, the way a person
+      {accuser.name} moves closer not aggressive, just intimate, the way a person
       stands when they want a conversation to stay between two people. "You are making
       an accusation about a guard officer," they say, "based on what? Someone told
       you something? You found something you think you understand?" The ease is back,
@@ -632,16 +632,16 @@ nodes:
   accuser_offers_deal:
     id: accuser_offers_deal
     text: >-
-      Something shifts in {accuser.name}'s posture — a fraction. The calculation
+      Something shifts in {accuser.name}'s posture a fraction. The calculation
       behind the eyes. "Look," they say, voice dropping further. "I will be honest with
       you. {accused.name} is not innocent. They have been light-fingered with the stores
       for over a year. Small amounts. Nothing anyone would move on." A pause. "The
       evidence was arranged. I will grant you that. But the guilt is real. I just
-      made sure the proof existed. Is that not what justice requires — that the guilty
+      made sure the proof existed. Is that not what justice requires that the guilty
       face consequences?"
     choices:
       - id: accept_accusers_logic
-        label: Consider it — there is a version of this where they have a point
+        label: Consider it there is a version of this where they have a point
         consequences:
           - type: world_fact
             target: considered_accusers_logic
@@ -676,7 +676,7 @@ nodes:
     id: accept_accusers_logic
     text: >-
       You stand with it. The guilty facing consequences. The outcome correct even if
-      the path was not. There is a version of this that holds together — a pragmatic
+      the path was not. There is a version of this that holds together a pragmatic
       version, the kind of justice that actually works in the world as it exists rather
       than the world as it should be. You are not certain it is wrong. You are not
       certain it is right either. The trial is in two hours and you are standing in the
@@ -711,8 +711,8 @@ nodes:
     id: reject_accuser
     text: >-
       {accuser.name} looks at you for a long moment. The warm calculation fades.
-      What replaces it is not anger — something more measured, more patient.
-      "You are going to regret this," they say, and it is not quite a threat — it is
+      What replaces it is not anger something more measured, more patient.
+      "You are going to regret this," they say, and it is not quite a threat it is
       a prediction, offered with the confidence of someone who has been in this town
       long enough to know how it works. They turn and walk away before you can answer.
       The trial is in two hours. They will be ready. The question is whether you will be.
@@ -748,7 +748,7 @@ nodes:
       to move on. But consistent. And {accused.name} stopped paying three months ago.
     choices:
       - id: discover_motive
-        label: Follow the thread all the way — you need to know who else is involved
+        label: Follow the thread all the way you need to know who else is involved
         consequences:
           - type: stat
             target: cunning
@@ -771,7 +771,7 @@ nodes:
     id: discover_motive
     text: >-
       The ledger woman is the one who makes it complete. She shows you, without comment,
-      three pages of entries in a secondary column — supplementary collections, marked
+      three pages of entries in a secondary column supplementary collections, marked
       with initials. She shows you where {accused.name}'s initials stop appearing.
       She shows you the date. She does not say what it means. She closes the ledger.
       "I have shown you nothing," she says. "If anyone asks, I showed you nothing."
@@ -798,7 +798,7 @@ nodes:
     text: >-
       This is not a theft trial. It is a message. {accuser.name} found a way to punish
       {accused.name} for refusing to pay, and they found a way to make the punishment
-      look like justice. If it works — if {accused.name} is convicted — every other
+      look like justice. If it works if {accused.name} is convicted every other
       merchant in town will know what happens to people who stop cooperating. The grain
       sack is not evidence of a crime. It is a demonstration of power. And {judge.name}
       is about to give it a verdict.
@@ -815,7 +815,7 @@ nodes:
   trial_begins:
     id: trial_begins
     text: >-
-      Noon. The square fills again, more formally this time — people arranged in a
+      Noon. The square fills again, more formally this time people arranged in a
       loose arc around the magistrate's table, {judge.name} standing behind it.
       {accused.name} stands to one side, pale and very still. {accuser.name} stands
       opposite, composed, the grain sack on the table between them. {judge.name}
@@ -824,7 +824,7 @@ nodes:
       one, and looks at you.
     choices:
       - id: present_full_truth_choice
-        label: Step forward. Present everything — evidence, motive, the protection racket.
+        label: Step forward. Present everything evidence, motive, the protection racket.
         consequences:
           - type: stat
             target: cunning
@@ -832,7 +832,7 @@ nodes:
         exhaustionCost: 3
         nextNodeId: present_full_truth
       - id: present_partial_truth_choice
-        label: Step forward. Present the planted evidence — but leave the rest out.
+        label: Step forward. Present the planted evidence but leave the rest out.
         consequences: []
         exhaustionCost: 2
         nextNodeId: present_partial_truth
@@ -857,7 +857,7 @@ nodes:
     id: present_full_truth
     text: >-
       You lay it out piece by piece. The lock that showed no forcing. The three key
-      holders — none of them {accused.name}. The seal impression on the burlap.
+      holders none of them {accused.name}. The seal impression on the burlap.
       The ledger entries and the date they stop. What {witness.name} saw before dawn.
       The supplementary fees and who collected them. You speak steadily and you do not
       look at {accuser.name} because if you look at them you might stop. When you
@@ -865,7 +865,7 @@ nodes:
       has gone the color of old ash.
     choices:
       - id: witness_testifies_after_full
-        label: Look at {witness.name} in the crowd — the moment is now, if they are going to take it
+        label: Look at {witness.name} in the crowd the moment is now, if they are going to take it
         consequences:
           - type: relationship
             target: witness
@@ -887,13 +887,13 @@ nodes:
     text: >-
       You speak to the lock. The key holders. The seal impression. You do not mention
       the ledger, the fees, the pattern that connects this moment to a longer cruelty.
-      You give {judge.name} enough to call the evidence into question — enough to
-      create reasonable doubt — but you stop short of the thing that would end
+      You give {judge.name} enough to call the evidence into question enough to
+      create reasonable doubt but you stop short of the thing that would end
       {accuser.name} completely. A compromise you will have to decide whether you
       made for good reasons or convenient ones.
     choices:
       - id: witness_testifies_after_partial
-        label: Catch {witness.name}'s eye — they can fill in what you left out
+        label: Catch {witness.name}'s eye they can fill in what you left out
         consequences:
           - type: relationship
             target: witness
@@ -917,7 +917,7 @@ nodes:
     id: stay_silent_at_trial
     text: >-
       You do not step forward. The moment passes. {judge.name} nods once and begins
-      presenting the evidence as submitted — the grain sack, the store mark, the
+      presenting the evidence as submitted the grain sack, the store mark, the
       testimony of {accuser.name} who found it. The trial that follows is brief, the way
       trials are when the evidence only goes one direction. {witness.name} catches your
       eye once from across the square. You look away first. Some things you do not
@@ -938,7 +938,7 @@ nodes:
       {witness.name} steps forward. They move through the crowd with the careful walk
       of someone who has decided something and is not allowing themselves to think about
       it too carefully or they will stop. They stand beside you. They do not look at
-      {accuser.name} when they speak — they look at {judge.name}. They describe what
+      {accuser.name} when they speak they look at {judge.name}. They describe what
       they saw before dawn, in their own words, in the voice of someone who is frightened
       and doing it anyway. When they finish, {accuser.name} starts to speak. {judge.name}
       holds up a hand. {accuser.name} stops.
@@ -967,7 +967,7 @@ nodes:
       placed, yes. But {accused.name} is still a thief. That is still true." The words
       fall into the silence of the square like stones into still water. Admission and
       accusation in the same breath. {judge.name}'s expression does not change but
-      something behind their eyes does — the final calculation completing. The town
+      something behind their eyes does the final calculation completing. The town
       is very quiet. Everyone is waiting to learn what kind of place they live in.
     choices:
       - id: judge_deliberates_choice
@@ -986,11 +986,11 @@ nodes:
   judge_deliberates:
     id: judge_deliberates
     text: >-
-      {judge.name} is still for a long moment. When they speak, they speak carefully —
+      {judge.name} is still for a long moment. When they speak, they speak carefully
       the way someone speaks when they know the words will be repeated and they want
       them repeated accurately. "Evidence obtained through deception cannot stand.
       This court does not concern itself with what a person may have done in some
-      other time and place — only with what is proven here, today." They look at
+      other time and place only with what is proven here, today." They look at
       {accuser.name}. "That is not a protection of the guilty. It is a protection of
       all of us." The verdict will follow. Its shape depends on what you brought.
     choices:
@@ -1003,7 +1003,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: justice_served
       - id: accused_convicted_partial
-        label: "{judge.name} looks uncertain — the partial truth left room for doubt"
+        label: "{judge.name} looks uncertain the partial truth left room for doubt"
         consequences:
           - type: world_fact
             target: judge_compromised
@@ -1015,7 +1015,7 @@ nodes:
     id: accused_convicted
     text: >-
       The verdict is guilty. {accused.name} receives it standing up, which takes more
-      than you gave them credit for. They are to be exiled — given until morning to
+      than you gave them credit for. They are to be exiled given until morning to
       leave the town. As they are led away, they find you in the crowd. The look they
       give you is not hatred. It is something harder to carry than hatred. It is the
       look of someone who expected something from you and is adjusting that expectation
@@ -1048,7 +1048,7 @@ nodes:
       {accused.name} is free. The words are simple and the reality is complicated, the
       way freedom always is when it comes at a cost to someone else. {accuser.name} is
       stripped of their guard rank before the square has finished processing what happened
-      — {judge.name} moves quickly when they move. The guard unit shuffles. People
+      {judge.name} moves quickly when they move. The guard unit shuffles. People
       are recalibrating. You have made an enemy who was, until this morning,
       a respected officer of the town. You know it and you stand with it.
     choices:
@@ -1084,7 +1084,7 @@ nodes:
     id: compromise_reached
     text: >-
       {accused.name} is freed with a formal warning and the cloud of the accusation
-      still hanging over them — not convicted, but not vindicated either. {accuser.name}
+      still hanging over them not convicted, but not vindicated either. {accuser.name}
       is quietly reassigned to a post outside the town walls. The ledger entries are
       not mentioned. The protection racket is not named. Everyone who knows about it
       knows that everyone else knows about it, and nothing is said. The town functions.
@@ -1123,12 +1123,12 @@ nodes:
       not finished being said.
     choices:
       - id: witness_gratitude_choice
-        label: Find {witness.name} — they went home after the square cleared
+        label: Find {witness.name} they went home after the square cleared
         consequences: []
         exhaustionCost: 1
         nextNodeId: witness_gratitude
       - id: accuser_revenge_choice
-        label: Take stock of your surroundings — the day does not feel finished
+        label: Take stock of your surroundings the day does not feel finished
         consequences: []
         exhaustionCost: 1
         nextNodeId: accuser_revenge
@@ -1144,7 +1144,7 @@ nodes:
       You find {witness.name} in the lane outside their house, sitting on the step
       with their hands on their knees. They look up when you approach. "I keep waiting
       to feel better," they say. "I thought it would feel better than this." They pause.
-      "It does not feel bad. It is just — different than I expected." You sit with them
+      "It does not feel bad. It is just different than I expected." You sit with them
       for a while. You do not have to say much. Some days the company is the thing,
       not the words. When you leave, they call after you. "Thank you. For being someone
       I could tell." You carry that differently than you carry most things.
@@ -1220,7 +1220,7 @@ nodes:
   reflection:
     id: reflection
     text: >-
-      The journal entry writes itself the way the honest ones always do — the hand
+      The journal entry writes itself the way the honest ones always do the hand
       moving faster than the editing instinct, getting it down before the comfortable
       version sets in. You write what happened and what you did and what you did not do.
       You write what {accused.name}'s face looked like. What {witness.name}'s voice

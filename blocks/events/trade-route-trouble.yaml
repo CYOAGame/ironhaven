@@ -27,8 +27,8 @@ nodes:
   start:
     id: start
     text: >-
-      {merchant_driver.name} has not left the tavern in two days. The eastern road — their
-      only route to market — has had three attacks in a fortnight. Bandits, they say.
+      {merchant_driver.name} has not left the tavern in two days. The eastern road their
+      only route to market has had three attacks in a fortnight. Bandits, they say.
       Or worse. {scout.name} confirms it: the old road past the mill bridge is being watched.
       {merchant_driver.name} looks at you over their ale. "I need to move this shipment.
       The town needs what I am carrying. But I cannot do it alone."
@@ -67,7 +67,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: alternate
       - id: stay_put
-        label: Advise them to wait — moving now is too dangerous
+        label: Advise them to wait moving now is too dangerous
         consequences:
           - type: stat
             target: cunning
@@ -81,7 +81,7 @@ nodes:
   escorted:
     id: escorted
     text: >-
-      The first hour is quiet — too quiet. At the mill bridge, three figures step from the
+      The first hour is quiet too quiet. At the mill bridge, three figures step from the
       treeline. Not bandits. Hollow-eyed, jerking wrong, their blades too long. {merchant_driver.name}
       goes pale. {scout.name}'s voice comes low behind you: "Move. Now."
     choices:
@@ -104,7 +104,7 @@ nodes:
         exhaustionCost: 4
         nextNodeId: null
       - id: run_and_split
-        label: Scatter — the driver takes the woods, you draw their attention
+        label: Scatter the driver takes the woods, you draw their attention
         consequences:
           - type: stat
             target: cunning
@@ -153,7 +153,7 @@ nodes:
     text: >-
       {merchant_driver.name} stares at their hands. They know you are right. The town goes
       short on supplies another few days. Word spreads that the roads are no longer safe.
-      {scout.name} catches your eye and gives a small nod — you read the situation honestly,
+      {scout.name} catches your eye and gives a small nod you read the situation honestly,
       even if nobody thanks you for it.
     choices:
       - id: help_plan_alternatives

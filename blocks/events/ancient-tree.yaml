@@ -22,7 +22,7 @@ nodes:
   start:
     id: start
     text: >-
-      You find it deep in the Ashwood — an oak that should not be possible. Three men could
+      You find it deep in the Ashwood an oak that should not be possible. Three men could
       not link hands around its trunk. The bark is carved in patterns you half-recognise:
       the same shapes from the shrine in the cellar. The same shapes from the passage below
       the square. The roots have pushed up the ground in a ring and the air smells of stone
@@ -56,7 +56,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: cut_branch
       - id: pray_beneath_it
-        label: Lay your hand on the bark and say something — even if you do not know what
+        label: Lay your hand on the bark and say something even if you do not know what
         consequences:
           - type: stat
             target: charisma
@@ -70,7 +70,7 @@ nodes:
   studied:
     id: studied
     text: >-
-      {scholar.name} shows you their notes. The carvings are a map — not of roads, but of
+      {scholar.name} shows you their notes. The carvings are a map not of roads, but of
       something beneath them. Confluences. Nodes. The tree sits at the centre of a web that
       includes the cellar, the passage, the old mill, and a point outside town you cannot
       identify. "This was not made by human hands," {scholar.name} says quietly. "Or not
@@ -89,7 +89,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: tell_the_town
-        label: This is too important to keep secret — the town should know
+        label: This is too important to keep secret the town should know
         consequences:
           - type: stat
             target: charisma
@@ -106,7 +106,7 @@ nodes:
   cut_branch:
     id: cut_branch
     text: >-
-      The blade meets no resistance — the wood is impossibly dense but it cuts as though it
+      The blade meets no resistance the wood is impossibly dense but it cuts as though it
       wants to. The branch is heavier than it looks, warm to the touch. As you pull it free,
       every bird in the nearby wood falls silent at once. {scholar.name} looks up from their
       notes. Then back down. They say nothing. But they write something.
@@ -124,7 +124,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: carry_branch_home
-        label: Wrap the branch and carry it home — you will figure out what it is
+        label: Wrap the branch and carry it home you will figure out what it is
         consequences:
           - type: world_fact
             target: ancient_branch_held
@@ -136,7 +136,7 @@ nodes:
     id: prayed
     text: >-
       You are not sure what you said. Something honest. The bark vibrates very slightly
-      under your hand — or you imagine it. {scholar.name} pauses their writing without
+      under your hand or you imagine it. {scholar.name} pauses their writing without
       looking at you. After a long moment the sensation fades. You feel both lighter
       and more aware of your own weight than you did before.
     choices:

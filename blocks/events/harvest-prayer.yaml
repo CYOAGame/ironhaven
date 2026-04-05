@@ -29,7 +29,7 @@ nodes:
     id: start
     text: >-
       The whole community is gathering at the edge of the first grain field. {priest.name}
-      leads a circle of prayer before the harvest begins — an old rite, older than the
+      leads a circle of prayer before the harvest begins an old rite, older than the
       current church, really, but nobody mentions that. {old_farmer.name} stands at the
       back, hat in hands, eyes closed. The smell of turned earth and coming rain fills
       the morning air.
@@ -50,7 +50,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: participated
       - id: observe_from_edge
-        label: Stand at the edge and observe — respectful but not committed
+        label: Stand at the edge and observe respectful but not committed
         consequences:
           - type: faction
             target: village_folk
@@ -61,7 +61,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: observed
       - id: slip_away
-        label: Slip away — you have work to do and cannot spare the morning
+        label: Slip away you have work to do and cannot spare the morning
         consequences:
           - type: faction
             target: village_folk
@@ -75,7 +75,7 @@ nodes:
   participated:
     id: participated
     text: >-
-      The prayer is long and repetitive in the way that old words are — worn smooth by
+      The prayer is long and repetitive in the way that old words are worn smooth by
       use. {priest.name} draws a mark in the soil and speaks a promise on behalf of the
       whole village. {old_farmer.name} cracks one eye open and looks at you. Afterward
       they clap you on the shoulder. "Good to see a young one still showing up," they say.
@@ -108,13 +108,13 @@ nodes:
   observed:
     id: observed
     text: >-
-      You watch from outside the circle. There is something in the moment — not religious,
+      You watch from outside the circle. There is something in the moment not religious,
       exactly, but communal in a way that catches you off guard. These people have done
       this together for generations. {old_farmer.name} opens their eyes after the prayer
       and sees you standing apart. They say nothing, but their expression is not unkind.
     choices:
       - id: step_in_next_time
-        label: Make a quiet note to yourself — you will join next year
+        label: Make a quiet note to yourself you will join next year
         consequences:
           - type: faction
             target: village_folk

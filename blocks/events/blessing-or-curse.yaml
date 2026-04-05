@@ -52,7 +52,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: sought_help
       - id: embrace_it
-        label: Embrace whatever it is — the benefits are real
+        label: Embrace whatever it is the benefits are real
         consequences:
           - type: stat
             target: strength
@@ -84,7 +84,7 @@ nodes:
       you use it for."
     choices:
       - id: use_it_sparingly
-        label: Heed the warning — use whatever gift this is sparingly
+        label: Heed the warning use whatever gift this is sparingly
         consequences:
           - type: stat
             target: cunning
@@ -112,7 +112,7 @@ nodes:
     text: >-
       You lean into it. Your work goes better. Your body aches less. People seem to listen
       to you more readily. {wise_woman.name} watches you from across the market a few days
-      later. She does not approach. But her expression is not disapproving — it is cautious.
+      later. She does not approach. But her expression is not disapproving it is cautious.
       Like someone watching a fire that has not yet decided what to burn.
     choices:
       - id: check_in_with_her

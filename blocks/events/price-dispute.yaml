@@ -27,7 +27,7 @@ nodes:
     id: start
     text: >-
       The shouting starts at the grain stall. {buyer.name} has a fistful of coins and is
-      shaking them at {seller.name}. "You doubled the price since last week! You doubled it —
+      shaking them at {seller.name}. "You doubled the price since last week! You doubled it
       I can count!" {seller.name} sets their jaw. "Supply is down. The whole eastern harvest
       is short. Blame the rain." A ring of onlookers has formed. Someone has to do something,
       or this will turn physical.
@@ -44,7 +44,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: mediated
       - id: side_with_buyer
-        label: Back the buyer — price gouging is wrong
+        label: Back the buyer price gouging is wrong
         consequences:
           - type: faction
             target: village_folk
@@ -59,7 +59,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: sided_buyer
       - id: side_with_seller
-        label: Back the seller — supply and demand is the law of trade
+        label: Back the seller supply and demand is the law of trade
         consequences:
           - type: faction
             target: merchants_guild
@@ -105,7 +105,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: move_on
-        label: Nod and move on — the moment is past
+        label: Nod and move on the moment is past
         consequences: []
         exhaustionCost: 0
         nextNodeId: null
@@ -130,7 +130,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: leave_it
-        label: Let it sit — you said your piece
+        label: Let it sit you said your piece
         consequences: []
         exhaustionCost: 0
         nextNodeId: null
@@ -152,7 +152,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: decline_coin
-        label: Decline — you did not do it for payment
+        label: Decline you did not do it for payment
         consequences:
           - type: stat
             target: charisma
@@ -172,7 +172,7 @@ nodes:
       watches you leave with the sack and says nothing. Both of them stare. You have the grain.
     choices:
       - id: keep_it
-        label: Keep it for yourself — food stored is security
+        label: Keep it for yourself food stored is security
         consequences:
           - type: world_fact
             target: food_stockpiled

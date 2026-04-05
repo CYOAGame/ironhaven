@@ -23,14 +23,14 @@ nodes:
   start:
     id: start
     text: >-
-      You hear it from two different people before you believe it: {traitor.name} — someone you
-      trusted, helped, maybe confided in — has been talking. Not just talking. They gave information
+      You hear it from two different people before you believe it: {traitor.name} someone you
+      trusted, helped, maybe confided in has been talking. Not just talking. They gave information
       about you to the wrong people: to the guard, to the merchants, to someone else's scheme.
       Your name in the wrong mouth at the wrong time. You find them at the end of the day, alone,
       and they know from your face that you know.
     choices:
       - id: confront_directly
-        label: Confront them directly — you want to hear it from them
+        label: Confront them directly you want to hear it from them
         consequences:
           - type: stat
             target: charisma
@@ -42,7 +42,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: confronted
       - id: cut_ties_silently
-        label: Say nothing — walk past them and cut them out of your life
+        label: Say nothing walk past them and cut them out of your life
         consequences:
           - type: stat
             target: cunning
@@ -57,7 +57,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: cut_ties
       - id: forgive
-        label: Approach them calmly — ask why, then consider forgiving
+        label: Approach them calmly ask why, then consider forgiving
         consequences:
           - type: stat
             target: charisma
@@ -72,13 +72,13 @@ nodes:
   confronted:
     id: confronted
     text: >-
-      {traitor.name} does not deny it. They explain — badly. Pressure from above, fear for their
+      {traitor.name} does not deny it. They explain badly. Pressure from above, fear for their
       own skin, a debt they could not refuse. None of it makes it right, and they know it. "I did
       not think it would reach you like this," they say, which is perhaps the worst thing they
       could say. Your hands are very still.
     choices:
       - id: rage
-        label: Let your anger out — they deserve to hear all of it
+        label: Let your anger out they deserve to hear all of it
         consequences:
           - type: stat
             target: strength
@@ -93,7 +93,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: cold_dismissal
-        label: Tell them you have nothing more to say to them — and mean it
+        label: Tell them you have nothing more to say to them and mean it
         consequences:
           - type: stat
             target: cunning
@@ -108,7 +108,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: demand_amends
-        label: Demand they make it right — there is still a chance to fix this
+        label: Demand they make it right there is still a chance to fix this
         consequences:
           - type: stat
             target: charisma
@@ -124,7 +124,7 @@ nodes:
     text: >-
       {traitor.name} calls after you. You do not stop. That night, you go through your memories
       and identify everything they might have heard from you. The accounting is bitter work. You
-      adjust your behavior accordingly. This is what the end of trust looks like — not drama, just
+      adjust your behavior accordingly. This is what the end of trust looks like not drama, just
       a door closing quietly.
     choices:
       - id: protect_yourself
@@ -150,13 +150,13 @@ nodes:
   forgave:
     id: forgave
     text: >-
-      {traitor.name} tells you everything — who asked, what was given, what was held back.
+      {traitor.name} tells you everything who asked, what was given, what was held back.
       It is a full accounting. Whether it absolves them is your call. "I am sorry," they say,
       and it sounds genuine. "I was afraid." You sit with that for a moment. Fear is understandable.
       It is not the same as forgivable. But it is a starting place.
     choices:
       - id: extend_forgiveness
-        label: Forgive them — but make clear it cannot happen again
+        label: Forgive them but make clear it cannot happen again
         consequences:
           - type: stat
             target: charisma
@@ -172,7 +172,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: forgive_but_distance
-        label: Forgive them in your heart — but keep your distance going forward
+        label: Forgive them in your heart but keep your distance going forward
         consequences:
           - type: stat
             target: charisma

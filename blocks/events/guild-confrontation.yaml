@@ -43,7 +43,7 @@ nodes:
     text: >-
       The town square fills with bodies. On one side: craftsmen with folded arms and hard faces.
       On the other: merchants in fine coats. {guild_master.name} and {schemer.name} face each other
-      across ten feet of cobblestone. Someone has posted the charter loophole on the notice board —
+      across ten feet of cobblestone. Someone has posted the charter loophole on the notice board
       your name, if you are involved, sits at the edge of everyone's awareness. The crowd watches.
       This is the moment.
     choices:
@@ -113,12 +113,12 @@ nodes:
   spoke_for_guild:
     id: spoke_for_guild
     text: >-
-      Your voice cuts through the noise. You lay out the guild's case — fair wages, local craft,
+      Your voice cuts through the noise. You lay out the guild's case fair wages, local craft,
       the town's own prosperity. The craftsmen cheer. {schemer.name} watches you with cold eyes.
       The crowd shifts. This is not over, but the momentum has changed.
     choices:
       - id: press_advantage
-        label: Press the advantage — demand the loophole be closed
+        label: Press the advantage demand the loophole be closed
         consequences:
           - type: faction
             target: craftsmen_guild
@@ -152,10 +152,10 @@ nodes:
       You argue free trade, lower prices for common folk, the right of the market to self-correct.
       The merchants applaud. {guild_master.name} gives you a look of quiet contempt.
       {crowd_member.name} mutters something unflattering under their breath. The merchants have
-      won this round — but you have made enemies among the craftsmen.
+      won this round but you have made enemies among the craftsmen.
     choices:
       - id: accept_the_fallout
-        label: Accept the craftsmen's anger — it was worth it
+        label: Accept the craftsmen's anger it was worth it
         consequences:
           - type: faction
             target: craftsmen_guild
@@ -178,7 +178,7 @@ nodes:
   arbitration:
     id: arbitration
     text: >-
-      Silence. Then {guild_master.name} and {schemer.name} look at each other — neither wanting to
+      Silence. Then {guild_master.name} and {schemer.name} look at each other neither wanting to
       be seen refusing reason in front of the whole town. Grudgingly, both agree to arbitration.
       The crowd disperses, unsatisfied but calm. You have bought the town time. What the arbitrators
       decide is another matter.

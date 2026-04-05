@@ -25,11 +25,11 @@ nodes:
     text: >-
       {rival.name} finds you at your workbench and leans against the doorframe with a grin that
       is half-friendly and entirely competitive. "I hear you have been doing good work. So have I.
-      Let us settle it properly — a contest. Best piece by sundown, judged by three folk from
+      Let us settle it properly a contest. Best piece by sundown, judged by three folk from
       the market. Loser buys the winner's supper."
     choices:
       - id: accept_fairly
-        label: Accept — fair competition, may the better work win
+        label: Accept fair competition, may the better work win
         consequences:
           - type: relationship
             target: '{rival.id}'
@@ -42,7 +42,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: competed_fairly
       - id: cheat
-        label: Accept — and spend the morning cutting corners cleverly
+        label: Accept and spend the morning cutting corners cleverly
         consequences:
           - type: stat
             target: cunning
@@ -54,7 +54,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: cheated
       - id: decline
-        label: Decline gracefully — you have more important things today
+        label: Decline gracefully you have more important things today
         consequences:
           - type: relationship
             target: '{rival.id}'
@@ -71,12 +71,12 @@ nodes:
     id: competed_fairly
     text: >-
       By sundown you have produced something you are genuinely proud of. So has {rival.name}. The
-      judges debate for twenty minutes, then split their vote two-to-one — in your favor, by the
+      judges debate for twenty minutes, then split their vote two-to-one in your favor, by the
       slimmest margin. {rival.name} laughs and extends a hand. "Fair enough. You earned it."
       Supper is warm and the conversation is better.
     choices:
       - id: be_generous_winner
-        label: Offer to split the cost of supper — you are gracious in victory
+        label: Offer to split the cost of supper you are gracious in victory
         consequences:
           - type: relationship
             target: '{rival.id}'
@@ -91,7 +91,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: enjoy_victory
-        label: Let them pay — you won, fair and square
+        label: Let them pay you won, fair and square
         consequences:
           - type: relationship
             target: '{rival.id}'
@@ -107,11 +107,11 @@ nodes:
     id: cheated
     text: >-
       Your piece wins, but the second judge squints at the joints for too long before reluctantly
-      agreeing. {rival.name} shakes your hand, but there is something in their eyes — a flicker
+      agreeing. {rival.name} shakes your hand, but there is something in their eyes a flicker
       of doubt. They pay for supper and say nothing more about it. You eat in mild discomfort.
     choices:
       - id: confess
-        label: Confess over supper — you are not proud of it
+        label: Confess over supper you are not proud of it
         consequences:
           - type: stat
             target: charisma
@@ -141,12 +141,12 @@ nodes:
   declined:
     id: declined
     text: >-
-      {rival.name} shrugs. "Another time, then." They do not seem offended — just mildly amused.
+      {rival.name} shrugs. "Another time, then." They do not seem offended just mildly amused.
       As they go, you wonder if you passed up something worth having: a good contest and a fair
       witness to your work.
     choices:
       - id: reconsider
-        label: Call them back — actually, you have time after all
+        label: Call them back actually, you have time after all
         consequences:
           - type: relationship
             target: '{rival.id}'

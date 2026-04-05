@@ -25,7 +25,7 @@ nodes:
     text: >-
       The sky goes green at noon. Wind strips leaves from the market trees in a single gust.
       By the time you hear the thunder, the rain is already sheeting sideways. The street
-      empties in seconds. {neighbor.name}'s shutters are flapping open down the lane — they
+      empties in seconds. {neighbor.name}'s shutters are flapping open down the lane they
       are old and cannot reach them. {traveler.name} is pressed under a cart across the
       square, soaked and looking for somewhere to go. You have seconds before the worst
       of it arrives.
@@ -58,7 +58,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: sheltered_traveler
       - id: brave_the_storm
-        label: Head out into it — someone needs to check the market stalls
+        label: Head out into it someone needs to check the market stalls
         consequences:
           - type: stat
             target: strength
@@ -74,7 +74,7 @@ nodes:
     text: >-
       You get the shutters latched just as the worst hits. Inside, {neighbor.name}'s small
       house shudders. They bring out bread and a blanket without asking. You wait out
-      the storm together. They talk — about the last great storm, about the town before
+      the storm together. They talk about the last great storm, about the town before
       your time, about their husband who died in winter. You listen.
     choices:
       - id: listen_all_the_way_through
@@ -105,13 +105,13 @@ nodes:
     id: sheltered_traveler
     text: >-
       {traveler.name} drips on your floor and cannot stop shaking. They were on the road
-      when it hit — three hours from the last town. When the lightning is over they look
+      when it hit three hours from the last town. When the lightning is over they look
       at you differently. "I would have been out there all night," they say. Over the
       candle you learn they are carrying a sealed letter to the magistrate. They did not
       mean to tell you that. The storm has a way of loosening things.
     choices:
       - id: ask_about_letter
-        label: Ask about the letter — casually, but ask
+        label: Ask about the letter casually, but ask
         consequences:
           - type: stat
             target: cunning
@@ -122,7 +122,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: offer_food_and_say_nothing
-        label: Give them food and leave them to dry — their business is their own
+        label: Give them food and leave them to dry their business is their own
         consequences:
           - type: relationship
             target: '{traveler.id}'
@@ -144,7 +144,7 @@ nodes:
       you saved will remember.
     choices:
       - id: find_shelter_after
-        label: Find shelter and rest — you earned it
+        label: Find shelter and rest you earned it
         consequences:
           - type: stat
             target: strength

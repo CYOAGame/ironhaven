@@ -26,13 +26,13 @@ nodes:
   start:
     id: start
     text: >-
-      The cellar walls are covered floor to ceiling in symbols — not scratched but carved, deep
+      The cellar walls are covered floor to ceiling in symbols not scratched but carved, deep
       and deliberate, by hands that knew what they were doing. Spirals connected to straight lines.
       Eyes. Figures with too many limbs. And in the center of the far wall, a phrase repeated in
       three languages, two of which you cannot read. The one you can says: DO NOT OPEN THE WAY.
     choices:
       - id: study_carefully
-        label: Study the symbols methodically — copy what you can
+        label: Study the symbols methodically copy what you can
         consequences:
           - type: stat
             target: cunning
@@ -63,7 +63,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: brought_neighbor
       - id: seal_it_back
-        label: You have seen enough — seal it back and walk away
+        label: You have seen enough seal it back and walk away
         consequences:
           - type: stat
             target: cunning
@@ -75,7 +75,7 @@ nodes:
     id: studied
     text: >-
       Hours pass. When you finally climb back out, your back aches and your hand is cramped from
-      writing. The patterns have a logic — a geometry that repeats at different scales. Whatever
+      writing. The patterns have a logic a geometry that repeats at different scales. Whatever
       was being warded against was not small. Your notes feel like a key you do not yet know the
       lock for.
     choices:
@@ -91,7 +91,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: keep_private
-        label: Keep the notes private — this knowledge feels dangerous
+        label: Keep the notes private this knowledge feels dangerous
         consequences:
           - type: stat
             target: cunning
@@ -103,7 +103,7 @@ nodes:
     id: copied_phrase
     text: >-
       You emerge with the phrase in three languages on a scrap of vellum. The third language, you
-      realize, resembles nothing you have seen — curved, almost organic. You find yourself staring
+      realize, resembles nothing you have seen curved, almost organic. You find yourself staring
       at it in the fading light, trying to make it mean something.
     choices:
       - id: seek_translation
@@ -150,7 +150,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: give_them_space
-        label: Give them space — ask again when they have settled
+        label: Give them space ask again when they have settled
         consequences:
           - type: relationship
             target: '{scholar_neighbor.id}'

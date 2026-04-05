@@ -27,7 +27,7 @@ nodes:
     text: >-
       {musician.name} plays at the corner of Market Lane with a battered lute and a
       voice that cuts clean through the noise. The melody is something you do not
-      recognise — not from around here. A small crowd has gathered. {crowd_member.name}
+      recognise not from around here. A small crowd has gathered. {crowd_member.name}
       is already clapping time. {musician.name}'s eyes catch yours briefly, and they
       hold the note an extra beat before moving on.
     choices:
@@ -44,7 +44,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: listened
       - id: join_the_dancing
-        label: Step into the space and dance — there is already dancing
+        label: Step into the space and dance there is already dancing
         consequences:
           - type: stat
             target: charisma
@@ -80,7 +80,7 @@ nodes:
       that the road tends to give or take away. This one it gave.
     choices:
       - id: talk_longer
-        label: Stay and talk — you want to know where they came from
+        label: Stay and talk you want to know where they came from
         consequences:
           - type: relationship
             target: '{musician.id}'
@@ -110,7 +110,7 @@ nodes:
       {crowd_member.name} whoops. More people join. {musician.name} grins and lifts the
       tempo, watching you specifically. By the end of the third song you are breathing
       hard and the crowd is loud and something that was tight in your chest has loosened.
-      {musician.name} calls out "Thank you — especially you" to the square without
+      {musician.name} calls out "Thank you especially you" to the square without
       specifying who.
     choices:
       - id: find_them_after
@@ -126,7 +126,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: let_the_moment_be
-        label: Let it be what it was — a good afternoon, nothing more
+        label: Let it be what it was a good afternoon, nothing more
         consequences:
           - type: faction
             target: village_folk

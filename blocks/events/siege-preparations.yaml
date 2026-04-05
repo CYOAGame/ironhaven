@@ -31,7 +31,7 @@ nodes:
     id: start
     text: >-
       {captain.name} has called every able body to the square. {engineer.name} unrolls a map of
-      the town walls — patched, old, not designed for what is coming. "We have perhaps a week,"
+      the town walls patched, old, not designed for what is coming. "We have perhaps a week,"
       {captain.name} says. "Maybe less. The question is how we spend it." They look around the
       crowd. "I need three things: stronger walls, food stores that will last, and a plan if the
       walls fail. Who is doing what?"
@@ -54,7 +54,7 @@ nodes:
         exhaustionCost: 4
         nextNodeId: fortified
       - id: stockpile_food
-        label: Organize the food stockpile — logistics will win or lose this
+        label: Organize the food stockpile logistics will win or lose this
         consequences:
           - type: stat
             target: cunning
@@ -86,7 +86,7 @@ nodes:
     id: fortified
     text: >-
       Three days of hauling stone and hammering braces. Your hands blister and your back screams.
-      {engineer.name} works beside you without complaint and twice says "good" — which, you learn,
+      {engineer.name} works beside you without complaint and twice says "good" which, you learn,
       is their highest form of praise. The north wall is now solid enough to matter. The east wall
       is another question.
     choices:
@@ -142,7 +142,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: null
       - id: decline_distribution_role
-        label: Decline — you have other skills needed elsewhere
+        label: Decline you have other skills needed elsewhere
         consequences:
           - type: stat
             target: cunning
@@ -156,10 +156,10 @@ nodes:
       You walk the town perimeter after dark. The old tannery has a collapsed section of outer wall
       that has been quietly ignored for years. Beyond it, a dry drainage channel runs northeast
       for half a mile before opening into the forest. Passable. Defensible from pursuit, briefly.
-      You make careful notes and share them with no one — yet.
+      You make careful notes and share them with no one yet.
     choices:
       - id: share_with_captain
-        label: Share the route with {captain.name} — they need contingency plans
+        label: Share the route with {captain.name} they need contingency plans
         consequences:
           - type: faction
             target: town_guard
@@ -174,7 +174,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: keep_private
-        label: Keep it private — knowledge of an exit is power
+        label: Keep it private knowledge of an exit is power
         consequences:
           - type: stat
             target: cunning

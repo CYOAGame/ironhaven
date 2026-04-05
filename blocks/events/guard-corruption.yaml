@@ -32,7 +32,7 @@ nodes:
     text: >-
       {corrupt_guard.name} stops you near the workshop lane, one hand resting on their belt.
       "Busy time, isn't it. All this guild trouble." They lower their voice. "Accidents happen to
-      folk who don't have friends in the guard. Call it... a protection fee. Ten silver — and I
+      folk who don't have friends in the guard. Call it... a protection fee. Ten silver and I
       make sure your door stays quiet."
     choices:
       - id: pay
@@ -87,7 +87,7 @@ nodes:
     text: >-
       {corrupt_guard.name} palms the coins without blinking. "Smart choice. You have a good day
       now." They stroll away, unhurried. You feel the lightness of ten silver missing from your
-      purse — and something heavier in its place.
+      purse and something heavier in its place.
     choices:
       - id: swallow_it
         label: Swallow the humiliation and get on with the day
@@ -98,7 +98,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: change_mind_report
-        label: Change your mind — go find {captain.name}
+        label: Change your mind go find {captain.name}
         consequences:
           - type: faction
             target: town_guard
@@ -113,7 +113,7 @@ nodes:
     id: refused
     text: >-
       {corrupt_guard.name} watches you go with flat eyes. "Your choice." That evening, you notice
-      a scratch on your door lock and a broken shutter latch. Nothing stolen — just a message. You
+      a scratch on your door lock and a broken shutter latch. Nothing stolen just a message. You
       sleep lightly.
     choices:
       - id: document_damage
@@ -144,7 +144,7 @@ nodes:
       at last. "And thank you for your courage."
     choices:
       - id: give_full_account
-        label: Give a full account — name, time, exact words
+        label: Give a full account name, time, exact words
         consequences:
           - type: faction
             target: town_guard

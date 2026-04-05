@@ -77,7 +77,7 @@ nodes:
     id: fight_result
     text: >-
       You clash with the nearest bandit. Steel rings against steel. The town guard arrives moments
-      later — your stand bought them time.
+      later your stand bought them time.
     choices:
       - id: pursue
         label: Chase the fleeing bandits
@@ -124,7 +124,7 @@ nodes:
     id: help_result
     text: >-
       {bystander.name} stumbles as you pull them behind the well. "Thank you," they gasp.
-      "I thought — I thought they were going to—"
+      "I thought I thought they were going to"
     choices:
       - id: comfort
         label: Stay with them until it passes
