@@ -1,0 +1,1045 @@
+id: the-sealed-depths
+name: The Sealed Depths
+tags:
+  - exploration
+  - intrigue
+  - action
+
+preconditions:
+  - type: world_fact
+    key: cellar_opened
+    value: true
+
+roles:
+  - id: companion
+    label: A Willing Explorer
+    archetypeFilter:
+      - scholar
+      - hunter
+      - thief
+      - scout
+  - id: old_keeper
+    label: An Old Keeper of Secrets
+    archetypeFilter:
+      - priest
+      - hermit
+      - scholar
+
+entryNodeId: start
+
+nodes:
+  start:
+    id: start
+    text: >-
+      The cellar entrance on Tanner's Row is still open — the iron-banded door swings
+      on its broken lock, moss-edged and patient. You have thought about it since you
+      first forced it open. Now you are back, and the cold air rising from below carries
+      that same old smell: damp stone and something underneath it, something older than
+      the town above. The symbols carved into the lintel seem to catch the morning light
+      differently than they should.
+    choices:
+      - id: find_companion_choice
+        label: Find someone worth trusting — this should not be done alone
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: find_companion
+      - id: descend_alone_choice
+        label: Light a torch and go alone — fewer people means fewer complications
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: descend_alone
+
+  find_companion:
+    id: find_companion
+    text: >-
+      You find {companion.name} and describe what little you have seen. They listen
+      with the careful stillness of someone deciding how much to believe. Then: "I am in.
+      But when we come back up — you tell me everything you understand. No holding back."
+      They say it with the particular weight of someone who has been kept in the dark before.
+      You shake on it. They tuck a second lantern under their arm.
+    choices:
+      - id: descend_together_choice
+        label: Head for the cellar together
+        consequences:
+          - type: relationship
+            target: companion
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: descend_together
+
+  descend_alone:
+    id: descend_alone
+    text: >-
+      The stairs spiral down in a tight corkscrew, the stone worn smooth by feet that
+      stopped walking long ago. Your torch throws jumping orange light across walls packed
+      with carved text — not decorative, you think. Too dense, too urgent. The air grows
+      colder with each step. Whatever the builders sealed away, they wanted it to stay sealed.
+    choices:
+      - id: study_alone_symbols
+        label: Stop and examine the carvings on the stairwell walls before going deeper
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: study_symbols
+      - id: push_past_alone
+        label: Keep moving — the carvings can wait until you know the layout
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: first_chamber
+
+  descend_together:
+    id: descend_together
+    text: >-
+      Two torches push the darkness back further than one could. {companion.name} takes
+      the lead on the stairs, moving with the careful step of someone who does not trust
+      old stonework. The walls press close. The carvings here are dense — warnings, you
+      both agree, though neither of you can read the script. At the base of the stairs
+      the passage opens wide and cold air spills outward like a held breath finally released.
+    choices:
+      - id: study_together_symbols
+        label: Both of you stop and examine the carvings before proceeding
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: study_symbols
+      - id: push_past_together
+        label: Note the carvings but keep moving — you are burning torch time
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: first_chamber
+
+  study_symbols:
+    id: study_symbols
+    text: >-
+      The script is not a language you recognise, but the images threaded through it
+      tell enough of the story. A shape like a man, bound in chain. Hands from above
+      pressing a lid onto a container. Lines radiating outward from a central point —
+      like a spider's web, or like anchors set in earth. Someone built this place as a
+      seal. The carvings are not history. They are instructions for maintenance, and
+      warnings for those who ignore them.
+    choices:
+      - id: press_on_to_chamber
+        label: You have learned what the walls can teach. Descend to the chamber below.
+        consequences:
+          - type: world_fact
+            target: symbols_read
+            value: true
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: first_chamber
+
+  ignore_symbols:
+    id: ignore_symbols
+    text: >-
+      Decoration, old craft, the vanity of builders who wanted their work remembered.
+      You have seen carved walls before. What matters is what lies beyond them. The
+      stairs end. A chamber opens ahead.
+    choices:
+      - id: press_on_ignore
+        label: Step into the chamber
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: first_chamber
+
+  first_chamber:
+    id: first_chamber
+    text: >-
+      A round room perhaps twenty feet across, with a domed ceiling. Four passages lead
+      outward at the compass points. The northern passage has collapsed — rubble fills it
+      floor to ceiling. The other three stand open and dark. Every surface of the room
+      is covered in carvings, these ones more elaborate than the stairwell: geometric
+      patterns, repeated faces, lines of script that spiral inward toward a central point
+      on the floor where a single large symbol has been incised deep into the stone.
+    choices:
+      - id: to_passage_hub
+        label: Study the room briefly, then choose a passage
+        consequences:
+          - type: world_fact
+            target: depths_explored
+            value: true
+        exhaustionCost: 1
+        nextNodeId: passage_hub
+
+  passage_hub:
+    id: passage_hub
+    text: >-
+      Three passages wait. From the left comes the distant sound of moving water — steady,
+      low, underground. From the center a warm draft breathes against your face, carrying
+      a faint smell of minerals and something faintly sweet, like old wood preserved too
+      long. From the right, what looks like a soft glow — not firelight, not quite —
+      a pale blue-white that does not flicker. You will need to choose one at a time.
+    choices:
+      - id: take_water_passage
+        label: Go left — follow the sound of water
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: water_passage
+      - id: take_warm_passage
+        label: Go center — follow the warm draft
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: warm_passage
+      - id: take_light_passage
+        label: Go right — follow the light
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: light_passage
+
+  water_passage:
+    id: water_passage
+    text: >-
+      The left passage slopes downward for thirty paces, then opens onto a stone shelf
+      above an underground river. The water is black and fast, channeled between carved
+      banks — this was engineered, deliberately guided beneath the rock. A bridge of
+      fitted stone spans the channel: narrow, no railing, the mortar around the joins
+      cracked with age. On the far bank, carved shelves line a wide alcove packed with
+      shapes you cannot make out clearly from here.
+    choices:
+      - id: cross_bridge_choice
+        label: Test the bridge and cross carefully
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: cross_bridge
+      - id: throw_stone_first
+        label: Drop a stone onto the bridge to test the stone before trusting your weight to it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: bridge_collapses
+
+  cross_bridge:
+    id: cross_bridge
+    text: >-
+      You move one foot at a time, weight distributed, testing each stone before committing.
+      The bridge holds. The current below is powerful enough that you would not want to
+      find out where it goes. On the far side, the shelves are packed with clay cylinders,
+      sealed with wax that has long since hardened to amber. Some have shattered; most are
+      intact. You open one carefully. Inside: tightly rolled sheets of a material that is
+      not quite paper and not quite leather, covered in dense writing and diagrams. Preserved
+      by the dry air and the cold. These are old texts — very old.
+    choices:
+      - id: take_texts
+        label: Take a selection carefully. These belong somewhere they can be read.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: ancient_texts_found
+            value: true
+        exhaustionCost: 1
+        nextNodeId: passage_hub
+      - id: read_texts_here
+        label: Try to read what you can before moving on
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: ancient_texts_found
+            value: true
+          - type: world_fact
+            target: texts_partially_read
+            value: true
+        exhaustionCost: 2
+        nextNodeId: passage_hub
+
+  bridge_collapses:
+    id: bridge_collapses
+    text: >-
+      The stone holds your throw, then gives a low crack when you step onto it — one of the
+      central spans separates and drops into the river. You throw yourself backward onto
+      solid ground, one hand catching a root that has forced its way through the ceiling,
+      hanging for a moment above black water before hauling yourself up. You are not crossing
+      that way. But the gap has revealed something: a narrow ledge below the water line,
+      running along the near bank to a crack in the far wall wide enough to squeeze through.
+    choices:
+      - id: take_the_ledge
+        label: Work along the ledge — it is risky but it gets you across
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: cross_bridge
+      - id: abandon_water_passage
+        label: The bridge is gone — leave this passage and try another
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: passage_hub
+
+  warm_passage:
+    id: warm_passage
+    text: >-
+      The center passage is wider than the others and angles steadily downward. The warm
+      draft grows stronger as you go. The walls here are different: the carved script gives
+      way to fungus — plates of flat grey-white growth that extend from the stone like shelves,
+      and between them, smaller fungi that glow with a cold green light. Not fire. Not crystal.
+      Something alive. The passage opens without warning into a space so large your torchlight
+      does not reach the far wall.
+    choices:
+      - id: enter_vast_cavern
+        label: Step into the great cavern and let your eyes adjust
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: vast_cavern
+
+  vast_cavern:
+    id: vast_cavern
+    text: >-
+      The cavern is vast enough that the ceiling exists only as a darkness above the
+      glowing fungi. What stops your breath is the structure at the center: columns of
+      worked stone, forty feet high, carved with faces you have never seen in any human
+      church or market. Not animal faces. Not quite human either — the proportions are
+      slightly wrong in ways that are hard to name. The columns ring a central platform,
+      and on the platform, partially fallen but still recognizable, the remains of a
+      building. A temple. Built before the town, before the road, before any memory
+      you have been given to work with.
+    choices:
+      - id: examine_ruins_choice
+        label: Move toward the central structure and examine it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: examine_ruins
+      - id: study_columns
+        label: Study the column faces first — understanding what was worshipped here matters
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: ruins_examined
+            value: true
+        exhaustionCost: 1
+        nextNodeId: examine_ruins
+
+  examine_ruins:
+    id: examine_ruins
+    text: >-
+      The structure is a temple, unmistakably. An altar stands at its center — large,
+      pale stone, cracked across the middle but still upright. Around its base, lengths
+      of chain are embedded in the stone, heavy as anchor cable, their ends cut or
+      snapped. Whatever was held here was held for a very long time, and whatever broke
+      free did not go easily — the altar has been pushed six inches off its base and
+      the stone beneath is scarred with something that burned. The altar is not empty.
+      An impression in the stone shows the shape of something large that once rested here.
+    choices:
+      - id: study_altar
+        label: Examine the impression and the broken chains closely
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: altar_examined
+            value: true
+        exhaustionCost: 2
+        nextNodeId: passage_hub
+      - id: move_on_from_ruins
+        label: You have seen enough here. Return to the hub and try another passage.
+        consequences:
+          - type: world_fact
+            target: ruins_examined
+            value: true
+        exhaustionCost: 1
+        nextNodeId: passage_hub
+
+  light_passage:
+    id: light_passage
+    text: >-
+      The right passage is narrower than the others and perfectly level — whoever built
+      this place cut this floor deliberately flat. The light grows slowly as you go,
+      cold and blue-white, emanating from crystals embedded in the stone at shoulder
+      height on both sides. Long ones, angled in, like ribs. They react when you pass:
+      brightening slightly as you near, dimming as you move away, as though aware of you.
+      The passage ends in a hexagonal room where the crystals cover every wall, floor
+      to ceiling, pulsing with slow lazy light.
+    choices:
+      - id: enter_crystal_chamber
+        label: Step into the crystal chamber and examine the pedestal at its center
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: crystal_chamber
+
+  crystal_chamber:
+    id: crystal_chamber
+    text: >-
+      The pedestal in the center of the room is waist-high, worked from a single piece of
+      dark stone that does not match the walls. Set into its top face is a mechanism: a
+      circular arrangement of interlocking rings, each engraved with symbols. It is a lock.
+      Or a puzzle. Or both. The rings can be turned — they move with a smooth resistance
+      that suggests they have been maintained, or perhaps that nothing here ages the way
+      it should. One section of wall behind the pedestal has a seam that does not quite
+      line up with the crystal pattern. A door, waiting to be opened.
+    choices:
+      - id: solve_mechanism_choice
+        label: Work the mechanism carefully — turn rings, test combinations, think it through
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 3
+        nextNodeId: solve_mechanism
+      - id: force_mechanism_choice
+        label: You do not have time for puzzles. Apply force and see what gives.
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: force_mechanism
+
+  solve_mechanism:
+    id: solve_mechanism
+    text: >-
+      An hour of careful work. Trial, error, listening for the change in resistance that
+      means a ring has found its place. The symbols begin to feel almost familiar — they
+      echo the carvings on the stairwell, and on the lintel above the cellar door. When
+      the last ring locks, there is a sound like a deep bell struck once underground, and
+      the seamed section of wall slides inward on a counterweight. Cool air sighs out
+      from the space beyond. Your torch leans toward it. The room inside is dark and dry
+      and has not been touched since it was sealed.
+    choices:
+      - id: enter_hidden_chamber_from_solve
+        label: Step through into the hidden chamber
+        consequences:
+          - type: world_fact
+            target: mechanism_solved
+            value: true
+          - type: world_fact
+            target: seal_found
+            value: true
+        exhaustionCost: 1
+        nextNodeId: hidden_chamber
+
+  force_mechanism:
+    id: force_mechanism
+    text: >-
+      The mechanism resists, then cracks. One of the inner rings shears off its pin and
+      the whole assembly sparks — a cold white light, not fire — and goes dark. The
+      crystal room dims sharply, as though offended. The seamed door does not open.
+      But the wall to its left shifts: a section you had not noticed tilts inward, pivoting
+      on a central pin. A different passage. Not the way the builders wanted anyone to go.
+      The air from it is warmer and smells of sulfur, faintly.
+    choices:
+      - id: enter_forced_passage
+        label: Go through the passage you forced open
+        consequences:
+          - type: world_fact
+            target: mechanism_broken
+            value: true
+          - type: world_fact
+            target: seal_found
+            value: true
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: hidden_chamber
+
+  hidden_chamber:
+    id: hidden_chamber
+    text: >-
+      The room is not large — twenty feet square, low-ceilinged. Every wall is covered
+      in murals, painted in colors that should not have survived down here but have,
+      preserved by the same wrongness that keeps the crystals lit. The paint is vivid:
+      deep red, bone white, a blue so dark it reads as night sky. The murals show a war.
+      Not the kind fought with swords — the kind fought between things that were not
+      men, with weapons that look like pure intention made solid. You need to understand
+      what you are looking at.
+    choices:
+      - id: study_murals_choice
+        label: Study the murals from beginning to end — take in the whole story
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: the_murals
+      - id: find_side_room
+        label: Look for anything else in the room before attending to the murals
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: find_the_key
+
+  the_murals:
+    id: the_murals
+    text: >-
+      The story begins on the left wall and spirals inward. Beings of pale light — you
+      count seven — fighting against a single entity that fills more of the frame than
+      it should: a figure of absolute shadow, neither human nor animal, drawn as absence
+      rather than presence. The light-beings force it downward, into the earth, into
+      a circle of runes. Chains. A seal pressed into place by seven pairs of hands. Then:
+      the town, built above. Generations of keepers. And the last panel — the one closest
+      to the door — shows the seal cracking. Three fractures. The shadow-figure pressing
+      upward from below. The date-marks in the lower margin of the final panel are not
+      old. They were added within living memory.
+    choices:
+      - id: absorb_murals_find_key
+        label: The murals have told you what you need to know. Find the key and go deeper.
+        consequences:
+          - type: world_fact
+            target: murals_read
+            value: true
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: find_the_key
+      - id: absorb_murals_altar_room
+        label: Find the altar room — if the demon is bound here, you need to see it
+        consequences:
+          - type: world_fact
+            target: murals_read
+            value: true
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: the_altar_room
+
+  find_the_key:
+    id: find_the_key
+    text: >-
+      In the far corner of the hidden chamber, set into a recess in the wall: a stone
+      key, perhaps eight inches long, worked from the same dark material as the pedestal.
+      The head of the key is carved with the same central symbol from the round chamber
+      above — the one incised deep into the floor. It fits a lock somewhere further down.
+      You can feel that certainty the way you feel the direction of north: not reasoned,
+      just known. The key is cold until you close your hand around it, and then it is
+      not cold at all.
+    choices:
+      - id: take_key_now
+        label: Take the key and find where it leads
+        consequences:
+          - type: world_fact
+            target: key_taken
+            value: true
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: the_altar_room
+      - id: read_murals_first
+        label: Take the key, but spend time with the murals before going deeper
+        consequences:
+          - type: world_fact
+            target: key_taken
+            value: true
+        exhaustionCost: 1
+        nextNodeId: the_murals
+
+  the_altar_room:
+    id: the_altar_room
+    text: >-
+      A passage from the hidden chamber leads down, and down again, to a room that feels
+      like the bottom of something. An altar of black stone dominates the space —
+      larger than the one in the ruined temple above, intact, un-cracked, placed with
+      total deliberate purpose at the center of a floor carved with runes. Chains ring
+      it, heavy as ship cable, bolted into the stone. They are all broken. The ends are
+      not cut cleanly. They were pulled apart, slowly, over a very long time. Whatever
+      was held here is no longer here. But something remains. You feel it before you
+      see it: the air in this room is alive in the way that a room is alive when someone
+      is waiting in it, invisible, patient, watching you breathe.
+    choices:
+      - id: feel_presence_choice
+        label: Stand still and let yourself feel whatever is here
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: feel_the_presence
+      - id: go_to_deeper_door
+        label: Ignore the feeling — find the door the key belongs to
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: deeper_door
+
+  feel_the_presence:
+    id: feel_the_presence
+    text: >-
+      You stop breathing and listen with something that is not your ears. It comes:
+      not words, not a voice — impressions, arriving like heat or pressure. Pain. Very
+      old pain, the kind that has had time to calcify into something colder. Rage at
+      the edges, banked down to coals. And underneath both of those, a patience so vast
+      it makes your own life feel like an afternoon. The demon lord did not die here.
+      It was held here, and it has been getting out, one anchor at a time, for longer
+      than anyone above knows.
+    choices:
+      - id: resist_presence_choice
+        label: Push back — this thing does not get to be inside your head
+        consequences:
+          - type: stat
+            target: strength
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: resist_presence
+      - id: listen_to_presence_choice
+        label: Stay open — let it show you what it wants you to know
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: listen_to_presence
+
+  resist_presence:
+    id: resist_presence
+    text: >-
+      You hold the edges of your own mind the way you hold a door against wind. The
+      presence pushes — not violently, with the specific patience of something that has
+      outlasted everything that has ever opposed it. Your torch gutters despite the still
+      air. If {companion.name} came down with you, they are at your shoulder now, hand
+      on your arm, voice low: "Whatever you are doing, stop. We should leave." Whether
+      alone or not, you feel it withdraw — not retreat, only step back. It will wait.
+      It is very good at waiting.
+    choices:
+      - id: find_deeper_door_after_resist
+        label: Use the stone key and find the final door while you still have your nerve
+        consequences:
+          - type: world_fact
+            target: presence_felt
+            value: true
+        exhaustionCost: 1
+        nextNodeId: deeper_door
+      - id: leave_now_resist
+        label: Your companion is right. Get out. Come back with more knowledge.
+        consequences:
+          - type: world_fact
+            target: presence_felt
+            value: true
+          - type: relationship
+            target: companion
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: choice_hub
+
+  listen_to_presence:
+    id: listen_to_presence
+    text: >-
+      You open the door in your mind that you usually keep closed. The images come fast:
+      a map, roughly, of the region — not your map, one far older, with different names
+      for the hills and rivers. Seven points marked on it, connected by lines of force.
+      Seals. Each one an anchor. The one beneath this town was not the first to crack.
+      Two others are already broken. The demon lord does not need to come here — it is
+      already here in pieces, filtering up through the fractures, waiting for enough of
+      itself to coalesce. The presence withdraws and takes the map with it. You are left
+      with the shape of what you saw pressed into your memory like a brand.
+    choices:
+      - id: use_key_after_listen
+        label: Use the stone key — find the binding circle before you lose your courage
+        consequences:
+          - type: world_fact
+            target: presence_felt
+            value: true
+          - type: world_fact
+            target: seal_map_seen
+            value: true
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: deeper_door
+
+  deeper_door:
+    id: deeper_door
+    text: >-
+      The door is in the base of the altar room's far wall, set so flush with the stone
+      that you might have missed it without looking. The lock is the same dark material
+      as the key. It fits without forcing — a quarter turn, a sound like a held breath
+      released, and the wall swings inward on counterweights so finely balanced that a
+      child could move it. Steps descend. There is no more warmth below, only heat —
+      dry, pressurised, the kind of heat that comes from stone that has been something's
+      floor for a very long time. Your torch shortens in the draft from below. You go.
+    choices:
+      - id: descend_to_circle
+        label: Descend into the heat
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: the_binding_circle
+
+  the_binding_circle:
+    id: the_binding_circle
+    text: >-
+      The deepest chamber is not large. It does not need to be. The floor is one continuous
+      rune, forty feet across, incised so deep that the lines are almost channels. A binding
+      circle — the largest piece of intentional craft you have ever seen. It would be
+      beautiful if it were not so clearly made out of emergency. Three cracks run across
+      it, each one roughly following a line of runes, interrupting the pattern. Along
+      the crack edges, the stone is not just broken — it is consumed, dissolved, as though
+      something acidic has been eating upward from below. The circle is failing. Slowly,
+      but unmistakably, failing.
+    choices:
+      - id: touch_circle_choice
+        label: Kneel at the edge and trace one of the runes with your finger
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: touch_the_circle
+      - id: assess_damage
+        label: Walk the perimeter and assess all three cracks before touching anything
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: circle_assessed
+            value: true
+        exhaustionCost: 2
+        nextNodeId: touch_the_circle
+
+  touch_the_circle:
+    id: touch_the_circle
+    text: >-
+      Pain, immediate and sharp, runs from your fingertip to your shoulder, not quite
+      like touching flame — more like grabbing a chain attached to something moving.
+      You feel the circle's purpose: not a barrier, exactly, but a drain. It was meant
+      to continuously unmake whatever it contained, grinding it down across centuries.
+      The cracks are not just structural damage — they are reversals. The circle is
+      beginning to unmake itself. You understand now: the seal can be repaired, but it
+      would require someone to sit at its center and push back against whatever is
+      coming through. Not for an hour. For a lifetime.
+    choices:
+      - id: go_to_choice_hub
+        label: You know what you know. Rise and decide what to do with it.
+        consequences:
+          - type: world_fact
+            target: seal_found
+            value: true
+          - type: world_fact
+            target: circle_touched
+            value: true
+        exhaustionCost: 1
+        nextNodeId: choice_hub
+
+  choice_hub:
+    id: choice_hub
+    text: >-
+      You stand at the top of the stairs, or just inside the entrance, or somewhere
+      between the depths and the daylight — and you hold everything you have learned
+      like a stone in both hands, feeling its weight. The town is above you: the market,
+      the guard house, the temple, the houses of people who do not know what their
+      streets are built over. There is the old keeper, {old_keeper.name}, who might know
+      more than they have said. There is the guard captain. There is the option of
+      telling no one. And there is the seal itself, cracking below.
+    choices:
+      - id: attempt_repair_choice
+        label: Go back down and try to reinforce the seal with what you have
+        consequences: []
+        exhaustionCost: 2
+        nextNodeId: attempt_repair
+      - id: tell_captain_choice
+        label: Report everything to the guard captain — they need to know
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: tell_the_captain
+      - id: tell_priest_choice
+        label: Find {old_keeper.name} — they have been carrying a piece of this
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: tell_the_priest
+      - id: seal_entrance_choice
+        label: Collapse the passage behind you — let no one else stumble into this
+        consequences: []
+        exhaustionCost: 2
+        nextNodeId: seal_the_entrance
+      - id: keep_secret_choice
+        label: Tell no one. Keep the stone key. Think.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: keep_the_secret
+
+  attempt_repair:
+    id: attempt_repair
+    text: >-
+      You go back down with everything you can find that might mean something: chalk,
+      iron, the stone key, your own blood if it comes to it. You work at the largest
+      crack for hours, tracing the interrupted runes, trying to close the gap in the
+      pattern by completing what the crack broke. It is not enough. You know it is
+      not enough even as you do it. But when you finally climb back out, the crack
+      has not grown. Whatever you did, it bought something — a season, maybe. Perhaps
+      a year. Not a solution. A delay.
+    choices:
+      - id: after_repair_tell_captain
+        label: It won't hold forever — tell the captain what you've done and why
+        consequences:
+          - type: world_fact
+            target: seal_repaired
+            value: true
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: tell_the_captain
+      - id: after_repair_tell_priest
+        label: Find {old_keeper.name} — a proper repair needs someone who understands the runes
+        consequences:
+          - type: world_fact
+            target: seal_repaired
+            value: true
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: tell_the_priest
+      - id: after_repair_seal_entrance
+        label: Seal the entrance. The delay is all you had to give.
+        consequences:
+          - type: world_fact
+            target: seal_repaired
+            value: true
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: seal_the_entrance
+
+  tell_the_captain:
+    id: tell_the_captain
+    text: >-
+      The captain listens without interrupting. That alone tells you they have been
+      expecting something like this, or at least some version of it. When you finish,
+      they are quiet for long enough that you wonder if they are deciding whether to
+      believe you. Then: "We need to send word to the capital. This changes what we
+      thought we were dealing with." They stand, go to the window, look at nothing
+      in particular. "I always thought the demon attacks were raids. Opportunity.
+      Now you are telling me they are excavation." They turn back. "You have put
+      yourself in the middle of something very large. I do not think you understand
+      yet how large."
+    choices:
+      - id: companion_captain_disagrees
+        label: "{companion.name} pulls you aside after — they think the captain will bury this"
+        consequences:
+          - type: world_fact
+            target: captain_knows_seal
+            value: true
+          - type: relationship
+            target: companion
+            value: -1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: companion_disagrees
+      - id: captain_and_return
+        label: Thank the captain and take your leave — the news is now in the right hands
+        consequences:
+          - type: world_fact
+            target: captain_knows_seal
+            value: true
+          - type: relationship
+            target: old_keeper
+            value: 0
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: return_to_surface
+
+  tell_the_priest:
+    id: tell_the_priest
+    text: >-
+      {old_keeper.name} has been waiting, you think, for a very long time for someone to
+      come through their door with exactly this news. They listen to every word. They do
+      not look surprised. When you describe the murals, they close their eyes and nod,
+      slowly, the way a person nods when something they feared turns out to be confirmed.
+      "I always suspected. The old texts speak of anchors — seven of them, set across the
+      whole of the valley. I thought they were metaphor. I thought I was being literal
+      where the writers were being poetic." They open their eyes. "You have found the first.
+      We must find the others before the seals collapse entirely."
+    choices:
+      - id: priest_and_return
+        label: This is the beginning of something. Rise and leave together to plan.
+        consequences:
+          - type: world_fact
+            target: priest_knows_seal
+            value: true
+          - type: relationship
+            target: old_keeper
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: return_to_surface
+      - id: priest_share_texts
+        label: Give {old_keeper.name} the ancient texts — they can read what you cannot
+        consequences:
+          - type: world_fact
+            target: priest_knows_seal
+            value: true
+          - type: relationship
+            target: old_keeper
+            value: 3
+            axis: trust
+          - type: world_fact
+            target: ancient_texts_given
+            value: true
+        exhaustionCost: 1
+        nextNodeId: return_to_surface
+
+  seal_the_entrance:
+    id: seal_the_entrance
+    text: >-
+      You bring down the stairwell the only way available to you — prying out the
+      keystone of the arch where the cellar joins the passage below. It takes three
+      hours and more effort than you thought your body had left in it. The collapse
+      is satisfying in the way that sealing something dangerous is satisfying: not
+      victory, just containment. The cellar door remains, but the stairs behind it
+      now end in rubble after twelve steps. No one will get through that easily.
+      No one except something that has been eating through solid stone for centuries.
+    choices:
+      - id: seal_companion_disagrees
+        label: "{companion.name} watches you work without helping. They think this was the wrong call."
+        consequences:
+          - type: world_fact
+            target: entrance_sealed
+            value: true
+          - type: relationship
+            target: companion
+            value: -2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: companion_disagrees
+      - id: seal_and_return
+        label: Walk away. The rubble will hold for a time. That is all you had.
+        consequences:
+          - type: world_fact
+            target: entrance_sealed
+            value: true
+        exhaustionCost: 1
+        nextNodeId: return_to_surface
+
+  keep_the_secret:
+    id: keep_the_secret
+    text: >-
+      You tell no one. The stone key goes into your pack, wrapped in cloth. The weight
+      of what you know sits on your chest that night and the nights after. You walk the
+      market square and the church steps and the guard house yard and you see people
+      who do not know. People who are building their lives on top of something that is
+      slowly getting free. There is a version of this where knowledge is power, where
+      you are the only one holding a card that matters. You are not sure you believe
+      in that version. But you are not ready to give the knowledge away either.
+    choices:
+      - id: secret_companion_confronts
+        label: "{companion.name} corners you two days later. They want what you promised."
+        consequences:
+          - type: world_fact
+            target: secret_kept
+            value: true
+          - type: relationship
+            target: companion
+            value: -2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: companion_disagrees
+      - id: secret_and_return
+        label: Keep it. For now. You will know when it is time.
+        consequences:
+          - type: world_fact
+            target: secret_kept
+            value: true
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: return_to_surface
+
+  companion_disagrees:
+    id: companion_disagrees
+    text: >-
+      {companion.name} does not raise their voice, which is somehow worse. "You made
+      a promise," they say, or: "This is bigger than your instinct to control it,"
+      or simply: "People will die if this stays buried and you know it." Whatever
+      the specific words, the shape is the same: they are right, and you both know
+      it, and the question is whether that is enough to change what you do next. They
+      wait. They are good at waiting. They learned it somewhere.
+    choices:
+      - id: concede_to_companion
+        label: They are right. Tell them everything and face it together.
+        consequences:
+          - type: relationship
+            target: companion
+            value: 2
+            axis: trust
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: return_to_surface
+      - id: hold_your_line
+        label: Hold your ground. You have reasons and they are not wrong either.
+        consequences:
+          - type: relationship
+            target: companion
+            value: -1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: return_to_surface
+
+  return_to_surface:
+    id: return_to_surface
+    text: >-
+      You step out of the cellar onto Tanner's Row. The sky is the same colour it
+      always is this time of day. A dog crosses the far end of the lane. Somewhere
+      past the rooflines, the market bell rings. The town is entirely ordinary from
+      up here — the same stones, the same sounds, the same rhythms. You know what
+      is under it now. That knowledge does not make you safer, exactly. But it makes
+      the ordinary feel like a choice someone made a very long time ago, and held,
+      at great cost, and is still holding — barely.
+    choices:
+      - id: to_aftermath
+        label: Go into the town. Live with what you know.
+        consequences: []
+        exhaustionCost: 1
+        nextNodeId: aftermath
+
+  aftermath:
+    id: aftermath
+    text: >-
+      The town does not change. That is the strangest part. The market still runs,
+      the bread still bakes, the forge still rings. You change. You look at the guards
+      on the gate and wonder if their swords are the right kind of tool. You look at
+      the temple and wonder what the priest's predecessor knew and didn't record. You
+      look at the road south and think about the other six anchors, wherever they are,
+      and whether someone else has found them yet. The stone key is still in your pack,
+      or the knowledge is still in your head, or the captain is writing a letter, or
+      the old keeper is reading the texts you found. One way or another, you are in
+      this now. The depths have a claim on you.
+    choices:
+      - id: end_close
+        label: Close your journal. Let the day go. Tomorrow has its own work.
+        consequences:
+          - type: world_fact
+            target: sealed_depths_completed
+            value: true
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
