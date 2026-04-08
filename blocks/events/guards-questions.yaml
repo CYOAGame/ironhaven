@@ -24,6 +24,12 @@ roles:
       - soldier
     factionRequirements:
       - town_guard
+  - id: captain
+    label: The Guard Captain
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
 
 entryNodeId: start
 
@@ -31,10 +37,10 @@ nodes:
   start:
     id: start
     text: >-
-      {guard.name} finds you the next morning. "That traveler you brought in," they say, keeping
-      their voice low. "They are not talking. But someone else says they saw you speaking with a
-      stranger near the gate around the same time. You see anything else?" Their eyes do not leave
-      your face.
+      {guard.name} finds you the next morning, keeping their voice low. "That traveler
+      you brought in," they say. "They are not talking. But someone says they saw you
+      speaking with a stranger near the gate around the same time. You see anything else?"
+      Their eyes do not leave your face. The question is shaped carefully. Too carefully.
     choices:
       - id: tell_everything
         label: Tell them everything you know about the traveler
@@ -52,7 +58,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: told_all
       - id: lie_to_protect
-        label: Say you saw nothing unusual the traveler seemed harmless
+        label: Say you saw nothing unusual. The traveler seemed harmless.
         consequences:
           - type: stat
             target: cunning
@@ -71,47 +77,158 @@ nodes:
           - type: faction
             target: town_guard
             value: 1
+          - type: world_fact
+            target: guard_told_partial
+            value: true
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: partial_account
+      - id: ask_why_asking
+        label: Ask why they are being so careful about the question
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: guard_reveals_concern
+
+  guard_reveals_concern:
+    id: guard_reveals_concern
+    text: >-
+      {guard.name} glances around the lane. "The traveler had a satchel when they came in.
+      It is not in evidence now. Someone either took it or they managed to pass it off
+      before we got them settled." A pause. "Given what happened to the south postern last
+      time someone tried to move something quietly through this town, the captain wants
+      this documented properly." They look at you again. "So. Did you see the satchel?"
+    choices:
+      - id: admit_to_satchel
+        label: Yes. Describe the satchel and what you observed
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+          - type: world_fact
+            target: satchel_warning_passed
+            value: true
+        exhaustionCost: 1
+        nextNodeId: told_all
+      - id: deny_the_satchel
+        label: Say you did not notice a satchel specifically
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: lied_to_guard
+            value: true
+        exhaustionCost: 1
+        nextNodeId: lied
 
   told_all:
     id: told_all
     text: >-
-      {guard.name} listens carefully, noting things down in a small ledger. "You did well to come
-      forward." They close the ledger with a snap. "We will find out what was in that satchel."
-      Something about their certainty makes you slightly uneasy.
+      {guard.name} listens carefully, noting things in a small ledger. You tell it
+      cleanly: the gate, the satchel pressed to the traveler's chest, the words they
+      said. When you finish, {guard.name} closes the ledger with a snap. "You did well
+      to come forward." Something about their certainty makes you slightly uneasy.
+      "We will find out what was in that satchel." You think about the warning the
+      traveler gave you and whether passing it on now would help or complicate things.
     choices:
-      - id: ask_what_happens
+      - id: pass_on_the_warning
+        label: Tell them the traveler said not to open the satchel alone
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: satchel_warning_passed
+            value: true
+          - type: relationship
+            target: '{guard.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: warning_received
+      - id: ask_what_happens_to_traveler
         label: Ask what will happen to the traveler
         consequences:
           - type: stat
             target: charisma
             value: 1
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: traveler_fate_discussion
       - id: let_it_go
         label: Nod and get on with your day
         consequences: []
         exhaustionCost: 0
-        nextNodeId: null
+        nextNodeId: morning_routine
 
-  lied:
-    id: lied
+  warning_received:
+    id: warning_received
     text: >-
-      {guard.name} watches you for a long moment. "Right," they say finally. "If you think of
-      anything else, you know where to find me." They leave. You are not sure they believed you.
-      The lie sits in your chest, small and heavy.
+      {guard.name} writes it down. Their expression is harder to read now. "Not alone,"
+      they repeat. "That is an interesting thing to know." A pause. "Why would they say that
+      to you? If they did not know you before last night?" The question is curious, not
+      accusatory, but it requires an answer and the answer you give will shape what comes next.
     choices:
-      - id: commit_to_lie
-        label: Good. You made your choice. Stick to it.
+      - id: say_you_dont_know
+        label: Say you have no idea. You are reporting it as said.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: guard_investigates_alone
+      - id: speculate_contents
+        label: Speculate that the satchel must contain something that needs careful handling
         consequences:
           - type: stat
             target: cunning
             value: 1
+          - type: world_fact
+            target: fraud_documents_known
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guard_investigates_alone
+      - id: ask_to_be_present
+        label: Ask to be present when they open it, as the only witness to the warning
+        preconditions:
+          - type: trait
+            key: charisma
+            min: 3
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: present_at_satchel_opening
+            value: true
+        exhaustionCost: 2
+        nextNodeId: satchel_opening_scene
+
+  lied:
+    id: lied
+    text: >-
+      {guard.name} watches you for a long moment. "Right," they say finally. "If you think
+      of anything else, you know where to find me." They leave. You are not sure they believed
+      you. The lie sits in your chest, small and heavy, and you know it will not stay small.
+      Later that day someone else will be asked the same questions and may give different answers.
+    choices:
+      - id: commit_to_lie
+        label: You made your choice. Stick to it and watch carefully.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: lied_to_guard
+            value: true
         exhaustionCost: 0
-        nextNodeId: null
+        nextNodeId: watching_situation
       - id: reconsider_confession
-        label: Go after the guard and tell them the truth
+        label: Go after {guard.name} and tell them the truth
         consequences:
           - type: faction
             target: town_guard
@@ -122,5 +239,500 @@ nodes:
           - type: world_fact
             target: cooperated_with_guard
             value: true
+        exhaustionCost: 1
+        nextNodeId: told_all
+      - id: find_traveler_first
+        label: Before confessing, go find {traveler.name} and warn them that questions are being asked
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
+        exhaustionCost: 2
+        nextNodeId: traveler_warned
+
+  partial_account:
+    id: partial_account
+    text: >-
+      You give {guard.name} a clean account of the arrival, the gate, the traveler's
+      frightened eyes, the words exchanged. You do not mention what the traveler told you
+      afterward, or the satchel's contents, or what the traveler said about not opening it
+      alone. {guard.name} writes it down. "That matches what the gate warden remembered,"
+      they say. Then: "What were they carrying?" The question drops in cleanly. They were
+      waiting to ask it.
+    choices:
+      - id: describe_satchel_only
+        label: Describe the satchel as you saw it, without speculating on contents
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: guard_pushes_further
+      - id: claim_not_to_know
+        label: Say you did not get a close look at their belongings
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: lied_to_guard
+            value: true
+        exhaustionCost: 1
+        nextNodeId: lied
+      - id: tell_all_now
+        label: Drop the partial account and tell them everything
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+        exhaustionCost: 1
+        nextNodeId: told_all
+
+  guard_pushes_further:
+    id: guard_pushes_further
+    text: >-
+      {guard.name} sets the ledger on their knee. "A worn leather satchel, held tight.
+      That matches what the gate warden said too." They look at you steadily. "The traveler
+      will not say what is inside it. The captain is considering whether to open it without
+      their consent, which is technically permissible given the circumstances. But if you
+      know something about what is in there, it would help us do this correctly." The word
+      correctly is doing a lot of work in that sentence.
+    choices:
+      - id: advise_caution
+        label: Tell them to be careful. The traveler said not to open it alone.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: satchel_warning_passed
+            value: true
+        exhaustionCost: 1
+        nextNodeId: warning_received
+      - id: stay_quiet
+        label: Say nothing more. Let the captain make their own decision.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: guard_investigates_alone
+      - id: request_captain_directly
+        label: Ask to speak to {captain.name} directly
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: captain_conversation
+
+  satchel_opening_scene:
+    id: satchel_opening_scene
+    text: >-
+      They let you in. The captain stands at the table. The satchel sits in the center,
+      still clasped. {guard.name} is to one side, watching. The traveler is not in the room.
+      The captain looks at you. "You requested to be present. What did the traveler say,
+      exactly, about not opening it alone?" You tell them. The captain nods once, then
+      opens the satchel slowly, with both hands visible. Inside: the oilcloth bundle. The
+      captain peels back a corner, reads one line, and stops. "I see." They reclose it.
+      "This does not leave this room."
+    choices:
+      - id: ask_what_they_saw
+        label: Ask what the captain saw in that one line
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: fraud_documents_known
+            value: true
+        exhaustionCost: 1
+        nextNodeId: captain_conversation
+      - id: say_nothing
+        label: Say nothing. Let the captain decide what to do.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: captain_conversation
+
+  captain_conversation:
+    id: captain_conversation
+    text: >-
+      {captain.name} speaks plainly and quietly. What the satchel contains is a matter for
+      careful handling. They will not tell you what specifically, but they will tell you
+      this: the traveler is safer in the guardhouse than outside it right now, and anyone
+      who has been seen with the traveler should stay close to town and visible. "It is
+      not a threat," the captain says. "It is practical advice." They study you.
+      "How deeply are you in this?"
+    choices:
+      - id: admit_depth
+        label: Admit you know more than you initially said
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{captain.id}'
+            value: 2
+            axis: respect
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_allies
+      - id: claim_peripheral
+        label: Say you only helped a stranger at the gate, that is all
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: morning_routine
+
+  traveler_fate_discussion:
+    id: traveler_fate_discussion
+    text: >-
+      {guard.name} considers. "They will be held until we know what we are dealing with.
+      Could be a day, could be three. Depends on whether the satchel tells a story or not."
+      They look at you with something that might be sympathy. "If you vouched for them
+      last night, that counts for something. But it is not my decision." A pause. "Do you
+      want me to tell them you asked?"
+    choices:
+      - id: yes_tell_them
+        label: Yes. Tell the traveler you asked after them.
+        consequences:
+          - type: relationship
+            target: '{guard.id}'
+            value: 1
+            axis: affection
+          - type: world_fact
+            target: traveler_knows_you_care
+            value: true
+        exhaustionCost: 0
+        nextNodeId: morning_routine
+      - id: no_stay_distant
+        label: No. Keep your distance for now.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: morning_routine
+
+  watching_situation:
+    id: watching_situation
+    text: >-
+      You watch the day carefully. By afternoon you have noticed: two people asked about
+      the traveler at the market, neither of them locals. {guard.name} passed you in the
+      lane without speaking, which could mean anything. The guardhouse door is closed.
+      The situation is not resolved. It is only suspended.
+    choices:
+      - id: go_to_guard_now
+        label: Go to the guardhouse and change your account
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+          - type: world_fact
+            target: lied_to_guard
+            value: false
+        exhaustionCost: 2
+        nextNodeId: told_all
+      - id: wait_and_see
+        label: Wait and see what develops. Stay visible and calm.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: morning_routine
+
+  traveler_warned:
+    id: traveler_warned
+    text: >-
+      {traveler.name} listens to you quickly. They are already half standing before you
+      finish. "How long since the guard asked?" They calculate. "All right. I can work
+      with that." They press the satchel more tightly. "Go back and tell the guard
+      whatever you need to tell them. Do not protect me at the cost of your own position
+      in this town." The steadiness in their voice is not courage, it is practice.
+    choices:
+      - id: go_back_and_tell_truth
+        label: Go back and tell the guard the full truth
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+        exhaustionCost: 1
+        nextNodeId: told_all
+      - id: stay_with_traveler
+        label: Stay with {traveler.name} and help them move to a safer spot
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+        exhaustionCost: 3
+        nextNodeId: morning_routine
+
+  guard_investigates_alone:
+    id: guard_investigates_alone
+    text: >-
+      {guard.name} nods and closes their ledger. "We will handle it from here." You watch
+      them walk back toward the guardhouse. By evening you hear, through the ordinary
+      machinery of town gossip, that the satchel was opened and the contents sent
+      upward, to someone with more authority than the local watch. Whether that is good
+      news depends entirely on who upward turns out to be.
+    choices:
+      - id: find_out_more
+        label: Quietly find out who the contents were sent to
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: fraud_documents_known
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_conversation
+      - id: wait_it_out
+        label: Wait and see what comes of it. You have done what you can.
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: morning_routine
+
+  captain_allies:
+    id: captain_allies
+    text: >-
+      {captain.name} nods slowly. "Then you understand the shape of what we are dealing with."
+      They do not spell it out further but the implication is clear: the satchel contains
+      something that touches powerful people, and the captain is one of the few in this
+      town with both the authority and the inclination to handle it correctly. "Stay in
+      town," they say. "I may need to ask you to stand and say what you know in front of
+      someone official. Will you do that?"
+    choices:
+      - id: agree_to_testify
+        label: Agree. Yes, you will stand and say what you know.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: relationship
+            target: '{captain.id}'
+            value: 3
+            axis: respect
+          - type: world_fact
+            target: agreed_to_testify
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: ask_for_guarantees
+        label: Ask what protection that comes with before agreeing
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{captain.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: null
+
+  morning_routine:
+    id: morning_routine
+    text: >-
+      You get on with your day. The guardhouse is there when you pass it, door closed,
+      ordinary. The town moves around you at its usual pace. But something has shifted
+      in the texture of things, the way a room feels different after someone has searched
+      it, even when everything is back in its place. The questions have been asked.
+      Whatever answers were given, they are already doing their work.
+    choices:
+      - id: keep_watch
+        label: Keep watching. Someone in town knows more than they are saying.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: let_it_settle
+        label: Let it settle. You did your part. What comes next is not yours to manage.
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+
+  considering_the_lie:
+    id: considering_the_lie
+    text: >-
+      The thing about a lie told to a guard is that it exists on paper now. {guard.name}
+      wrote something in that ledger. What they wrote matches what you said. If the true
+      account ever surfaces from another direction, there will be a discrepancy with your
+      name on it. That is a different kind of problem from the original one, and a more
+      durable one. You sit with this and decide how much it matters to you.
+    choices:
+      - id: accept_the_lie_stands
+        label: Accept it. The lie is made. You protect the traveler.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: lied_to_guard
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: go_back_and_correct
+        label: Go back and correct the record before it hardens
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+          - type: world_fact
+            target: lied_to_guard
+            value: false
+        exhaustionCost: 2
+        nextNodeId: told_all
+
+  what_the_guard_knows:
+    id: what_the_guard_knows
+    text: >-
+      You spend part of the day finding out, through the ordinary channels of a small
+      town, what {guard.name} has been doing with what you gave them. The answer is:
+      more than you expected. They spoke to the gate warden, they checked the after-hours
+      log, and they sent a note upward to someone in the guard hierarchy with more
+      authority. Something is moving, quietly, through official channels. The question
+      is whether it moves toward the traveler or toward the problem the traveler was
+      running from.
+    choices:
+      - id: try_to_steer_it
+        label: Try to ensure the investigation goes the right direction
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: captain_conversation
+      - id: let_it_run
+        label: Let it run. You have done what you could.
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+
+  guard_at_door:
+    id: guard_at_door
+    text: >-
+      That evening there is a knock at your door. Not {guard.name}, a different one.
+      They ask three questions, practical and official, about what you saw at the gate
+      and whether you have had any contact with the traveler since. You answer carefully.
+      When they leave you stand in your doorway for a moment, looking at the lane. The
+      town feels slightly different than it did this morning, which is often how you know
+      something has started that you cannot easily stop.
+    choices:
+      - id: find_traveler_tonight
+        label: Go find {traveler.name} tonight and let them know questions are circulating
+        consequences:
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
+          - type: relationship
+            target: '{guard.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: stay_home
+        label: Stay home. Keep your head down. Answer questions when asked.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  reading_the_ledger:
+    id: reading_the_ledger
+    text: >-
+      You think about what {guard.name} wrote in that ledger. Whatever you told them,
+      it is there now in ink: your name, a time, a version of events. Official records
+      have a way of outlasting the conversations that produced them. If the traveler's
+      situation escalates, that ledger entry becomes part of the evidence trail, and
+      your account will be one of the points on it. You gave them a shape. You cannot
+      take it back. You can only be consistent with it.
+    choices:
+      - id: stay_consistent
+        label: Stay consistent with what you said. Consistency is its own protection.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: morning_routine
+      - id: go_back_to_correct
+        label: Go back and amend your account before it is relied upon
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: cooperated_with_guard
+            value: true
+        exhaustionCost: 2
+        nextNodeId: told_all
+
+  document_the_interaction:
+    id: document_the_interaction
+    text: >-
+      You write down what happened: the time, the exact words, the names as you know
+      them. Not for any immediate purpose, but because you understand that conversations
+      like the one you just had have a way of being remembered differently by different
+      people, and having your own account in writing, sealed and dated, is a form of
+      insurance. You fold the paper and put it somewhere that is not your obvious pocket.
+    choices:
+      - id: keep_it_private
+        label: Keep it private. Use it only if needed.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: share_with_trusted_person
+        label: Give a copy to someone you trust to hold it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 1
         exhaustionCost: 1
         nextNodeId: null

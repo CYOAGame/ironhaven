@@ -18,6 +18,17 @@ roles:
     traitRequirements:
       cunning:
         min: 5
+  - id: guard
+    label: A Town Guard
+    archetypeFilter:
+      - soldier
+    factionRequirements:
+      - town_guard
+  - id: neighbor
+    label: A Neighbor
+    archetypeFilter:
+      - farmer
+      - merchant
 
 entryNodeId: start
 
@@ -25,12 +36,14 @@ nodes:
   start:
     id: start
     text: >-
-      Two riders stop you on the road outside town. {stranger.name} leans from the saddle. "We are
-      looking for someone who came through here. Carries a leather satchel, travels alone." Their
-      smile does not reach their eyes. "You would remember someone like that."
+      Two riders have been in town since morning. You spotted them at the market, again
+      near the cooperage, and now {stranger.name} leans from the saddle as you pass
+      the well. "We are looking for someone who came through here. Carries a leather
+      satchel, travels alone." Their smile does not reach their eyes. "You would
+      remember someone like that." Their partner stays mounted, watching the lane.
     choices:
       - id: deny_knowledge
-        label: Shake your head you have not seen anyone like that
+        label: Shake your head. You have not seen anyone like that.
         consequences:
           - type: stat
             target: cunning
@@ -41,7 +54,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: denied
       - id: point_wrong_way
-        label: Send them toward the south road wrong direction
+        label: Send them toward the south road, wrong direction
         consequences:
           - type: stat
             target: cunning
@@ -51,51 +64,199 @@ nodes:
             value: true
         exhaustionCost: 1
         nextNodeId: misdirected
+      - id: ask_who_is_asking
+        label: Ask what their business is in Ironhaven before answering anything
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: probe_the_strangers
       - id: tell_truth
-        label: Tell them what you know this is not your fight
+        label: Tell them what you know. This is not your fight.
         consequences:
           - type: world_fact
             target: betrayed_traveler
             value: true
         exhaustionCost: 0
         nextNodeId: told_truth
-
-  denied:
-    id: denied
-    text: >-
-      {stranger.name} studies you. A long silence. Then they nod once and ride on. You watch until
-      they are out of sight, then let out a slow breath. You hope that was enough.
-    choices:
-      - id: warn_traveler
-        label: Go warn the traveler immediately
-        consequences:
-          - type: relationship
-            target: '{stranger.id}'
-            value: -1
-            axis: trust
-          - type: stat
-            target: charisma
-            value: 1
-        exhaustionCost: 2
-        nextNodeId: null
-      - id: keep_watch
-        label: Watch the road for a while to make sure they have gone
+      - id: excuse_yourself
+        label: Say you have an errand and you cannot stop right now
         consequences:
           - type: stat
             target: cunning
             value: 1
+        exhaustionCost: 0
+        nextNodeId: bought_moment
+
+  probe_the_strangers:
+    id: probe_the_strangers
+    text: >-
+      {stranger.name} pauses, recalibrating. They name a merchant house from three towns
+      east, something generic enough to be true or invented. "Family matter," they say.
+      "The person we are looking for is owed money." The partner shifts slightly in the
+      saddle. The story is plausible if you do not know what you know. You do know what
+      you know.
+    choices:
+      - id: pretend_to_believe
+        label: Nod as if you believe them and give a vague non-answer
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: denied_traveler_to_hunters
+            value: true
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: denied
+      - id: push_on_their_story
+        label: Press them, politely, on the details. See if the story holds.
+        preconditions:
+          - type: trait
+            key: cunning
+            min: 4
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: hunters_unsettled
+            value: true
+        exhaustionCost: 1
+        nextNodeId: strangers_rattled
+      - id: walk_away_carefully
+        label: Say you will keep an eye out and excuse yourself
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: bought_moment
+
+  strangers_rattled:
+    id: strangers_rattled
+    text: >-
+      You ask about the specific merchant house. The name of the clerk who processes
+      the debt collections. The district where the house operates. {stranger.name}'s
+      smile thins. The partner's hand moves slightly. You have unsettled them without
+      accusing them of anything. They cannot quite tell how much you know. "I do not
+      have the details on me," {stranger.name} says carefully. "We were sent to find
+      the person, not to litigate the debt." They are watching you now more carefully
+      than you are watching them.
+    choices:
+      - id: let_them_go_rattled
+        label: Shrug and let them go. You have made your point.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: hunters_unsettled
+            value: true
+        exhaustionCost: 0
+        nextNodeId: after_confrontation
+      - id: follow_up_with_warning
+        label: Add, quietly, that Ironhaven has a thorough guard. Papers get checked.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: hunters_warned_off
+            value: true
+        exhaustionCost: 1
+        nextNodeId: after_confrontation
+
+  bought_moment:
+    id: bought_moment
+    text: >-
+      You get clear of the well and into a side lane. The riders do not follow immediately.
+      You have a window, minutes at most, where you can move before they reacquire you or
+      find someone more willing to talk. There are several things you could do with this time.
+    choices:
+      - id: warn_traveler_urgently
+        label: Go directly to {traveler.name} and tell them the riders are here
+        consequences:
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
+          - type: relationship
+            target: '{stranger.id}'
+            value: -1
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: traveler_warned
+      - id: find_guard_now
+        label: Find {guard.name} and tell them what is happening
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: riders_reported
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guard_alerted
+      - id: circle_back_to_observe
+        label: Circle back and watch the strangers without being seen
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: observed_strangers
+
+  denied:
+    id: denied
+    text: >-
+      {stranger.name} studies you. A long silence, the kind meant to make you fill it.
+      You do not. After a moment they nod, once, and look at their partner. "If you
+      happen to see someone," they say, "we are staying at the south hostel." They ride
+      on unhurried, watching the lanes. You watch until they are out of sight, then let
+      out a slow breath. They did not believe you fully. But they could not call you
+      a liar to your face without showing more of their hand.
+    choices:
+      - id: warn_traveler_after
+        label: Go warn {traveler.name} immediately
+        consequences:
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
+        exhaustionCost: 2
+        nextNodeId: traveler_warned
+      - id: observe_their_route
+        label: Watch where they go next, mark who they speak to
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: hunters_tracked
+            value: true
+        exhaustionCost: 1
+        nextNodeId: observed_strangers
+      - id: go_to_guard
+        label: Go directly to {guard.name} and report the strangers
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: riders_reported
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guard_alerted
 
   misdirected:
     id: misdirected
     text: >-
-      The riders exchange a glance, then wheel their horses south. You watch them go, heart
-      hammering. You bought some time. Possibly a day, possibly less depending on how long before
-      they figure out you lied.
+      The riders exchange a glance and wheel south. You watch them go, heart hammering
+      in a controlled rhythm. You bought time, possibly a full day depending on how long
+      it takes them to realize the south road goes nowhere useful. A day is enough for
+      several things if you move now.
     choices:
-      - id: use_time_wisely
-        label: Use the time to help the traveler get clear of town
+      - id: use_time_for_escape
+        label: Use the time. Go help {traveler.name} get clear of Ironhaven.
         consequences:
           - type: stat
             target: strength
@@ -103,10 +264,408 @@ nodes:
           - type: faction
             target: village_folk
             value: 1
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
         exhaustionCost: 3
-        nextNodeId: null
+        nextNodeId: traveler_warned
+      - id: use_time_for_documents
+        label: Use the time to get the documents to the miller's widow
+        preconditions:
+          - type: world_fact
+            key: fraud_documents_known
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: millers_widow_contacted
+            value: true
+        exhaustionCost: 2
+        nextNodeId: after_confrontation
       - id: lay_low
-        label: Go home and act normal until the dust settles
+        label: Go home. Act normal. Wait for the dust to settle.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: after_confrontation
+
+  told_truth:
+    id: told_truth
+    text: >-
+      {stranger.name}'s expression shifts, something colder underneath. "Good. We thought
+      someone here would be sensible." A coin lands in the dirt at your feet. They ride
+      back toward town without another word. You do not pick up the coin. You stand in the
+      lane and weigh what you have just done against what you could still do, and how much
+      time you have left to do it.
+    choices:
+      - id: try_to_warn_anyway
+        label: Run to warn {traveler.name} before the riders arrive
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: world_fact
+            target: betrayed_traveler
+            value: true
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
+        exhaustionCost: 3
+        nextNodeId: too_late_warning
+      - id: go_to_guard_to_undo
+        label: Go to {guard.name} and tell them what you just told the strangers
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: riders_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: guard_alerted
+      - id: do_nothing
+        label: You told them what you knew. That is the end of it.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: after_confrontation
+
+  traveler_warned:
+    id: traveler_warned
+    text: >-
+      {traveler.name} is already moving before you finish speaking. They have been
+      half-ready to run since they arrived. "How long do I have?" you say what you know.
+      They nod, calculating. The satchel goes on first. They look at you with something
+      that is more complicated than gratitude. "You did not have to come. I will remember
+      that." They are already at the back door, already gone by the time you think of
+      something worth saying.
+    choices:
+      - id: escort_them_out
+        label: Go with them as far as the mill road
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: relationship
+            target: '{stranger.id}'
+            value: -2
+            axis: trust
+          - type: world_fact
+            target: escorting_traveler
+            value: true
+        exhaustionCost: 3
+        nextNodeId: escape_route
+      - id: give_route_only
+        label: Give them the safest route you know and let them go alone
+        consequences:
+          - type: relationship
+            target: '{stranger.id}'
+            value: -1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: after_confrontation
+      - id: pass_a_message
+        label: Ask them to carry a message to the miller's widow when they pass the east road
+        preconditions:
+          - type: world_fact
+            key: fraud_documents_known
+            value: true
+        consequences:
+          - type: world_fact
+            target: millers_widow_contacted
+            value: true
+        exhaustionCost: 1
+        nextNodeId: after_confrontation
+
+  too_late_warning:
+    id: too_late_warning
+    text: >-
+      You get there in time to see the riders arrive first. {traveler.name} is already
+      surrounded, not violently, but effectively, the way patient people surround someone
+      who has run out of room. The satchel is under their arm. {stranger.name} holds out
+      a hand. {traveler.name} looks at you once, over the rider's shoulder, and the look
+      says: you tried. Then they hold out the satchel. You watch from the lane, out of
+      breath, not quite in time.
+    choices:
+      - id: intervene_anyway
+        label: Step forward and intervene anyway
+        preconditions:
+          - type: trait
+            key: charisma
+            min: 4
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: riders_confronted
+            value: true
+        exhaustionCost: 3
+        nextNodeId: standoff
+      - id: go_to_guard_immediately
+        label: Turn and go directly to {guard.name} before the riders leave town
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: riders_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: guard_alerted
+
+  guard_alerted:
+    id: guard_alerted
+    text: >-
+      {guard.name} listens quickly and does not ask twice. They move. Two more guards
+      are pulled from the square. The riders, when approached with a formal request for
+      papers and purpose, cannot simply refuse. They do not have legal standing to compel
+      anything in Ironhaven. The law slows them down. Whether it stops them depends on
+      what they find, or do not find, in the next few hours.
+    choices:
+      - id: use_guard_delay
+        label: Use the delay. Go to {traveler.name} now.
+        consequences:
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
+        exhaustionCost: 2
+        nextNodeId: traveler_warned
+      - id: stay_with_guard
+        label: Stay with the guard and add your testimony to the formal questioning
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: relationship
+            target: '{guard.id}'
+            value: 2
+            axis: respect
+        exhaustionCost: 2
+        nextNodeId: standoff
+
+  observed_strangers:
+    id: observed_strangers
+    text: >-
+      From a comfortable distance you watch {stranger.name} and the partner work through
+      the square methodically. They speak to {neighbor.name} at the bread stall, to the
+      gate warden, to two people outside the cooperage. You cannot hear the words but you
+      can see who talks at length and who gives short answers. {neighbor.name} talks at length.
+      The partner writes something down. They are building a picture. You are part of it.
+    choices:
+      - id: intercept_neighbor
+        label: Go to {neighbor.name} before the riders circle back to them
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: hunters_unsettled
+            value: true
+        exhaustionCost: 2
+        nextNodeId: after_confrontation
+      - id: go_warn_traveler_now
+        label: You have seen enough. Go warn {traveler.name}.
+        consequences:
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
+        exhaustionCost: 2
+        nextNodeId: traveler_warned
+      - id: go_to_guard_with_intel
+        label: Take what you have observed to {guard.name} as actionable information
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: riders_reported
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guard_alerted
+
+  escape_route:
+    id: escape_route
+    text: >-
+      The mill road is quiet. You and {traveler.name} move quickly and without speaking,
+      past the tanner's yard and through the gap in the south hedge the local children use
+      as a shortcut. At the edge of town, where the road bends and Ironhaven disappears
+      behind the rise, {traveler.name} stops. "This is far enough." They face you. "I will
+      not forget what you did. If this comes out the way I think it will, people will want
+      to know who helped. I will tell them honestly."
+    choices:
+      - id: wish_them_well
+        label: Wish them well and watch them go
+        consequences:
+          - type: relationship
+            target: '{stranger.id}'
+            value: -3
+            axis: trust
+          - type: world_fact
+            target: traveler_escaped
+            value: true
+        exhaustionCost: 0
+        nextNodeId: after_confrontation
+      - id: ask_them_to_contact_widow
+        label: Ask {traveler.name} to go to the miller's widow on the east road
+        consequences:
+          - type: world_fact
+            target: millers_widow_contacted
+            value: true
+          - type: world_fact
+            target: traveler_escaped
+            value: true
+        exhaustionCost: 0
+        nextNodeId: after_confrontation
+
+  standoff:
+    id: standoff
+    text: >-
+      The moment stretches. {stranger.name}'s attention moves to you. They recalibrate,
+      quickly. The partner stays very still. "This does not need to be complicated," {stranger.name}
+      says pleasantly. "We are only looking for what belongs to our employer." Whatever
+      happens next is determined by who blinks, and the law is technically on your side
+      if you keep it visible. A guard is within shouting distance.
+    choices:
+      - id: call_for_guard
+        label: Call for {guard.name} loudly and by name
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: world_fact
+            target: riders_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: guard_alerted
+      - id: negotiate
+        label: Tell the riders {traveler.name} will meet them outside town, on neutral ground
+        preconditions:
+          - type: trait
+            key: charisma
+            min: 4
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: riders_misdirected
+            value: true
+        exhaustionCost: 2
+        nextNodeId: after_confrontation
+
+  after_confrontation:
+    id: after_confrontation
+    text: >-
+      The riders leave Ironhaven before nightfall. What they took with them depends on
+      what you did and did not do. {traveler.name} is somewhere: escaped, in hiding, in
+      custody, or gone quietly into the countryside with a satchel full of documents that
+      will do their work slowly over the next few weeks. The square feels larger than it
+      did this morning. Ironhaven has been part of something, whether it knows it yet or not.
+    choices:
+      - id: pursue_what_comes_next
+        label: This is not finished. Find out what the documents set in motion.
+        consequences:
+          - type: world_fact
+            target: pursuing_ironhaven_fraud
+            value: true
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: let_it_rest_for_now
+        label: Let it rest. You played your part. What comes next will come.
+        consequences:
+          - type: relationship
+            target: '{stranger.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: check_on_neighbor
+        label: Check on {neighbor.name} and find out what they told the strangers
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: hunters_tracked
+            value: true
+        exhaustionCost: 1
+        nextNodeId: neighbor_account
+
+  neighbor_account:
+    id: neighbor_account
+    text: >-
+      {neighbor.name} is not proud of it. "They offered coin," they say, not quite
+      meeting your eyes. "I told them someone came through the gate two nights ago,
+      leather bag, traveling alone. That is all I said." They look at you. "I did not
+      say where they went." A pause. "I did not know where they went." The information
+      given was limited. The fact that it was given at all is the problem. The strangers
+      now know the timing and the description are confirmed. That is enough.
+    choices:
+      - id: not_blame_neighbor
+        label: Tell them you understand. Do not make it harder than it is.
+        consequences:
+          - type: relationship
+            target: '{neighbor.id}'
+            value: 1
+            axis: affection
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: warn_neighbor_to_say_nothing_more
+        label: Warn {neighbor.name} to say nothing more if the strangers come back
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{neighbor.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: null
+
+  town_in_the_aftermath:
+    id: town_in_the_aftermath
+    text: >-
+      Ironhaven settles back into its rhythms. The strangers are gone. The questions
+      they asked are still in the air, attached to the people who answered them and the
+      people who did not. {traveler.name} is wherever they ended up. The satchel is
+      wherever the satchel went. The name written on those documents is still in town,
+      going about their business, possibly aware and possibly not that the net drew close
+      this week and then moved on. Or did not move on.
+    choices:
+      - id: investigate_the_named_person
+        label: Look into the named person quietly. Know your town better than before.
+        preconditions:
+          - type: world_fact
+            key: fraud_documents_known
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: pursuing_ironhaven_fraud
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: let_the_town_settle
+        label: Let the town settle. These things have their own pace.
         consequences:
           - type: stat
             target: cunning
@@ -114,29 +673,124 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
 
-  told_truth:
-    id: told_truth
+  reading_what_happened:
+    id: reading_what_happened
     text: >-
-      {stranger.name}'s expression shifts something colder underneath. "Good. We thought so." A
-      coin lands in the dirt at your feet. They ride back toward town without another word. You do
-      not pick up the coin.
+      Three days later you have enough pieces to read what happened. The strangers did
+      not find {traveler.name}, or they found them and made a deal that did not involve
+      the town further, or they found them and something was taken, or they left empty
+      and are planning a return. The version that reached you through ordinary town talk
+      may or may not be accurate. But you notice: the named person's window was lit late
+      for two nights after the strangers left, which it usually is not.
     choices:
-      - id: try_to_warn
-        label: Run to warn the traveler before the riders arrive
+      - id: note_the_window
+        label: Note it. Someone is worried, or busy, or both.
         consequences:
           - type: stat
-            target: strength
-            value: 1
-          - type: exhaustion
-            target: self
+            target: cunning
             value: 2
-        exhaustionCost: 3
+          - type: world_fact
+            target: pursuing_ironhaven_fraud
+            value: true
+        exhaustionCost: 1
         nextNodeId: null
-      - id: do_nothing
-        label: You told them what you knew. That is the end of it.
+      - id: ask_around_about_window
+        label: Casually ask around about the named person's activities recently
         consequences:
           - type: stat
             target: cunning
             value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  what_they_left_behind:
+    id: what_they_left_behind
+    text: >-
+      The strangers are gone but they left a residue. A few people in town are slightly
+      more watchful than they were before, aware that something moved through Ironhaven
+      that was not ordinary. The gate warden checks papers a little more carefully this
+      week. {neighbor.name} avoids meeting your eye in the square. {guard.name} has been
+      to three houses on the workshop lane asking routine questions that are not routine.
+      The strangers did not find what they came for, or they did, but either way the town
+      has changed texture slightly.
+    choices:
+      - id: map_the_changes
+        label: Map the changes you can see. Understand what shifted and why.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: town_in_the_aftermath
+      - id: let_it_settle_naturally
+        label: Let it settle naturally. Towns absorb these things.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  letter_arrives:
+    id: letter_arrives
+    text: >-
+      Four days after the strangers left, a letter arrives for you. No seal, no return
+      address. Inside, in a careful hand you recognize as {traveler.name}'s: "Safe.
+      Moving. The widow received the delivery. Thank you." Three sentences and a smudge
+      where the paper was folded quickly. You read it twice, then burn it as anyone with
+      sense would, and sit for a moment with the feeling of something having gone, not
+      wrong exactly, but into motion, and far enough now that you can only watch where
+      it lands.
+    choices:
+      - id: feel_the_weight_of_it
+        label: Feel the weight of it. You moved something and do not know where it will stop.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: pursuing_ironhaven_fraud
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: take_it_as_closure
+        label: Take it as closure. They are safe. The documents are moving. Enough.
+        consequences:
+          - type: relationship
+            target: '{stranger.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 0
+        nextNodeId: null
+
+  the_coin_in_the_dirt:
+    id: the_coin_in_the_dirt
+    text: >-
+      You go back to the spot where the coin landed. It is still there. No one picked
+      it up, either. It has been sitting in the lane mud since {stranger.name} dropped
+      it. That tells you something about how people read the gesture. You stand over it
+      for a moment and think about what you know and what you did with it and whether
+      those two things are in reasonable alignment. Then you leave the coin where it is.
+    choices:
+      - id: leave_the_coin
+        label: Leave it. Some things should stay where they fell.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: pursuing_ironhaven_fraud
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: pick_it_up_as_evidence
+        label: Pick it up. It is evidence of a transaction, even a one-sided one.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: riders_identified
+            value: true
         exhaustionCost: 0
         nextNodeId: null

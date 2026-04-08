@@ -25,6 +25,11 @@ roles:
     label: A Merchant
     archetypeFilter:
       - merchant
+  - id: alderman
+    label: The Deciding Alderman
+    archetypeFilter:
+      - merchant
+      - farmer
 
 entryNodeId: start
 
@@ -35,9 +40,9 @@ nodes:
       The argument spills out of the guild hall and into the lane. {craftsman.name} jabs a
       finger at {merchant.name}, face red. "You import shoddy foreign goods and call it trade!
       You are strangling every skilled hand in this town!" The merchant crosses their arms.
-      "I sell what the market demands unlike your guild, which demands without producing."
-      A crowd is forming. Neither of them has noticed you yet, which means you still have
-      a choice about how you enter this.
+      "I sell what the market demands, unlike your guild, which demands without producing."
+      A crowd is forming. Neither has noticed you yet, which means you still have a choice
+      about how you enter this.
     choices:
       - id: side_craftsman
         label: Step in and back the craftsman publicly
@@ -93,7 +98,7 @@ nodes:
         exhaustionCost: 2
         nextNodeId: mediated
       - id: watch_and_leave
-        label: Watch in silence you want to understand before acting
+        label: Stay on the edge of the crowd. Listen before acting.
         consequences:
           - type: stat
             target: cunning
@@ -109,10 +114,10 @@ nodes:
     text: >-
       {craftsman.name} straightens, emboldened. {merchant.name} narrows their eyes at you.
       "Another guild lapdog." They walk away with the deliberate pace of someone who is not
-      finished, only postponing. The craftsman grips your arm. "We will remember our friends
-      when it matters." The crowd disperses. {craftsman.name} lowers their voice. "The import
-      ledgers the merchant is hiding I have seen copies. Come to the hall tonight. There
-      is more to this than a street argument."
+      finished, only postponing. {craftsman.name} grips your arm. "We will remember our friends
+      when it matters." The crowd disperses. Then, lower: "The import ledgers the merchant is
+      hiding, I have seen copies. Come to the hall tonight. There is more to this than a
+      street argument."
     choices:
       - id: agree_to_hall_meeting
         label: Agree to come to the guild hall tonight
@@ -125,29 +130,39 @@ nodes:
             target: guild_hall_meeting_arranged
             value: true
         exhaustionCost: 1
-        nextNodeId: learns_stakes
+        nextNodeId: guild_hall_meeting
       - id: ask_whats_at_stake
-        label: Ask what exactly is being disputed before committing to anything
+        label: Ask what exactly is being disputed before committing
         consequences:
           - type: stat
             target: cunning
             value: 1
         exhaustionCost: 1
         nextNodeId: learns_stakes
+      - id: ask_about_the_ledgers
+        label: Ask specifically about the import ledgers right now
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: guild_hall_meeting_arranged
+            value: true
+        exhaustionCost: 1
+        nextNodeId: ledger_details
 
   sided_merchant:
     id: sided_merchant
     text: >-
       {merchant.name} gives you a thin, satisfied smile. {craftsman.name} spits on the
-      cobblestones and storms off "You will regret this," they call back. The merchant
-      smooths their coat. "Sensible. Come walk with me. There is opportunity for people
-      who understand how trade actually works. The guild is trying to force a new levy on
-      imports. If it passes, half the market stalls will empty within the year. I need
-      someone to carry a message to the alderman a private message. No names. You would
+      cobblestones and storms off, calling back: "You will regret this." The merchant
+      smooths their coat. "Sensible. Come walk with me. The guild is trying to force a
+      new levy on imports. If it passes, half the market stalls will empty within the year.
+      I need someone to carry a message to the alderman, privately. No names. You would
       be doing the whole town a service."
     choices:
       - id: agree_to_carry_message
-        label: Agree to carry the message to the alderman
+        label: Agree to carry the message
         consequences:
           - type: relationship
             target: '{merchant.id}'
@@ -157,7 +172,7 @@ nodes:
             target: carrying_merchant_message
             value: true
         exhaustionCost: 1
-        nextNodeId: learns_stakes
+        nextNodeId: merchant_details
       - id: ask_what_message_says
         label: Ask to know what is in the message before carrying it
         consequences:
@@ -169,21 +184,29 @@ nodes:
             value: 1
             axis: trust
         exhaustionCost: 1
-        nextNodeId: learns_stakes
+        nextNodeId: merchant_details
+      - id: ask_about_the_alderman
+        label: Ask which alderman, and what kind of person they are
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: alderman_context
 
   mediated:
     id: mediated
     text: >-
       Both parties glare at you, then at each other. The crowd disperses, muttering.
-      Neither is truly satisfied but the shouting stops. {craftsman.name} shakes their
-      head. "Pretty words do not fix a broken market." {merchant.name} straightens their
-      coat. "At least someone here has some sense." Before they separate, you catch
-      something pass between them not a word, but a look. The look of two people who
-      have had this conversation before, who know exactly where it ends, and who are
-      playing to a different audience than the crowd.
+      Neither is satisfied but the shouting stops. {craftsman.name} shakes their head.
+      "Pretty words do not fix a broken market." {merchant.name} straightens their coat.
+      "At least someone here has some sense." Before they separate, something passes
+      between them: not a word, but a look. The look of two people who have had this
+      conversation before, who know exactly where it ends, and who are performing for
+      a different audience than the crowd.
     choices:
       - id: press_for_meeting
-        label: Suggest they meet formally with a neutral party present you
+        label: Suggest they meet formally with a neutral party present, you
         consequences:
           - type: stat
             target: charisma
@@ -206,15 +229,27 @@ nodes:
             target: merchant_followed
             value: true
         exhaustionCost: 1
-        nextNodeId: learns_stakes
+        nextNodeId: merchant_seen
+      - id: speak_to_craftsman_alone
+        label: Wait until the merchant leaves and approach {craftsman.name} privately
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{craftsman.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: ledger_details
 
   watched:
     id: watched
     text: >-
       You drift to the edge of the crowd and keep still. You hear it all. Trade rights.
       Import fees. An alderman who has been taking payments from both guilds. A vote
-      scheduled for the end of the month that could reshape commerce in Ironhaven for
-      a generation. Neither {craftsman.name} nor {merchant.name} notices you watching
+      scheduled for the end of the month that could reshape commerce in Ironhaven for a
+      generation. Neither {craftsman.name} nor {merchant.name} notices you watching,
       or if they do, they do not care. You are just another face. That is useful.
     choices:
       - id: approach_craftsman_alone
@@ -228,7 +263,7 @@ nodes:
             value: 1
             axis: trust
         exhaustionCost: 1
-        nextNodeId: learns_stakes
+        nextNodeId: ledger_details
       - id: approach_merchant_alone
         label: Wait until the craftsman leaves, then approach {merchant.name} privately
         consequences:
@@ -240,22 +275,306 @@ nodes:
             value: 1
             axis: trust
         exhaustionCost: 1
+        nextNodeId: merchant_details
+      - id: investigate_alderman
+        label: You heard the alderman mentioned. Find out who that is before approaching either side.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: alderman_context
+
+  guild_hall_meeting:
+    id: guild_hall_meeting
+    text: >-
+      The guild hall smells of sawdust and tallow. Five craftsmen around a table, {craftsman.name}
+      at the head. They speak plainly: the import levy vote is in three days. The merchant
+      faction has been lobbying the alderman who holds the deciding vote. Someone has been
+      paying that alderman from both sides, which means the alderman is currently available
+      to whoever applies the most pressure last. "We need someone outside the guild to carry
+      a word to the alderman," {craftsman.name} says. "Someone with no obvious allegiance."
+      They look at you.
+    choices:
+      - id: agree_to_approach_alderman
+        label: Agree to approach the alderman on the guild's behalf
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: relationship
+            target: '{craftsman.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_meeting
+      - id: ask_for_the_ledgers
+        label: Ask to see the import ledgers they mentioned before agreeing to anything
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: ledger_details
+      - id: offer_different_help
+        label: Offer to find out what the merchant has already promised the alderman
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: investigating_both_sides
+            value: true
+        exhaustionCost: 2
+        nextNodeId: merchant_seen
+
+  ledger_details:
+    id: ledger_details
+    text: >-
+      The ledgers are spread on a table in a back room. The numbers tell a story: goods
+      marked as locally produced on the official roll, imported through a loophole in the
+      charter, underpriced by exactly enough to undercut guild pricing. The margins are
+      thin but they add up over three years to a substantial advantage. "The guild produces
+      better goods," {craftsman.name} says. "But we cannot compete with a merchant who is
+      running a legal fiction." They tap the page. "If the levy passes, this loophole closes.
+      If it does not, another ten craftsmen close their doors by winter."
+    choices:
+      - id: believe_the_ledgers
+        label: Say the ledgers are convincing. You will help.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: guild_dispute
+            value: true
+        exhaustionCost: 0
+        nextNodeId: learns_stakes
+      - id: check_other_side
+        label: Before committing, say you want to hear the merchant's version
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: investigating_both_sides
+            value: true
+        exhaustionCost: 1
+        nextNodeId: merchant_details
+      - id: note_what_you_saw
+        label: Note the key figures mentally. This information has value before it is used.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: knows_ledger_details
+            value: true
+        exhaustionCost: 1
+        nextNodeId: learns_stakes
+
+  merchant_details:
+    id: merchant_details
+    text: >-
+      {merchant.name} speaks in their private office, with the door closed and a bottle of
+      wine on the desk. Their version is different and also plausible. The guild has been
+      running its own quality cartel for fifteen years, blocking cheaper materials and
+      inflating prices for common goods. The import levy would formalize that cartel behind
+      law. "The market corrects for quality naturally," the merchant says. "The guild wants
+      the law to do what the market will not." They slide a paper across the desk.
+      "My terms for the alderman. If you carry this, I will cut you in on the first delivery."
+    choices:
+      - id: take_the_terms
+        label: Take the paper and agree to carry it
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 3
+          - type: faction
+            target: craftsmen_guild
+            value: -1
+          - type: relationship
+            target: '{merchant.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: carrying_merchant_message
+            value: true
+        exhaustionCost: 1
+        nextNodeId: alderman_meeting
+      - id: read_the_terms_first
+        label: Read the paper carefully before agreeing to anything
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: merchant_terms_read
+      - id: take_and_hold
+        label: Take the paper but do not commit. Keep it as information.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: knows_merchant_terms
+            value: true
+        exhaustionCost: 1
+        nextNodeId: learns_stakes
+
+  merchant_seen:
+    id: merchant_seen
+    text: >-
+      You follow {merchant.name} at a careful distance through two lanes and into the
+      back of the cooper's yard. They meet someone briefly, not the alderman, but a
+      courier. A sealed letter changes hands. The courier goes south. {merchant.name}
+      returns to the market as if nothing happened. The alderman lives south of here.
+      The letter will arrive before any message you might carry.
+    choices:
+      - id: intercept_courier
+        label: Follow the courier and try to intercept the letter
+        preconditions:
+          - type: trait
+            key: cunning
+            min: 4
+        consequences:
+          - type: stat
+            target: cunning
+            value: 3
+          - type: world_fact
+            target: knows_merchant_terms
+            value: true
+        exhaustionCost: 3
+        nextNodeId: alderman_context
+      - id: report_to_craftsman
+        label: Go back to {craftsman.name} and report what you saw
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: relationship
+            target: '{craftsman.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: learns_stakes
+      - id: go_to_alderman_directly
+        label: Go to the alderman yourself, now, before the courier arrives
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_meeting
+
+  alderman_context:
+    id: alderman_context
+    text: >-
+      The alderman holds the deciding vote and has been holding it carefully. Local
+      knowledge suggests they have taken silver from both guilds over the past two years,
+      which makes them not corrupt so much as indecisive about who to be corrupt for.
+      They are a person who wants to be on the winning side, and they have not yet decided
+      which side that is. The vote is in three days. Someone who knows this and arrives
+      with a credible account of where the power is shifting could tip them.
+    choices:
+      - id: go_to_alderman_with_guild
+        label: Go to the alderman carrying the craftsmen's argument
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_meeting
+      - id: go_to_alderman_with_merchant
+        label: Go to the alderman carrying the merchant's argument
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_meeting
+      - id: use_as_leverage
+        label: Hold the information. The alderman's position is leverage before it is spent.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: playing_both_guilds
+            value: true
+        exhaustionCost: 1
+        nextNodeId: learns_stakes
+
+  merchant_terms_read:
+    id: merchant_terms_read
+    text: >-
+      The terms are clear and also revealing. The merchant is not simply opposing the levy.
+      They are proposing a counter-arrangement: a self-regulated import council controlled
+      entirely by the merchants' guild, with nominal guild craftsmen representation that
+      amounts to a decoration. The charitable reading is efficient market governance.
+      The less charitable reading is that the craftsmen would be absorbed and neutralized
+      while the merchant controls the charter loophole indefinitely.
+    choices:
+      - id: refuse_and_warn_guild
+        label: Refuse to carry this and go warn {craftsman.name}
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: faction
+            target: merchants_guild
+            value: -2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 2
+        nextNodeId: learns_stakes
+      - id: carry_but_warn_alderman
+        label: Carry the terms but warn the alderman privately what they actually mean
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: carrying_merchant_message
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_meeting
+      - id: bring_to_guard
+        label: Take this to the town guard. An arrangement this structured may be illegal.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: alderman_corruption_reported
+            value: true
+        exhaustionCost: 2
         nextNodeId: learns_stakes
 
   learns_stakes:
     id: learns_stakes
     text: >-
-      Whatever thread brought you here the guild hall, a private conversation, or a
-      quiet piece of information gathered from the edge of a crowd the core of the
-      dispute is the same: there is a vote in three days before the town aldermen. The
-      craftsmen's guild wants a protective levy on imported goods. The merchants want it
-      blocked. The alderman who will cast the deciding vote is a man who has taken money
-      from both sides. He is, at this moment, undecided or rather, waiting to see
-      which side applies more pressure. You have been handed the shape of the lever.
-      The question is what you do with it.
+      Whatever thread brought you here, the core of the dispute is the same: there is a
+      vote in three days before the town aldermen. The craftsmen's guild wants a protective
+      levy on imported goods. The merchants want it blocked. The alderman who will cast the
+      deciding vote has taken money from both sides and is waiting to see which applies more
+      pressure. You have been handed the shape of the lever. The question is what you do with it.
     choices:
       - id: approach_alderman
-        label: Go to the alderman directly let them know you understand the situation
+        label: Go to the alderman directly. Let them know you understand the situation.
         consequences:
           - type: stat
             target: cunning
@@ -264,7 +583,7 @@ nodes:
             target: alderman_approached
             value: true
         exhaustionCost: 2
-        nextNodeId: confrontation
+        nextNodeId: alderman_meeting
       - id: use_info_as_leverage
         label: Hold the information and let both guilds know you could go either way
         consequences:
@@ -288,15 +607,82 @@ nodes:
         exhaustionCost: 1
         nextNodeId: confrontation
 
+  alderman_meeting:
+    id: alderman_meeting
+    text: >-
+      {alderman.name} receives you at their house, a spare room with a ledger on the desk
+      and the look of someone who has been expecting exactly this kind of visit. They hear
+      you out without interrupting. When you finish, they are quiet for a moment, then:
+      "You are the third person who has come to me this week with an opinion on this vote.
+      Each of you thinks you are the first." They study you. "Tell me something none of
+      the others would have told me."
+    choices:
+      - id: share_ledger_evidence
+        label: Tell them about the import ledgers. The specific figures.
+        preconditions:
+          - type: world_fact
+            key: knows_ledger_details
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: confrontation
+      - id: share_merchant_terms
+        label: Tell them what the merchant's terms actually propose to do to the guild
+        preconditions:
+          - type: world_fact
+            key: knows_merchant_terms
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: confrontation
+      - id: tell_about_courier
+        label: Tell them a letter is already on its way to them. Ask what is in it.
+        preconditions:
+          - type: world_fact
+            key: merchant_followed
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 3
+          - type: world_fact
+            target: alderman_unsettled
+            value: true
+        exhaustionCost: 2
+        nextNodeId: confrontation
+      - id: honest_appeal
+        label: "Tell them the truth: the town will remember how this vote lands, and so will you"
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: relationship
+            target: '{alderman.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 1
+        nextNodeId: confrontation
+
   confrontation:
     id: confrontation
     text: >-
-      Whatever move you made, the board shifts. {craftsman.name} and {merchant.name}
-      both know something has changed by the end of the day you can read it in the
-      way they each give you a slightly longer look when your paths cross in the square.
-      The vote will happen. The outcome is no longer certain. And your position in
-      the space between these two factions has been established, whether you intended
-      it or not.
+      Whatever move you made, the board shifts. {craftsman.name} and {merchant.name} both
+      know something has changed by the end of the day. You can read it in the way each
+      gives you a slightly longer look when your paths cross in the square. The vote will
+      happen. The outcome is no longer certain. And your position in the space between these
+      two factions has been established, whether you intended it or not.
     choices:
       - id: build_craftsman_alliance
         label: Commit to the craftsmen's cause before the vote
@@ -329,7 +715,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: null
       - id: stay_neutral
-        label: Stay neutral your value is precisely that you have not committed
+        label: Stay neutral. Your value is precisely that you have not committed.
         consequences:
           - type: stat
             target: cunning
@@ -339,3 +725,398 @@ nodes:
             value: true
         exhaustionCost: 0
         nextNodeId: null
+      - id: expose_alderman_publicly
+        label: Make the alderman's double-dealing known. Let the guilds sort it out without the corruption.
+        preconditions:
+          - type: world_fact
+            key: alderman_corruption_reported
+            value: true
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: alderman_exposed
+            value: true
+          - type: stat
+            target: charisma
+            value: 2
+        exhaustionCost: 3
+        nextNodeId: null
+
+  reading_both_sides:
+    id: reading_both_sides
+    text: >-
+      You have now spoken with both parties, or heard both cases through different
+      channels. The honest assessment is: they are both partly right. The craftsmen
+      produce better goods at higher prices. The merchants provide cheaper goods at
+      lower quality. The town needs both, in some proportion. The dispute is not about
+      facts, it is about who controls the proportion and who profits from setting it.
+      The alderman is the mechanism for that control, and they are currently for sale.
+    choices:
+      - id: approach_as_neutral
+        label: Approach the alderman as a genuinely neutral observer with a synthesis
+        preconditions:
+          - type: world_fact
+            key: investigating_both_sides
+            value: true
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_meeting
+      - id: decide_to_take_a_side
+        label: Decide you have seen enough. Pick the side that is more right.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: learns_stakes
+
+  three_days_to_vote:
+    id: three_days_to_vote
+    text: >-
+      The vote is in three days. The town knows the vote is coming, even if most people
+      do not know the details. Prices have shifted slightly at the market, which is how
+      people who watch prices can tell something is happening in the background. Both
+      guilds are in motion: meetings, private conversations, letters sent and received.
+      You are somewhere in this. The question is whether your position is defined or
+      still being formed.
+    choices:
+      - id: define_position_now
+        label: Define your position now. Stop being available to both sides.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: confrontation
+      - id: spend_day_watching
+        label: Spend the day watching and listening. One more day of information is worth something.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: reads_the_room
+
+  reads_the_room:
+    id: reads_the_room
+    text: >-
+      You spend the day at the edges of conversations, in doorways, at the well, at the
+      market stall corners. By evening you have a clearer picture: the craftsmen are
+      frightened and angry in equal measure. The merchants are confident but wary of
+      overconfidence. The alderman has been to three private meals in two days, which is
+      unusual. Something is being decided in rooms you do not have access to. You know
+      enough now to make a useful move.
+    choices:
+      - id: go_to_alderman_tonight
+        label: Go to the alderman tonight before whatever is happening in those rooms concludes
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_meeting
+      - id: use_information_with_craftsman
+        label: Take what you know to {craftsman.name} and let them use it
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: relationship
+            target: '{craftsman.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: confrontation
+      - id: use_information_with_merchant
+        label: Take what you know to {merchant.name} and let them use it
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: relationship
+            target: '{merchant.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: confrontation
+
+  the_day_before_vote:
+    id: the_day_before_vote
+    text: >-
+      The day before the vote, the town square has the texture of held breath. People
+      who normally pass without speaking stop and exchange words. The craftsmen's guild
+      hall has its lights on at midday. The merchants' tables have sharper expressions
+      than usual. You have made your choices in the days leading here. Tomorrow will
+      tell you what those choices were worth.
+    choices:
+      - id: go_to_alderman_last_moment
+        label: Make one last visit to the alderman before the vote
+        preconditions:
+          - type: world_fact
+            key: alderman_approached
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: alderman_unsettled
+            value: true
+        exhaustionCost: 1
+        nextNodeId: confrontation
+      - id: prepare_yourself
+        label: Prepare yourself. Tomorrow you will be visible whatever happens.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: confrontation
+
+  overheard_at_the_well:
+    id: overheard_at_the_well
+    text: >-
+      At the well you overhear two people you do not know well: a tanner's apprentice
+      and a bread-seller. The tanner's apprentice is afraid of losing their master's work
+      if the import goods get cheaper. The bread-seller is afraid of the guild levy
+      raising costs for the grain they use. Both fears are real. Both people are collateral
+      in a dispute neither of them controls. They stop talking when they notice you.
+      What you do with having heard this depends on what you value.
+    choices:
+      - id: speak_to_both
+        label: Speak to both of them. Hear their fears directly.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: finding_common_ground
+      - id: carry_their_concerns
+        label: Carry their concerns to whichever side you are working with
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: learns_stakes
+
+  private_talk_with_alderman:
+    id: private_talk_with_alderman
+    text: >-
+      The alderman meets with you privately, away from the formal office, which suggests
+      they want this conversation to be unofficial. They are trying to understand what
+      the town actually thinks, beyond the guilds. They ask you three questions about
+      everyday people's experience of prices and goods in the market. The questions are
+      good questions. Whatever their personal corruption, they are not a stupid person.
+    choices:
+      - id: answer_honestly
+        label: Answer honestly. Give them the real picture.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{alderman.id}'
+            value: 2
+            axis: respect
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 1
+        nextNodeId: confrontation
+      - id: answer_strategically
+        label: Answer strategically. Give them the picture that helps your preferred outcome.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 1
+        nextNodeId: confrontation
+
+  market_prices_shift:
+    id: market_prices_shift
+    text: >-
+      Two days before the vote, grain prices in the market drop by two copper a bushel.
+      It happens quietly, the way things happen when they have been arranged rather than
+      discovered. {merchant.name}'s stall has the new price posted first. By mid-morning
+      three others match it. The craftsmen's stalls do not: they sell finished goods, not
+      grain. But the people who buy grain are now looking at the merchant stalls differently,
+      and looking at the guild levy proposal as something that might make grain expensive again.
+    choices:
+      - id: recognize_the_manipulation
+        label: Recognize this for what it is. Tell {craftsman.name}.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: relationship
+            target: '{craftsman.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: confrontation
+      - id: use_it_yourself
+        label: Note the timing carefully. This is useful information for the alderman conversation.
+        preconditions:
+          - type: world_fact
+            key: alderman_approached
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_unsettled
+            value: true
+        exhaustionCost: 1
+        nextNodeId: alderman_meeting
+
+  the_vote_result:
+    id: the_vote_result
+    text: >-
+      The vote happens the next morning. By noon Ironhaven knows the result, the way small
+      towns know things: through a sequence of knowing looks and half-finished sentences
+      that add up to a clear picture before the official announcement. Whatever the alderman
+      decided, the market reacts before the ink dries. Prices shift. Conversations shift.
+      {craftsman.name} and {merchant.name} will both be living with this result for years.
+    choices:
+      - id: find_out_the_result_from_guild
+        label: Go to the guild hall and hear how the craftsmen received it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: find_out_result_from_merchant
+        label: Go to the merchant stalls and watch how they handle it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+
+  your_stake_in_the_outcome:
+    id: your_stake_in_the_outcome
+    text: >-
+      Whatever the vote produces, it affects you. Even if you stayed neutral, the people
+      on both sides will remember where you were standing and what you said and to whom.
+      In a town this size, political capital is earned and spent in increments. You spent
+      some of yours in the past few days. Whether it was well spent depends on whether
+      the side you backed, or the neutral position you held, paid out in something that
+      mattered.
+    choices:
+      - id: assess_your_position
+        label: Assess your position in Ironhaven honestly. What do you have now that you did not before?
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: move_on_to_next_thing
+        label: Move on. The vote is done. Ironhaven keeps moving.
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+
+  finding_common_ground:
+    id: finding_common_ground
+    text: >-
+      In a quiet moment between the confrontations, you find yourself in a space where
+      neither {craftsman.name} nor {merchant.name} is present, talking to ordinary people
+      who buy from both. The consensus among the people who are not guilded is: they want
+      quality and they want affordability and they understand these two things are in tension.
+      They are tired of being the battleground for that tension. This is also useful information.
+    choices:
+      - id: bring_consumer_voice_to_alderman
+        label: Bring this perspective to the alderman. Let them know the town is more than two guilds.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_meeting
+      - id: tell_craftsman_what_you_heard
+        label: Tell {craftsman.name} what the non-guilded people are saying
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: relationship
+            target: '{craftsman.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 1
+        nextNodeId: confrontation
+
+  faction_asks_for_loyalty:
+    id: faction_asks_for_loyalty
+    text: >-
+      Whichever side you have been seen with more, they send someone to find you
+      the evening before the vote. The message is simple: the vote is tomorrow and they
+      need to know you are with them. Not an ask. A confirmation request. The assumption
+      of loyalty, presented as an opportunity to confirm it. How you respond tells them
+      more than your answer does.
+    choices:
+      - id: confirm_loyalty_to_that_side
+        label: Confirm it. You made your choice.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: faction
+            target: merchants_guild
+            value: -1
+        exhaustionCost: 0
+        nextNodeId: confrontation
+      - id: say_you_will_be_there
+        label: Say you will be in the square tomorrow. That is as far as you commit.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: guild_neutral_broker
+            value: true
+        exhaustionCost: 0
+        nextNodeId: confrontation

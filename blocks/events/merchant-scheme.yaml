@@ -31,6 +31,11 @@ roles:
     archetypeFilter:
       - blacksmith
       - carpenter
+  - id: alderman
+    label: The Deciding Alderman
+    archetypeFilter:
+      - merchant
+      - farmer
 
 entryNodeId: start
 
@@ -38,14 +43,23 @@ nodes:
   start:
     id: start
     text: >-
-      {schemer.name} finds you alone behind the market stalls. They glance both ways before
-      speaking. "The guild is bleeding silver trying to maintain their price floor. I have a plan
-      to flood the market with cheaper goods legally, through a loophole in the charter. I need
-      a trusted partner to front the operation." They hold out a folded paper. "Forty percent of
-      the profits."
+      {schemer.name} finds you alone behind the market stalls, away from the crowd.
+      They glance both ways before speaking. "The guild is bleeding silver trying to
+      maintain their price floor. I have a plan to flood the market with cheaper goods,
+      legally, through a loophole in the charter. I need a trusted partner to front
+      the operation." They hold out a folded paper. "Forty percent of the profits."
+      The paper is not sealed. They want you to read it before deciding.
     choices:
+      - id: read_before_deciding
+        label: Read the paper carefully before saying anything
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: paper_read
       - id: join_scheme
-        label: Take the paper forty percent sounds fair
+        label: Take the paper. Forty percent sounds worth hearing out.
         consequences:
           - type: stat
             target: cunning
@@ -53,9 +67,6 @@ nodes:
           - type: faction
             target: merchants_guild
             value: 2
-          - type: faction
-            target: craftsmen_guild
-            value: -3
           - type: relationship
             target: '{schemer.id}'
             value: 2
@@ -66,7 +77,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: joined
       - id: refuse_scheme
-        label: Decline you want no part of it
+        label: Decline. You want no part of it.
         consequences:
           - type: stat
             target: charisma
@@ -76,8 +87,72 @@ nodes:
             value: -1
         exhaustionCost: 0
         nextNodeId: refused
-      - id: warn_guild
-        label: Refuse and go warn {guild_master.name}
+      - id: ask_about_the_loophole
+        label: Ask about the charter loophole specifically before agreeing to anything
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: loophole_explained
+
+  paper_read:
+    id: paper_read
+    text: >-
+      The paper outlines a three-step arrangement: a nominal import partnership registered
+      under your name, goods passing through a charter category reserved for raw materials
+      but applied here to finished goods by a technical reading of the definition, and
+      distribution through market stalls controlled by {schemer.name}'s network. Forty
+      percent of receipts to you. Your name on the registration. Your legal exposure if
+      the loophole is challenged. The math is clean. The risk is not.
+    choices:
+      - id: join_knowing_risk
+        label: Join anyway. The risk is acceptable and forty percent is real money.
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: -2
+          - type: relationship
+            target: '{schemer.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: joined_scheme
+            value: true
+        exhaustionCost: 1
+        nextNodeId: joined
+      - id: negotiate_terms
+        label: Say you want different terms. Less exposure, not less profit.
+        preconditions:
+          - type: trait
+            key: cunning
+            min: 3
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: relationship
+            target: '{schemer.id}'
+            value: 1
+            axis: rivalry
+        exhaustionCost: 2
+        nextNodeId: negotiating
+      - id: use_paper_as_evidence
+        label: Keep the paper. This is evidence of something, even if you do not join.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: knows_merchant_terms
+            value: true
+        exhaustionCost: 1
+        nextNodeId: refused
+      - id: warn_guild_with_paper
+        label: Take the paper directly to {guild_master.name}
         consequences:
           - type: faction
             target: craftsmen_guild
@@ -85,48 +160,231 @@ nodes:
           - type: faction
             target: merchants_guild
             value: -2
-          - type: relationship
-            target: '{guild_master.id}'
-            value: 3
-            axis: trust
           - type: world_fact
             target: warned_guild
             value: true
+          - type: world_fact
+            target: knows_merchant_terms
+            value: true
         exhaustionCost: 2
-        nextNodeId: warned
+        nextNodeId: guild_warned
+
+  loophole_explained:
+    id: loophole_explained
+    text: >-
+      {schemer.name} explains it smoothly. The charter defines "raw material" imports
+      broadly enough that finished goods with one untreated component can technically
+      qualify if registered correctly. The category has been used before for shipments of
+      partially-cured leather, which set the precedent. A creative reading extends it to
+      finished goods with a wood or metal element. "It has never been tested in a dispute,"
+      the schemer admits. "But it has never been challenged because no one has used it at
+      this scale." They look at you. "The guild will challenge it eventually. I need the
+      operation running before they realize what we are doing."
+    choices:
+      - id: agree_loophole_is_valid
+        label: Accept the loophole argument and join
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: -2
+          - type: world_fact
+            target: joined_scheme
+            value: true
+          - type: relationship
+            target: '{schemer.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: joined
+      - id: find_the_charter_yourself
+        label: Say you want to read the charter yourself before putting your name on anything
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: charter_examined
+      - id: see_the_illegality
+        label: Point out that "eventually challenged" means "eventually illegal"
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: negotiating
+
+  charter_examined:
+    id: charter_examined
+    text: >-
+      The town charter is kept at the alderman's office, available to any citizen. You
+      spend an hour with it. The loophole is real. It is also shakier than {schemer.name}
+      let on: the leather precedent is thin and the definition of "raw material" depends
+      heavily on which alderman is interpreting it. The current alderman has not ruled on
+      it. A different alderman might rule differently. If the levy vote changes the
+      composition of the aldermanic council, the loophole may close. The scheme is
+      viable, but only until the political ground shifts.
+    choices:
+      - id: join_with_knowledge
+        label: Join, knowing exactly what you are joining and for how long it will last
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: -2
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: joined_scheme
+            value: true
+          - type: relationship
+            target: '{schemer.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: joined
+      - id: use_charter_to_warn_guild
+        label: Use what you found to warn the guild before the scheme launches
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: world_fact
+            target: warned_guild
+            value: true
+          - type: world_fact
+            target: knows_merchant_terms
+            value: true
+        exhaustionCost: 2
+        nextNodeId: guild_warned
+      - id: take_to_alderman
+        label: Go to the alderman with the charter question. Get a ruling before anyone moves.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_approached_node
+
+  negotiating:
+    id: negotiating
+    text: >-
+      {schemer.name} is quiet for a moment, reassessing. They did not expect pushback.
+      Then: "What terms would you accept?" The question is practical, not hostile.
+      {schemer.name} is above all a person who wants the scheme to run, and if you
+      have identified a structural weakness, they would rather address it than lose you.
+    choices:
+      - id: demand_less_exposure
+        label: Ask for your name removed from the registration, replaced with a nominee
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: joined_scheme
+            value: true
+          - type: world_fact
+            target: scheme_restructured
+            value: true
+        exhaustionCost: 2
+        nextNodeId: joined
+      - id: demand_higher_percentage
+        label: Ask for sixty percent in exchange for the risk you are carrying
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{schemer.id}'
+            value: -1
+            axis: rivalry
+          - type: world_fact
+            target: joined_scheme
+            value: true
+        exhaustionCost: 1
+        nextNodeId: joined
+      - id: walk_away_in_negotiation
+        label: Walk away. The terms are not acceptable and you do not think they can be.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: refused
 
   joined:
     id: joined
     text: >-
-      {schemer.name} tucks the signed paper away with a satisfied nod. "Good. We move in three
-      days. Stay quiet until then." The plan is in motion. Whatever comes next, you are part of it.
+      {schemer.name} tucks the arrangement away with a satisfied nod. "Good. We move in
+      three days. Stay quiet until then. Do not discuss this with anyone connected to the
+      guild, obviously." They pause. "And if anyone asks, you are exploring a legitimate
+      import partnership. Which is technically accurate." They are already thinking past
+      this conversation, running the plan forward. You are now in it.
     choices:
-      - id: study_the_charter
-        label: Study the charter loophole yourself know what you are in for
+      - id: study_the_charter_now
+        label: Study the charter loophole yourself. Know what you are actually in for.
         consequences:
           - type: stat
             target: cunning
             value: 1
         exhaustionCost: 2
-        nextNodeId: null
+        nextNodeId: charter_examined
+      - id: arrange_exit_strategy
+        label: Before anything else, arrange a way out if the scheme is challenged
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: scheme_restructured
+            value: true
+        exhaustionCost: 2
+        nextNodeId: preparing_scheme
       - id: trust_the_schemer
-        label: Trust {schemer.name} to handle the details
+        label: Trust {schemer.name} to handle the details. You are in for the profits.
         consequences:
           - type: relationship
             target: '{schemer.id}'
             value: 1
             axis: affection
         exhaustionCost: 0
-        nextNodeId: null
+        nextNodeId: preparing_scheme
+      - id: change_mind_warn_guild
+        label: Change your mind. Go warn the guild before it starts.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: faction
+            target: merchants_guild
+            value: -2
+          - type: world_fact
+            target: joined_scheme
+            value: false
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 2
+        nextNodeId: guild_warned
 
   refused:
     id: refused
     text: >-
-      {schemer.name} slides the paper back into their coat. "A shame. You would have done well."
-      They walk away without another word. The offer is closed for now.
+      {schemer.name} slides the paper back into their coat. "A shame. You would have done
+      well." They walk away without another word. The offer is closed, for now. You are
+      outside the scheme but you know it exists and you know its shape. That knowledge is
+      worth something. What you do with it is a separate question.
     choices:
-      - id: reconsider_warn
-        label: Reconsider go warn the guild anyway
+      - id: warn_guild_anyway
+        label: Warn the craftsmen's guild anyway
         consequences:
           - type: faction
             target: craftsmen_guild
@@ -135,7 +393,18 @@ nodes:
             target: warned_guild
             value: true
         exhaustionCost: 2
-        nextNodeId: null
+        nextNodeId: guild_warned
+      - id: report_to_guard
+        label: Take what you know to the town guard
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: alderman_corruption_reported
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guard_informed
       - id: stay_out
         label: Stay out of it entirely
         consequences:
@@ -144,15 +413,28 @@ nodes:
             value: 1
         exhaustionCost: 0
         nextNodeId: null
+      - id: watch_the_scheme
+        label: Stay quiet and watch. If the scheme runs, you will know things.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: knows_merchant_terms
+            value: true
+        exhaustionCost: 0
+        nextNodeId: preparing_scheme
 
-  warned:
-    id: warned
+  guild_warned:
+    id: guild_warned
     text: >-
-      {guild_master.name} listens with darkening expression. "Charter loophole of course. We
-      have been too trusting." They grip your hand. "You have done the guild a great service. When
-      this comes to a head, we will stand beside you." The coming confrontation feels inevitable now.
+      {guild_master.name} listens with darkening expression. "Charter loophole. Of course.
+      We have been too trusting." They grip your hand. "You have done the guild a great
+      service. When this comes to a head, we will stand beside you." They are already
+      moving, calling for a scribe, pulling papers from a shelf. The coming confrontation
+      feels inevitable now, and they intend to be prepared for it.
     choices:
-      - id: ask_what_to_expect
+      - id: ask_what_guild_will_do
         label: Ask what {guild_master.name} intends to do about it
         consequences:
           - type: stat
@@ -163,9 +445,535 @@ nodes:
             value: 1
             axis: respect
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: guild_response
+      - id: offer_to_help_guild
+        label: Offer to help them prepare for the confrontation
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: guild_response
       - id: leave_it_to_guild
-        label: Leave it in the guild's hands
+        label: Leave it in the guild's hands. You have done your part.
         consequences: []
         exhaustionCost: 0
         nextNodeId: null
+
+  guild_response:
+    id: guild_response
+    text: >-
+      {guild_master.name} unfolds a chart of the charter provisions and begins annotating.
+      "We will challenge the registration when it is filed. We need three aldermen to call
+      for an interpretation ruling. We have two who are sympathetic. The third is the one
+      who has been taking silver from both sides." They look at you. "If someone were to
+      approach that alderman and make clear that the guild now knows what they know about
+      the double payments, the third vote becomes easier to predict."
+    choices:
+      - id: agree_to_approach_alderman
+        label: Agree to approach the alderman with that information
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: alderman_approached_node
+      - id: ask_who_else_knows
+        label: Ask who else knows about the alderman's double payments
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: alderman_approached_node
+      - id: suggest_public_exposure
+        label: Suggest making the alderman's situation public instead of negotiating privately
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: alderman_exposed
+            value: true
+        exhaustionCost: 2
+        nextNodeId: null
+
+  preparing_scheme:
+    id: preparing_scheme
+    text: >-
+      The scheme takes shape over the next two days. Registration papers move through
+      the alderman's clerk. The first shipment is arranged. You are in place, on the
+      margins or at the center, depending on the terms. Then {guild_master.name} is seen
+      at the charter hall, speaking to a clerk, and {schemer.name}'s expression at the
+      market the next morning has changed. The guild knows something. The question is
+      how much, and who told them.
+    choices:
+      - id: tell_schemer_about_guild
+        label: Tell {schemer.name} what you know about the guild's awareness
+        preconditions:
+          - type: world_fact
+            key: joined_scheme
+            value: true
+        consequences:
+          - type: relationship
+            target: '{schemer.id}'
+            value: 2
+            axis: trust
+          - type: faction
+            target: craftsmen_guild
+            value: -1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: tell_guild_about_schemer
+        label: Tell {guild_master.name} what you know about where the scheme stands
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guild_warned
+      - id: do_nothing_and_watch
+        label: Say nothing to either side. Watch what happens next.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 0
+        nextNodeId: null
+
+  guard_informed:
+    id: guard_informed
+    text: >-
+      The guard on duty hears you out and writes a note. "This would be a matter for the
+      town clerk to review, charter disputes are not strictly our jurisdiction." But they
+      will pass it along. The machinery is slow but it has been set moving. Whether it
+      catches up to the scheme before the scheme is running is uncertain.
+    choices:
+      - id: push_for_faster_action
+        label: Ask to speak to someone with more authority, urgently
+        preconditions:
+          - type: trait
+            key: charisma
+            min: 3
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: also_warn_guild
+        label: Go warn the guild as well, the guard moves too slowly
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guild_warned
+
+  alderman_approached_node:
+    id: alderman_approached_node
+    text: >-
+      {alderman.name} receives you without obvious surprise. They have the careful patience
+      of someone who has been waiting for this particular conversation for some time.
+      When you lay out what you know about their double payments and the scheme currently
+      being registered, they are quiet for a long moment. "You are the second person today
+      to sit in that chair with information about my activities," they say finally.
+      "What do you want from this?"
+    choices:
+      - id: want_honest_ruling
+        label: Tell them you want an honest ruling on the charter question, that is all
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: relationship
+            target: '{alderman.id}'
+            value: 2
+            axis: respect
+          - type: world_fact
+            target: alderman_unsettled
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: want_guild_protection
+        label: Tell them you want the guild protected from the loophole exploit
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: want_nothing_for_yourself
+        label: Say you want nothing for yourself. Just the right outcome.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 3
+          - type: relationship
+            target: '{alderman.id}'
+            value: 3
+            axis: respect
+          - type: world_fact
+            target: alderman_exposed
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null
+
+  inside_the_scheme:
+    id: inside_the_scheme
+    text: >-
+      Being inside the scheme is a different experience than knowing about it from the
+      outside. You see the machinery: a clerk who looks the other way, a market official
+      who has been told to expect this category of registration, a delivery route planned
+      to avoid certain hours. The operation is not large. It is designed to grow. You are
+      a part of it, which means you are also a part of what it will become if it is not
+      stopped.
+    choices:
+      - id: record_what_you_see
+        label: Record the details of what you observe. This may be useful later.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: knows_merchant_terms
+            value: true
+        exhaustionCost: 2
+        nextNodeId: preparing_scheme
+      - id: use_position_to_warn_guild
+        label: Use your inside position to pass information to the guild
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: faction
+            target: merchants_guild
+            value: -2
+          - type: world_fact
+            target: warned_guild
+            value: true
+          - type: world_fact
+            target: joined_scheme
+            value: false
+        exhaustionCost: 2
+        nextNodeId: guild_warned
+
+  the_forty_percent:
+    id: the_forty_percent
+    text: >-
+      The first payment arrives in an unmarked envelope. The amount is exactly forty
+      percent of the first delivery's profit, as agreed. The money is real. It sits on
+      your table and you look at it with the conflicted attention of someone who knows
+      exactly how it was made. It is not illegal, technically. The loophole is real.
+      The question is whether technical legality is the right frame for this particular
+      decision.
+    choices:
+      - id: keep_the_money
+        label: Keep it. You did the work. The law permits it.
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 1
+          - type: world_fact
+            target: joined_scheme
+            value: true
+        exhaustionCost: 0
+        nextNodeId: preparing_scheme
+      - id: donate_the_money
+        label: Give the money to the craftsmen's relief fund. Anonymously.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: guild_warned
+      - id: use_money_as_evidence
+        label: Use the money as evidence that you were paid, for when you go to the captain
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: alderman_corruption_reported
+            value: true
+          - type: world_fact
+            target: joined_scheme
+            value: false
+        exhaustionCost: 2
+        nextNodeId: guard_informed
+
+  schemer_asks_for_more:
+    id: schemer_asks_for_more
+    text: >-
+      {schemer.name} finds you three days into the arrangement. They want to expand.
+      A second route, a second delivery, a new registration category that pushes further
+      into the ambiguous zone. The forty percent offer stands. The exposure doubles.
+      They are testing you: will you grow with them or are you a limited partner.
+    choices:
+      - id: agree_to_expand
+        label: Agree to expand. You are in this now.
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: -2
+          - type: world_fact
+            target: joined_scheme
+            value: true
+        exhaustionCost: 1
+        nextNodeId: preparing_scheme
+      - id: hold_at_current_level
+        label: Hold at the current level. You are not growing with them.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{schemer.id}'
+            value: -1
+            axis: trust
+        exhaustionCost: 0
+        nextNodeId: preparing_scheme
+      - id: use_expansion_request_to_exit
+        label: Use the expansion request as your exit. You are done.
+        consequences:
+          - type: world_fact
+            target: joined_scheme
+            value: false
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 2
+        nextNodeId: guild_warned
+
+  the_scheme_in_motion:
+    id: the_scheme_in_motion
+    text: >-
+      The scheme is running. The first delivery moved through the charter loophole
+      without formal challenge. The registration stands. The goods are on market stalls
+      with the ambiguous labeling that the charter category allows. Some buyers notice.
+      Most do not. The guild is aware: you can see it in how {guild_master.name} looks
+      at certain stalls as they pass. The confrontation is approaching. The question is
+      who moves first and what position you are in when they do.
+    choices:
+      - id: prepare_for_guild_challenge
+        label: Prepare for the guild's challenge. Know what defense the scheme has.
+        preconditions:
+          - type: world_fact
+            key: joined_scheme
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: preparing_scheme
+      - id: exit_before_challenge
+        label: Exit before the guild moves. Take what you earned and step out.
+        consequences:
+          - type: world_fact
+            target: joined_scheme
+            value: false
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: null
+
+  calculating_the_impact:
+    id: calculating_the_impact
+    text: >-
+      You try to work out what the scheme does to actual people. The craftsmen who lose
+      work are real people: the blacksmith's second apprentice, the carpenter who was
+      going to take on a journeyman this year, the leather-worker whose margins are
+      already tight. The consumers who benefit from cheaper imports are also real people,
+      who have less coin than the craftsmen and more immediate needs. Neither side of the
+      calculation is wrong. The scheme advantages one group at another's expense, which
+      is also what the levy does, in the other direction.
+    choices:
+      - id: decide_the_levy_is_right
+        label: Decide the levy is more just than the scheme. Warn the guild.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guild_warned
+      - id: decide_neither_is_clean
+        label: Decide neither is clean. Look for a third path.
+        preconditions:
+          - type: world_fact
+            key: alderman_approached
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: guild_neutral_broker
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_approached_node
+
+  the_registration_filed:
+    id: the_registration_filed
+    text: >-
+      The import partnership is filed with the alderman's clerk. Your name, or the name
+      of whoever fronted it, appears on the register. The registration is public record.
+      The guild can see it. The guard can see it. Anyone looking for evidence of the
+      charter loophole being exploited has now found a concrete example. The scheme is
+      no longer theoretical. It exists on paper. That changes what kind of problem it is.
+    choices:
+      - id: watch_who_notices
+        label: Watch who notices the registration and what they do with it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: knows_merchant_terms
+            value: true
+        exhaustionCost: 1
+        nextNodeId: preparing_scheme
+      - id: approach_guild_now
+        label: Now that it is filed, go to the guild with it. The evidence is public.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guild_warned
+
+  what_forty_percent_means:
+    id: what_forty_percent_means
+    text: >-
+      You do the arithmetic. Forty percent of the first delivery's receipts is a meaningful
+      sum. Forty percent of what the scheme could grow to, if {schemer.name} achieves what
+      they outlined, is substantial. But the arithmetic of risk works differently: the
+      exposure is not forty percent, it is one hundred percent if the loophole is challenged
+      and you are named as the registered partner. You are carrying all the risk for
+      two-fifths of the reward.
+    choices:
+      - id: renegotiate_risk_share
+        label: Go back to {schemer.name} and renegotiate the risk distribution
+        preconditions:
+          - type: world_fact
+            key: joined_scheme
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: relationship
+            target: '{schemer.id}'
+            value: -1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: negotiating
+      - id: accept_the_arithmetic
+        label: Accept the arithmetic. The risk is the price of the opportunity.
+        consequences:
+          - type: world_fact
+            target: joined_scheme
+            value: true
+        exhaustionCost: 0
+        nextNodeId: preparing_scheme
+      - id: decide_against_it_now
+        label: Decide the arithmetic does not work. Find a way out.
+        consequences:
+          - type: world_fact
+            target: joined_scheme
+            value: false
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guild_warned
+
+  guild_master_suspects:
+    id: guild_master_suspects
+    text: >-
+      {guild_master.name} stops you in the square. They do not accuse. They observe,
+      carefully, that you seem to have been spending time near the merchant stalls
+      recently, which is a way of saying they have noticed something without committing
+      to knowing what. Their expression is the expression of someone who hopes they are
+      wrong. You have to decide how to answer that hope.
+    choices:
+      - id: confess_and_switch
+        label: Confess your involvement and switch sides fully, right now
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: faction
+            target: merchants_guild
+            value: -3
+          - type: world_fact
+            target: warned_guild
+            value: true
+          - type: world_fact
+            target: joined_scheme
+            value: false
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 2
+            axis: respect
+        exhaustionCost: 2
+        nextNodeId: guild_warned
+      - id: deny_involvement
+        label: Deny any particular involvement. Say you have been keeping your options open.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{guild_master.id}'
+            value: -1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: preparing_scheme
+      - id: be_honest_without_detail
+        label: Be honest without detail. Say you have been learning things and will act on them.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: guild_response

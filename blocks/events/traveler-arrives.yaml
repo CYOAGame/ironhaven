@@ -33,11 +33,11 @@ nodes:
   start:
     id: start
     text: >-
-      A stranger slips through the town gate just before dusk dusty, limping, clutching
+      A stranger slips through the town gate just before dusk, dusty, limping, clutching
       a worn leather satchel to their chest. {traveler.name} scans the square with wide,
       frightened eyes and fixes on you. Not on the nearest face. On yours specifically.
-      "Please," they rasp. "I need somewhere safe. Just for tonight." Behind them, {guard.name}
-      is watching from the gatehouse. The gate will close in minutes.
+      "Please," they rasp. "I need somewhere safe. Just for tonight." Behind them,
+      {guard.name} is watching from the gatehouse. The gate will close in minutes.
     choices:
       - id: help_and_hide
         label: Pull them inside and find a hiding place
@@ -69,6 +69,17 @@ nodes:
             value: true
         exhaustionCost: 2
         nextNodeId: reported_to_guard
+      - id: stall_for_time
+        label: Step in front of {guard.name}'s sightline to block their view, buying a moment
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: traveler_concealed_briefly
+            value: true
+        exhaustionCost: 1
+        nextNodeId: stall_gate
       - id: turn_away
         label: Tell them you cannot help and turn them away
         consequences:
@@ -81,15 +92,51 @@ nodes:
         exhaustionCost: 0
         nextNodeId: turned_away
 
+  stall_gate:
+    id: stall_gate
+    text: >-
+      You drift toward the gatehouse and strike up a pointless conversation with {guard.name}
+      about the evening weather, about the state of the road north, about nothing at all.
+      {guard.name} answers politely, glancing past your shoulder now and then. {traveler.name}
+      uses the time. When you finally turn around, they have slipped into the cooperage lane
+      and are out of sight. The gate swings shut. {guard.name} frowns, looking at the empty
+      square. "Did someone just come through?"
+    choices:
+      - id: confirm_traveler
+        label: Confirm someone came through, say they looked harmless
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+        exhaustionCost: 1
+        nextNodeId: hidden_them
+      - id: deny_all_knowledge
+        label: Shrug and say you saw no one in particular
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+          - type: world_fact
+            target: lied_to_guard
+            value: true
+        exhaustionCost: 1
+        nextNodeId: hidden_them
+
   hidden_them:
     id: hidden_them
     text: >-
-      You tuck {traveler.name} into the back of the cooperage, behind old barrel staves.
-      They press the satchel against their body with both arms. "You have no idea what you
+      You find {traveler.name} crouched behind old barrel staves in the cooperage,
+      pressing the satchel against their body with both arms. "You have no idea what you
       have done for me," they whisper. "Or what is in here." They look exhausted down to
-      the bone but their eyes are sharp and calculating. This is someone who thinks
-      even when they are afraid. After a moment: "Do you want to know? I will tell you,
-      if you want. You have earned the right to know what you are protecting."
+      the bone, but their eyes are sharp and calculating. This is someone who thinks even
+      when they are afraid. After a moment: "Do you want to know? I will tell you, if you
+      want. You have earned the right to know what you are protecting."
     choices:
       - id: ask_whats_inside
         label: Ask what they are carrying
@@ -102,26 +149,37 @@ nodes:
             value: 1
             axis: trust
         exhaustionCost: 1
-        nextNodeId: traveler_explains
+        nextNodeId: traveler_hints
       - id: leave_them_rest
-        label: Tell them to rest you will talk in the morning
+        label: Tell them to rest and you will talk in the morning
         consequences:
           - type: relationship
             target: '{traveler.id}'
             value: 2
             axis: affection
         exhaustionCost: 0
-        nextNodeId: morning_check_in
+        nextNodeId: night_passes
+      - id: ask_who_pursues
+        label: Ask who is after them, before worrying about the satchel
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: pursuers_described
 
   reported_to_guard:
     id: reported_to_guard
     text: >-
       {guard.name} listens, nods, and takes {traveler.name} firmly by the arm. "You did
-      right bringing them in," the guard says to you. "We will look after this." {traveler.name}
-      shoots you a look you cannot quite read not quite betrayal, not quite anger, something
-      cooler and more considered. As they are led away, the satchel still tucked under their
-      arm, they say quietly to you specifically: "If they open the satchel, tell them not
-      to open it alone."
+      right bringing them in," the guard says. "We will look after this." {traveler.name}
+      shoots you a look, not quite betrayal, not quite anger, something cooler and more
+      considered. As they are led away with the satchel still tucked under their arm, they
+      say quietly, just to you: "If they open the satchel, tell them not to open it alone."
     choices:
       - id: pass_on_warning
         label: Catch up to {guard.name} and pass on the traveler's warning
@@ -137,9 +195,9 @@ nodes:
             target: satchel_warning_passed
             value: true
         exhaustionCost: 1
-        nextNodeId: morning_check_in
+        nextNodeId: guard_reacts_to_warning
       - id: stay_to_observe
-        label: Stay and observe find out what the guard makes of them
+        label: Stay and observe what the guard makes of them
         consequences:
           - type: faction
             target: town_guard
@@ -148,20 +206,86 @@ nodes:
             target: cunning
             value: 1
         exhaustionCost: 1
-        nextNodeId: traveler_explains
+        nextNodeId: guardhouse_scene
+      - id: follow_at_distance
+        label: Follow them to the guardhouse at a distance
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: guardhouse_scene
+
+  guard_reacts_to_warning:
+    id: guard_reacts_to_warning
+    text: >-
+      {guard.name} pauses when you relay the warning. Their expression shifts, just slightly,
+      from bureaucratic patience to something more alert. "Not open it alone," they repeat.
+      "Interesting thing to say." They study you. "How well did you know this person before
+      tonight?" The question is sharp and you did not expect it.
+    choices:
+      - id: honest_answer_stranger
+        label: Tell them honestly you had never met {traveler.name} before tonight
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: relationship
+            target: '{guard.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: morning_check_in
+      - id: deflect_question
+        label: Turn it back, ask why that matters
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: morning_check_in
+
+  guardhouse_scene:
+    id: guardhouse_scene
+    text: >-
+      Through the guardhouse window you can see {traveler.name} seated on a bench,
+      still hugging the satchel. Two guards stand nearby, and they do not look comfortable.
+      {traveler.name} has not spoken a word since being brought in. They are waiting for
+      something, or someone. The satchel has not been touched. After a long while, a senior
+      guard leans down and says something quietly. {traveler.name} shakes their head.
+    choices:
+      - id: enter_guardhouse
+        label: Go inside and ask to speak with {traveler.name}
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: traveler_hints
+      - id: wait_outside
+        label: Wait outside until they release or detain them
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: morning_check_in
 
   turned_away:
     id: turned_away
     text: >-
-      {traveler.name} stares at you for a long moment too tired even for anger then
-      turns and limps back toward the gate. The gate closes at dusk; they will have nowhere
-      to go. You watch them go. The satchel knocks against their hip with every step. Two
-      hours later, you hear from a neighbor: there was a disturbance at the south postern.
-      Someone tried to break through after hours. The guard stopped them. The stranger is
-      in the guardhouse now.
+      {traveler.name} stares at you for a long moment, too tired even for anger, then
+      turns and limps back toward the gate. The gate closes at dusk. They will have nowhere
+      to go. Two hours later, a neighbor finds you: there was a disturbance at the south
+      postern. Someone tried to force through after hours. The guard stopped them. The
+      stranger is in the guardhouse now, and the satchel is no longer under their arm.
     choices:
-      - id: reconsider
-        label: Go to the guardhouse tell them you know this person and vouch for them
+      - id: reconsider_vouch
+        label: Go to the guardhouse, say you know this person, and vouch for them
         consequences:
           - type: stat
             target: charisma
@@ -173,11 +297,19 @@ nodes:
           - type: world_fact
             target: traveler_vouched_for
             value: true
-          - type: world_fact
-            target: traveler_hidden
-            value: false
         exhaustionCost: 2
-        nextNodeId: traveler_explains
+        nextNodeId: traveler_hints
+      - id: inquire_about_satchel
+        label: Go to the guardhouse, not for the traveler, but to ask about the satchel
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: traveler_imprisoned
+            value: true
+        exhaustionCost: 1
+        nextNodeId: satchel_in_custody
       - id: let_them_go
         label: Leave it. Not your concern.
         consequences:
@@ -190,19 +322,119 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
 
-  traveler_explains:
-    id: traveler_explains
+  satchel_in_custody:
+    id: satchel_in_custody
     text: >-
-      {traveler.name} speaks in a low, rapid voice. The satchel contains documents
-      account ledgers, correspondence, and a list of names. Evidence of a systematic
-      fraud running through three towns, including Ironhaven. Money diverted from the
-      road-tax fund, the building fund for the new mill, charitable donations. The money
-      went to a single account. The name on the account is recognisable someone with
-      standing in this town. "They sent men after me when I copied the ledgers," the
-      traveler says. "The men are a day behind, at most."
+      {guard.name} is behind the desk when you arrive. The satchel sits on the table,
+      unopened. They look at you with the neutral expression of someone who has already
+      decided you are interesting. "You have an interest in this?" they ask. You have a
+      choice about how to answer that.
     choices:
-      - id: help_expose
-        label: Help them bring the documents to the right authority
+      - id: claim_to_know_contents
+        label: Imply you know what is inside and that it matters
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: fraud_documents_known
+            value: true
+        exhaustionCost: 2
+        nextNodeId: complication
+      - id: play_concerned_citizen
+        label: Say you saw the person come in and were worried for their welfare
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: morning_check_in
+
+  traveler_hints:
+    id: traveler_hints
+    text: >-
+      {traveler.name} speaks carefully, choosing each word. The satchel contains documents
+      that could ruin a name in this town. They copied them from a ledger they had legitimate
+      access to. "Account records," they say. "A diversion of funds. Three towns, including
+      Ironhaven. The name on the account has standing here." They stop. "I am not a thief.
+      I am a clerk who made a copy and ran when the wrong person saw me do it. The men
+      sent after me are a day behind, at most." The words land quietly and settle heavily.
+    choices:
+      - id: ask_whose_name
+        label: Ask whose name is on the account
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: name_revealed
+      - id: ask_what_they_need
+        label: Set aside the details, ask what they actually need from you right now
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 2
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: traveler_asks_for_help
+      - id: express_doubt
+        label: Say this is a heavy story and you need time to think
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: night_passes
+
+  pursuers_described:
+    id: pursuers_described
+    text: >-
+      {traveler.name} closes their eyes briefly. "Two men. Well-dressed, not guards.
+      They ride good horses and they are patient." A pause. "They work for the person
+      whose name is in this satchel. Not soldiers. Fixers." They open their eyes.
+      "I lost them on the Caldmere fork two days ago. I do not think I lost them for
+      good." The exhaustion in their face is not just physical, it is the exhaustion of
+      someone who has been running a calculation that keeps coming up short.
+    choices:
+      - id: ask_about_satchel_now
+        label: Ask what exactly is in the satchel that makes it worth this
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: traveler_hints
+      - id: focus_on_safety
+        label: Focus on immediate safety, move them to a better hiding spot
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+        exhaustionCost: 2
+        nextNodeId: night_passes
+
+  name_revealed:
+    id: name_revealed
+    text: >-
+      {traveler.name} tells you the name. You recognize it. Of course you do. It is the kind
+      of name that appears on dedication plaques and civic records, attached to generous
+      donations and public goodwill. The name of someone who has been building a reputation
+      for years, carefully, on a foundation that is apparently stolen. You sit with that for
+      a moment.
+    choices:
+      - id: believe_them
+        label: Say you believe them and you will help
         consequences:
           - type: relationship
             target: '{traveler.id}'
@@ -214,24 +446,10 @@ nodes:
           - type: world_fact
             target: helping_expose_fraud
             value: true
-        exhaustionCost: 2
-        nextNodeId: complication
-      - id: hide_documents_separately
-        label: Separate the documents from the traveler safer if they are apart
-        consequences:
-          - type: stat
-            target: cunning
-            value: 2
-          - type: world_fact
-            target: fraud_documents_known
-            value: true
-          - type: world_fact
-            target: documents_hidden
-            value: true
         exhaustionCost: 1
-        nextNodeId: complication
-      - id: step_back
-        label: This is too large step back and let the traveler find another way
+        nextNodeId: traveler_asks_for_help
+      - id: need_to_see_proof
+        label: Say you need to see the documents themselves before deciding anything
         consequences:
           - type: stat
             target: cunning
@@ -239,18 +457,126 @@ nodes:
           - type: world_fact
             target: fraud_documents_known
             value: true
-        exhaustionCost: 0
+        exhaustionCost: 1
+        nextNodeId: documents_examined
+
+  traveler_asks_for_help:
+    id: traveler_asks_for_help
+    text: >-
+      "I need the documents to reach someone who cannot be bought," {traveler.name} says.
+      "The miller's widow on the east road. She was a magistrate's clerk twenty years ago.
+      She knows what to do with evidence." They press a small sealed letter into your hand.
+      "That is for her. The satchel stays with me until I know the way is clear. But I need
+      someone who knows this town." They look at you steadily. "Can you get word to her?"
+    choices:
+      - id: agree_to_carry_word
+        label: Agree to carry word to the miller's widow
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: millers_widow_contacted
+            value: true
+        exhaustionCost: 2
         nextNodeId: complication
+      - id: offer_to_go_with_them
+        label: Offer to escort them to the widow yourself
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{traveler.id}'
+            value: 2
+            axis: affection
+          - type: world_fact
+            target: escorting_traveler
+            value: true
+        exhaustionCost: 3
+        nextNodeId: complication
+      - id: suggest_hiding_documents
+        label: Suggest separating the documents from the traveler, hiding them elsewhere
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: documents_hidden
+            value: true
+        exhaustionCost: 1
+        nextNodeId: complication
+
+  documents_examined:
+    id: documents_examined
+    text: >-
+      {traveler.name} hesitates, then opens the satchel. Inside, wrapped in oilcloth: a
+      sheaf of ledger copies and a folded letter bearing a crest you know. The numbers are
+      meticulous. The diversions are systematic, running back four years. The letter is
+      more damning still, written in a familiar hand, addressed to someone outside town,
+      referring to a fund as "our account" with a familiarity that assumes shared guilt.
+      Your hands are steady as you reseal the oilcloth. Your mind is not.
+    choices:
+      - id: commit_to_helping
+        label: Close the satchel and tell them you are in
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 3
+            axis: trust
+          - type: world_fact
+            target: fraud_documents_known
+            value: true
+          - type: world_fact
+            target: helping_expose_fraud
+            value: true
+        exhaustionCost: 1
+        nextNodeId: traveler_asks_for_help
+      - id: step_back_from_documents
+        label: This is enough for tonight. Close the satchel and think.
+        consequences:
+          - type: world_fact
+            target: fraud_documents_known
+            value: true
+        exhaustionCost: 0
+        nextNodeId: night_passes
+
+  night_passes:
+    id: night_passes
+    text: >-
+      You leave {traveler.name} to rest. Through the night you lie awake running through
+      what you know, what you have agreed to, what you have not yet agreed to. At first
+      light you go back. {traveler.name} is already awake, the satchel in their lap, a
+      look on their face that says they have also not slept. The conversation you deferred
+      last night waits in the room between you.
+    choices:
+      - id: morning_ask_satchel
+        label: Ask about the satchel now, in the clear light of morning
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: traveler_hints
+      - id: morning_practical
+        label: Skip the story, ask what the plan is for today
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: traveler_asks_for_help
 
   morning_check_in:
     id: morning_check_in
     text: >-
-      Morning. You go to check on {traveler.name} wherever you stashed them, or in
-      the guardhouse waiting room if the guard is the more cooperative sort. They look
-      rested in the way of someone who was truly desperate for sleep. The satchel is in
-      their lap. They have been awake for a while, thinking. When they see you, something
-      in their posture shifts the decision to trust you is made, or renewed. They begin
-      to speak.
+      Morning. You check on {traveler.name}, wherever they ended up, the cooperage or
+      the guardhouse waiting room if the guard proved accommodating. They look rested in
+      the way of someone who was desperate for sleep and finally got it. The satchel is
+      in their lap. They have been awake for a while, thinking. When they see you, something
+      shifts in their posture, the decision to trust fully made, or renewed. They begin to speak.
     choices:
       - id: listen_fully
         label: Sit down and listen to everything they want to tell you
@@ -260,9 +586,9 @@ nodes:
             value: 2
             axis: affection
         exhaustionCost: 1
-        nextNodeId: traveler_explains
+        nextNodeId: traveler_hints
       - id: tell_them_to_stay_put
-        label: Tell them to stay out of sight and wait you will arrange something
+        label: Tell them to stay out of sight and wait, you will arrange something
         consequences:
           - type: relationship
             target: '{traveler.id}'
@@ -279,13 +605,13 @@ nodes:
     text: >-
       By mid-morning, two riders are in the square. Well-dressed, unhurried, asking quiet
       questions of stall-holders. Not guards. Not merchants. Their horses are good and their
-      hands say they know how to use what is at their belts. Someone has pointed them in
-      your direction already you can see it in the way one of them scans the square and
-      pauses when their eyes find you. {traveler.name} is not in sight. The riders have
-      not yet spoken to you. You have perhaps a minute.
+      hands say they know how to use what is at their belts. Someone has already pointed
+      in your direction. You can see it in the way one of them scans the square and pauses
+      when their eyes find you. {traveler.name} is not in sight. You have perhaps a minute
+      before one of them crosses the square.
     choices:
       - id: confront_riders
-        label: Walk directly to the riders and introduce yourself own the moment
+        label: Walk directly to the riders and introduce yourself, own the moment
         preconditions:
           - type: trait
             key: charisma
@@ -298,9 +624,9 @@ nodes:
             target: riders_confronted
             value: true
         exhaustionCost: 2
-        nextNodeId: resolution
+        nextNodeId: riders_confronted_node
       - id: slip_away_to_traveler
-        label: Turn away before they see you look at them go warn {traveler.name}
+        label: Turn away before they commit to you, go warn {traveler.name}
         consequences:
           - type: stat
             target: cunning
@@ -309,9 +635,53 @@ nodes:
             target: traveler_warned_of_riders
             value: true
         exhaustionCost: 2
+        nextNodeId: riders_and_warning
+      - id: go_to_guard_now
+        label: Go directly to {guard.name}, you need the law on your side right now
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: riders_reported
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guard_intervenes
+      - id: buy_time_misdirect
+        label: Walk up to the riders and send them toward the north road with a plausible story
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: riders_misdirected
+            value: true
+        exhaustionCost: 2
+        nextNodeId: riders_misdirected_node
+
+  riders_confronted_node:
+    id: riders_confronted_node
+    text: >-
+      You walk to them directly and introduce yourself by name. You ask, pleasantly, what
+      brings them to Ironhaven. The lead rider measures you, looking for the tell of
+      someone hiding something. You give them nothing. After a careful exchange they admit
+      they are looking for a person, a traveler with a leather bag. You say you saw someone
+      matching that description heading east before dawn. They thank you, coldly, and ride.
+      You have bought time. Possibly a day.
+    choices:
+      - id: use_time_wisely
+        label: Use the time. Go now and help {traveler.name} get clear.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+        exhaustionCost: 3
         nextNodeId: resolution
-      - id: go_to_guard
-        label: Go directly to {guard.name} you need the law on your side now
+      - id: go_to_guard_after
+        label: Go to {guard.name} now and tell them what just happened
         consequences:
           - type: faction
             target: town_guard
@@ -322,18 +692,112 @@ nodes:
         exhaustionCost: 1
         nextNodeId: resolution
 
+  riders_and_warning:
+    id: riders_and_warning
+    text: >-
+      You find {traveler.name} and tell them quickly. Their face goes still in the way of
+      someone who expected this and was hoping they were wrong. "How long?" they ask.
+      "An hour, maybe two," you say. They nod, already moving, already calculating. "I need
+      to get out before they talk to the right person." They look at you. "Will you come with
+      me as far as the mill road?"
+    choices:
+      - id: escort_out_of_town
+        label: Go with them as far as the mill road
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: relationship
+            target: '{traveler.id}'
+            value: 3
+            axis: affection
+          - type: world_fact
+            target: escorting_traveler
+            value: true
+        exhaustionCost: 3
+        nextNodeId: resolution
+      - id: give_directions_only
+        label: Give them the clearest route and say your goodbyes here
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 1
+        nextNodeId: resolution
+
+  riders_misdirected_node:
+    id: riders_misdirected_node
+    text: >-
+      The riders exchange a glance, then wheel north. You watch them go, heart hammering
+      in a controlled way. You bought time, possibly a full day. The square smells of bread
+      and wet stone. Everything looks ordinary. It is not.
+    choices:
+      - id: warn_traveler_now
+        label: Go immediately to warn {traveler.name} and make a plan
+        consequences:
+          - type: world_fact
+            target: traveler_warned_of_riders
+            value: true
+        exhaustionCost: 2
+        nextNodeId: riders_and_warning
+      - id: go_to_widow
+        label: Use the time to reach the miller's widow before the riders circle back
+        preconditions:
+          - type: world_fact
+            key: millers_widow_contacted
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: resolution
+
+  guard_intervenes:
+    id: guard_intervenes
+    text: >-
+      {guard.name} listens quickly, does not ask twice, and moves. By the time the riders
+      reach the middle of the square, they are met by two guards and a formal request for
+      their papers. The riders are not local. They have no standing. They can ask questions
+      but they cannot compel anything. The law, for now, is on your side. The riders wait,
+      cold and impatient, while the paperwork is processed. They will not leave until evening.
+    choices:
+      - id: use_delay_for_traveler
+        label: Use the delay to help {traveler.name} get clear of town
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+        exhaustionCost: 3
+        nextNodeId: resolution
+      - id: stay_and_observe_riders
+        label: Stay and watch the riders, try to learn who sent them
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: riders_identified
+            value: true
+        exhaustionCost: 1
+        nextNodeId: resolution
+
   resolution:
     id: resolution
     text: >-
-      The riders leave at dusk with or without what they came for, depending on what
-      you did. {traveler.name} is either gone, safe, in custody, or sitting at a table
-      across from a very uncomfortable town official. The documents are somewhere: in hand,
-      in hiding, or destroyed. The name on the account is known to you now. Whether it
-      becomes known to anyone else is, largely, your decision. Ironhaven will feel the
-      shape of this for a while.
+      The riders leave Ironhaven at dusk, with or without what they came for, depending on
+      what you did. {traveler.name} is somewhere: gone to safety, in custody, in hiding, or
+      sitting across from a very uncomfortable town official with a sheaf of ledger copies
+      on the table between them. The documents are somewhere too. The name attached to the
+      fraud is known to you. Whether it becomes known to anyone else is, largely, your
+      decision. Ironhaven will feel the shape of this evening for a while.
     choices:
       - id: pursue_the_fraud
-        label: Decide to pursue the fraud this does not end here
+        label: Decide to pursue this. It does not end here.
         consequences:
           - type: world_fact
             target: pursuing_ironhaven_fraud
@@ -344,7 +808,7 @@ nodes:
         exhaustionCost: 0
         nextNodeId: null
       - id: let_it_rest
-        label: Let it settle you have done what you could for now
+        label: Let it settle. You have done what you could for now.
         consequences:
           - type: relationship
             target: '{traveler.id}'
@@ -352,3 +816,149 @@ nodes:
             axis: respect
         exhaustionCost: 0
         nextNodeId: null
+      - id: go_to_widow_yourself
+        label: Go to the miller's widow tonight and tell her everything you know
+        consequences:
+          - type: world_fact
+            target: millers_widow_contacted
+            value: true
+          - type: world_fact
+            target: pursuing_ironhaven_fraud
+            value: true
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: null
+      - id: report_riders_to_guard
+        label: Give {guard.name} a full account of the riders and what you know of the satchel
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: fraud_documents_known
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+
+  traveler_vouched:
+    id: traveler_vouched
+    text: >-
+      You go to the guardhouse and tell them clearly that you know this person and that
+      they are no threat. The duty guard looks skeptical but calls for the senior watch.
+      {traveler.name} is brought out, still holding the satchel, face carefully neutral.
+      When they see you they allow themselves one small, genuine expression: relief.
+      "This person vouches for you," the senior watch says. "You are free to go. Do not
+      leave town without informing the gate." {traveler.name} thanks you with a restraint
+      that suggests they are saving the real gratitude for later.
+    choices:
+      - id: find_somewhere_private
+        label: Take them somewhere private and hear the full story
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: traveler_hints
+      - id: stay_visible_together
+        label: Stay visible in the square. Normalcy is the best protection right now.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: traveler_hidden
+            value: false
+        exhaustionCost: 0
+        nextNodeId: complication
+
+  night_at_the_inn:
+    id: night_at_the_inn
+    text: >-
+      You arrange a room at the small inn near the cooperage, paying for two nights in
+      advance. The landlord does not ask questions, which means they have asked questions
+      before and learned when not to. {traveler.name} eats in the room and you sit across
+      from them while they do. The satchel never leaves arm's reach. Outside, the town
+      settles into its evening routine. Inside, the conversation begins to move toward
+      the things that need to be said.
+    choices:
+      - id: ask_gently
+        label: Ask gently what they are carrying and who sent those men
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 1
+            axis: affection
+        exhaustionCost: 1
+        nextNodeId: traveler_hints
+      - id: let_silence_do_the_work
+        label: Say nothing. Let the silence and the warmth work on them.
+        consequences:
+          - type: relationship
+            target: '{traveler.id}'
+            value: 2
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: night_passes
+
+  quiet_observation:
+    id: quiet_observation
+    text: >-
+      You sit with what you know for a moment before moving. The traveler, the satchel,
+      the riders who will come. The name of a person in this town who has built their
+      reputation on stolen money. The miller's widow at the end of the east road who
+      apparently knows how this kind of thing works. The shape of the problem is visible.
+      What you choose to do with that shape is the question.
+    choices:
+      - id: take_it_one_step
+        label: Take it one step at a time. Start with keeping {traveler.name} safe tonight.
+        consequences:
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+        exhaustionCost: 1
+        nextNodeId: traveler_asks_for_help
+      - id: think_about_the_name
+        label: Sit with the name in the documents. Think about who that person is.
+        preconditions:
+          - type: world_fact
+            key: fraud_documents_known
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 1
+        nextNodeId: complication
+
+  consider_options:
+    id: consider_options
+    text: >-
+      You stand in the lane for a moment after {traveler.name} has told you what they
+      know. The satchel. The names. The men following. The town you live in, which has
+      apparently been quietly defrauded for years by someone who eats at the same market
+      stalls you do. You think about the shape of the problem and what you actually have
+      the capacity to do about it. Not what would be ideal. What is actually possible,
+      tonight, with what you have.
+    choices:
+      - id: decide_to_act
+        label: Decide to act. Start by getting {traveler.name} properly safe.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: traveler_hidden
+            value: true
+        exhaustionCost: 1
+        nextNodeId: traveler_asks_for_help
+      - id: decide_to_wait
+        label: Decide to wait until morning. Nothing happens well when rushed.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: night_passes

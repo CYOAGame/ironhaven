@@ -37,6 +37,11 @@ roles:
       - merchant
       - blacksmith
       - farmer
+  - id: alderman
+    label: The Deciding Alderman
+    archetypeFilter:
+      - merchant
+      - farmer
 
 entryNodeId: start
 
@@ -44,10 +49,12 @@ nodes:
   start:
     id: start
     text: >-
-      The town square fills with bodies. On one side: craftsmen with folded arms and hard faces.
-      On the other: merchants in fine coats. {guild_master.name} and {schemer.name} face each other
-      across ten feet of cobblestone. Someone has posted the charter loophole on the notice board
-      your name, if you are involved, sits at the edge of everyone's awareness. The crowd watches.
+      The town square fills with bodies. Craftsmen on one side, folded arms and hard faces.
+      Merchants on the other, fine coats and practiced patience. {guild_master.name} and
+      {schemer.name} face each other across ten feet of cobblestone. Someone has posted
+      the charter loophole argument on the notice board. The alderman who holds the
+      deciding vote stands off to one side, watching, not speaking. Your name sits at
+      the edge of this, depending on what you did in the days before. The crowd watches.
       This is the moment.
     choices:
       - id: speak_for_guild
@@ -104,8 +111,19 @@ nodes:
             value: arbitrated
         exhaustionCost: 3
         nextNodeId: arbitration
+      - id: approach_alderman_now
+        label: Bypass both sides and go directly to the alderman while the crowd is watching
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_pivotal
       - id: stay_silent
-        label: Say nothing and let it play out
+        label: Say nothing. Let it play out.
         consequences:
           - type: stat
             target: cunning
@@ -116,12 +134,14 @@ nodes:
   spoke_for_guild:
     id: spoke_for_guild
     text: >-
-      Your voice cuts through the noise. You lay out the guild's case fair wages, local craft,
-      the town's own prosperity. The craftsmen cheer. {schemer.name} watches you with cold eyes.
-      The crowd shifts. This is not over, but the momentum has changed.
+      Your voice cuts through the noise. You lay out the guild's case: fair wages, local
+      craft, the town's own prosperity, the charter loophole as a legal fiction that
+      benefits one party at the cost of many. The craftsmen cheer. {schemer.name} watches
+      you with cold eyes. {crowd_member.name} looks uncertain, calculating which side feels
+      safer. The momentum has changed. What you do in the next minute determines how far.
     choices:
       - id: press_advantage
-        label: Press the advantage demand the loophole be closed
+        label: Press the advantage. Demand the loophole be closed formally.
         consequences:
           - type: faction
             target: craftsmen_guild
@@ -133,9 +153,9 @@ nodes:
             target: charisma
             value: 1
         exhaustionCost: 2
-        nextNodeId: null
-      - id: offer_compromise
-        label: Offer a compromise to end it cleanly
+        nextNodeId: guild_wins_round
+      - id: offer_compromise_now
+        label: Offer a compromise to end it cleanly and preserve both sides' dignity
         consequences:
           - type: faction
             target: craftsmen_guild
@@ -147,44 +167,89 @@ nodes:
             target: charisma
             value: 1
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: compromise_proposed
+      - id: call_on_alderman
+        label: Turn to the alderman in front of the crowd and ask for their ruling now
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_pivotal
+      - id: cite_corruption_evidence
+        label: Cite what you know about the double payments to the alderman, publicly
+        preconditions:
+          - type: world_fact
+            key: alderman_corruption_reported
+            value: true
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: world_fact
+            target: alderman_exposed
+            value: true
+        exhaustionCost: 3
+        nextNodeId: alderman_pivotal
 
   spoke_for_merchants:
     id: spoke_for_merchants
     text: >-
-      You argue free trade, lower prices for common folk, the right of the market to self-correct.
+      You argue free trade: lower prices for common people, the right of the market to
+      self-correct, the guild's pricing history as a cartel dressed in craft language.
       The merchants applaud. {guild_master.name} gives you a look of quiet contempt.
-      {crowd_member.name} mutters something unflattering under their breath. The merchants have
-      won this round but you have made enemies among the craftsmen.
+      {crowd_member.name} mutters something unflattering. The merchants have won this
+      round, but you have made enemies among the craftsmen, and those debts tend to
+      present themselves later.
     choices:
       - id: accept_the_fallout
-        label: Accept the craftsmen's anger it was worth it
+        label: Accept the craftsmen's anger. It was worth it.
         consequences:
           - type: faction
             target: craftsmen_guild
             value: -1
         exhaustionCost: 0
-        nextNodeId: null
-      - id: apologize_privately
-        label: Seek out {guild_master.name} later to explain your reasoning
+        nextNodeId: merchant_wins_round
+      - id: offer_concession_to_craftsmen
+        label: Add a concession, a quality certification standard, something for the craftsmen to stand on
         consequences:
           - type: faction
             target: craftsmen_guild
             value: 1
-          - type: relationship
-            target: '{guild_master.id}'
+          - type: faction
+            target: merchants_guild
             value: 1
-            axis: respect
+          - type: stat
+            target: charisma
+            value: 1
         exhaustionCost: 2
-        nextNodeId: null
+        nextNodeId: compromise_proposed
+      - id: call_on_alderman
+        label: Turn to the alderman and ask for their ruling while the merchants are with you
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_pivotal
 
   arbitration:
     id: arbitration
     text: >-
-      Silence. Then {guild_master.name} and {schemer.name} look at each other neither wanting to
-      be seen refusing reason in front of the whole town. Grudgingly, both agree to arbitration.
-      The crowd disperses, unsatisfied but calm. You have bought the town time. What the arbitrators
-      decide is another matter.
+      Silence. Then {guild_master.name} and {schemer.name} look at each other, neither
+      wanting to be seen refusing reason in front of the whole town. Grudgingly, both
+      agree. The crowd disperses, unsatisfied but calm. You have bought time. The alderman
+      nods once in your direction, something you cannot quite read in it. What the
+      arbitrators decide is another matter entirely.
     choices:
       - id: volunteer_to_serve
         label: Volunteer to serve on the arbitration panel
@@ -199,19 +264,37 @@ nodes:
             target: merchants_guild
             value: 1
         exhaustionCost: 3
-        nextNodeId: null
-      - id: step_back
+        nextNodeId: on_the_panel
+      - id: propose_alderman_recusal
+        label: Propose that the alderman recuse themselves from the process given their conflicts
+        preconditions:
+          - type: world_fact
+            key: alderman_corruption_reported
+            value: true
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: alderman_exposed
+            value: true
+        exhaustionCost: 2
+        nextNodeId: on_the_panel
+      - id: step_back_from_arbitration
         label: Step back and let others take it from here
         consequences: []
         exhaustionCost: 0
-        nextNodeId: null
+        nextNodeId: resolution
 
   played_out:
     id: played_out
     text: >-
-      The shouting escalates. Someone throws a rotten apple. The guard moves in to separate the
-      factions before it turns to blows. {guild_master.name} and {schemer.name} are escorted off
-      in opposite directions, still glaring. Nothing is resolved. The wound festers.
+      The shouting escalates. Someone throws a rotten apple. The guard moves in to
+      separate the factions before it turns to blows. {guild_master.name} and {schemer.name}
+      are escorted off in opposite directions, still glaring. Nothing is resolved. The
+      alderman slips away before anyone can corner them. The wound festers. Whatever you
+      did in the days leading here, the confrontation has ended without resolution and
+      the next round will be worse.
     choices:
       - id: help_guard_clear_square
         label: Help the guard clear the square
@@ -223,7 +306,7 @@ nodes:
             target: strength
             value: 1
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: resolution
       - id: follow_guild_master
         label: Follow {guild_master.name} to see what happens next
         consequences:
@@ -235,4 +318,605 @@ nodes:
             value: 1
             axis: trust
         exhaustionCost: 1
+        nextNodeId: resolution
+      - id: follow_schemer
+        label: Follow {schemer.name} and see where they go when the crowd disperses
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: merchant_followed
+            value: true
+        exhaustionCost: 1
+        nextNodeId: resolution
+      - id: find_the_alderman
+        label: Find the alderman before they disappear entirely
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_pivotal
+
+  guild_wins_round:
+    id: guild_wins_round
+    text: >-
+      The loophole argument, presented clearly in public, is harder to defend in the
+      square than in a private office. {schemer.name} makes a controlled withdrawal:
+      not a concession, more a tactical repositioning. The craftsmen are elated and
+      immediately suspicious that the elation will not last. {guild_master.name} grips
+      your arm. "The vote is still tomorrow. This was the square. The alderman's office
+      is what matters." They look at you. "Will you come?"
+    choices:
+      - id: go_to_aldermans_office
+        label: Go with {guild_master.name} to the alderman's office
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 2
+            axis: trust
+        exhaustionCost: 2
+        nextNodeId: alderman_pivotal
+      - id: trust_guild_to_handle_vote
+        label: Trust the guild to handle the vote. You have done what you can.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: resolution
+
+  merchant_wins_round:
+    id: merchant_wins_round
+    text: >-
+      The crowd shifts. Free trade is a popular argument when framed correctly, and
+      {schemer.name} is visibly pleased. {guild_master.name} retreats to the guild hall
+      to regroup. You have given the merchants the public square, but the alderman's vote
+      is tomorrow and {schemer.name} knows it. You are brought along to a private dinner
+      that evening, quietly, to meet people you have not met before.
+    choices:
+      - id: attend_dinner
+        label: Attend the dinner and see who {schemer.name} calls a friend
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: resolution
+      - id: decline_dinner
+        label: Decline. Going that far in feels like too much.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: resolution
+
+  compromise_proposed:
+    id: compromise_proposed
+    text: >-
+      The crowd goes quiet enough to hear what you are proposing. A quality certification
+      standard that distinguishes guild-marked goods from imports. Pricing transparency
+      that the market can use to make decisions. The loophole stays open but is constrained
+      by labeling requirements that make the legal fiction visible. It is not everything
+      either side wanted. It is something both sides could possibly live with.
+    choices:
+      - id: push_for_agreement_now
+        label: Push for a show of agreement before the crowd disperses
+        preconditions:
+          - type: trait
+            key: charisma
+            min: 4
+        consequences:
+          - type: stat
+            target: charisma
+            value: 3
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: arbitrated
+        exhaustionCost: 3
+        nextNodeId: compromise_held
+      - id: let_it_be_considered
+        label: Put it forward and let both sides take it back to discuss
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: faction
+            target: merchants_guild
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: resolution
+
+  alderman_pivotal:
+    id: alderman_pivotal
+    text: >-
+      {alderman.name} is in their private room, one hand on their ledger, listening.
+      The noise from the square has followed everyone here in spirit. They know the vote
+      is tomorrow and they have been reading the room carefully all day. When you speak,
+      they do not interrupt. When you finish, they close the ledger and look at you with
+      the expression of someone who has already decided and is now confirming it against
+      your presence.
+    choices:
+      - id: make_case_for_guild
+        label: Make the guild's case plainly and without pressure
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: relationship
+            target: '{alderman.id}'
+            value: 1
+            axis: respect
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: craftsmen
+        exhaustionCost: 1
+        nextNodeId: vote_decided
+      - id: make_case_for_merchants
+        label: Make the merchant's case plainly and without pressure
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 2
+          - type: relationship
+            target: '{alderman.id}'
+            value: 1
+            axis: respect
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: merchants
+        exhaustionCost: 1
+        nextNodeId: vote_decided
+      - id: expose_double_payments
+        label: Tell them you know about the double payments. Ask them to vote cleanly.
+        preconditions:
+          - type: world_fact
+            key: alderman_corruption_reported
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_exposed
+            value: true
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: arbitrated
+        exhaustionCost: 2
+        nextNodeId: vote_decided
+      - id: offer_to_be_neutral_witness
+        label: Offer to be present during the vote as a neutral witness
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{alderman.id}'
+            value: 2
+            axis: respect
+        exhaustionCost: 1
+        nextNodeId: vote_decided
+
+  on_the_panel:
+    id: on_the_panel
+    text: >-
+      You serve on the arbitration panel alongside two others: a retired charter clerk
+      and a farmer with long standing in town. The sessions run two evenings. Both guilds
+      present their positions with paper and witnesses. You ask questions and take notes.
+      At the end, the panel recommends a set of labeling requirements and a review period
+      for the loophole. Neither guild is fully satisfied. Both accept it. The alderman
+      ratifies the recommendation without a vote. The crisis is contained. Not solved.
+      Contained.
+    choices:
+      - id: accept_the_outcome
+        label: Accept the outcome. It is better than nothing.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: faction
+            target: merchants_guild
+            value: 1
+          - type: stat
+            target: charisma
+            value: 2
+        exhaustionCost: 0
+        nextNodeId: resolution
+      - id: push_for_stronger_ruling
+        label: Dissent from the recommendation. Push for a stronger ruling.
+        preconditions:
+          - type: trait
+            key: charisma
+            min: 4
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: faction
+            target: merchants_guild
+            value: -1
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: resolution
+
+  compromise_held:
+    id: compromise_held
+    text: >-
+      Against most predictions, both sides agree to the outline in the square. It is
+      a thin agreement, the kind that will require maintaining, but it is an agreement.
+      {crowd_member.name} starts to applaud and others join. {schemer.name} shakes your
+      hand with a smile that does not commit to anything. {guild_master.name} gives you
+      a nod that means more than the handshake. The alderman, watching from the edge,
+      slips away. The vote tomorrow will be a formality now.
+    choices:
+      - id: ensure_vote_follows
+        label: Go to the alderman and make sure the vote tomorrow reflects the agreement
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: arbitrated
+        exhaustionCost: 1
+        nextNodeId: resolution
+      - id: celebrate_quietly
+        label: Let it settle. You did what you came to do.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: resolution
+
+  vote_decided:
+    id: vote_decided
+    text: >-
+      The alderman votes. Whatever way it goes, the vote is clean or at least cleaner
+      than it would have been. The outcome depends on everything that led here: who you
+      spoke for, what evidence you brought, whether you exposed the double payments.
+      The town knows how the vote went by evening. The guilds know how to read it.
+      And they know you were involved, whatever involvement meant in your particular case.
+    choices:
+      - id: let_both_sides_find_you
+        label: Let both sides find you in the square. Face what your choices made.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: resolution
+      - id: seek_out_guild_master
+        label: Seek out {guild_master.name} privately before the public reactions settle
+        consequences:
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 1
+            axis: affection
+        exhaustionCost: 1
+        nextNodeId: resolution
+
+  resolution:
+    id: resolution
+    text: >-
+      The confrontation is over. What it produced, a winner, a compromise, a continued
+      wound, or a contained pause, depends on everything you did before today. The guilds
+      will settle into a new arrangement, whatever it is. The alderman will continue
+      serving, with a changed relationship to their own position. {crowd_member.name}
+      will have an opinion about all of it. Your role in this has been established, and
+      the town will remember it with the particular accuracy of small-town memory.
+    choices:
+      - id: stay_connected_to_guild
+        label: Stay connected. These relationships will matter.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+        exhaustionCost: 0
         nextNodeId: null
+      - id: stay_connected_to_merchants
+        label: Maintain the merchant connections you made.
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: step_back_from_factions
+        label: Step back from both factions. You have done enough.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: guild_neutral_broker
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: consider_the_alderman
+        label: Consider what to do about the alderman going forward
+        preconditions:
+          - type: world_fact
+            key: alderman_exposed
+            value: true
+        consequences:
+          - type: world_fact
+            target: pursuing_ironhaven_fraud
+            value: true
+        exhaustionCost: 0
+        nextNodeId: null
+
+  the_crowd_disperses:
+    id: the_crowd_disperses
+    text: >-
+      The square empties. The craftsmen go back to their workshops, talking loudly.
+      The merchants go back to their stalls, talking quietly. {crowd_member.name} lingers
+      at the well long enough to tell you what the mood was on their side of the square,
+      which is useful. The alderman has left without making a statement, which is also
+      useful, in a different way. The town has witnessed something. What the town decides
+      it witnessed is still being formed.
+    choices:
+      - id: speak_to_crowd_member
+        label: Speak to {crowd_member.name} before they go. Get the ground-level read.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: resolution
+      - id: go_after_alderman
+        label: Follow the alderman before they reach their office
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: vote_decided
+
+  two_sides_come_to_you:
+    id: two_sides_come_to_you
+    text: >-
+      Within the hour after the confrontation, you are approached by representatives
+      of both guilds. Not the principals, but people sent on their behalf. Each offers
+      something: the craftsmen offer standing in the guild, the merchants offer a share
+      in the next import arrangement. Neither offer is subtle. Both are acknowledgments
+      that what happened in the square shifted something, and your position is now
+      worth securing.
+    choices:
+      - id: take_craftsmen_offer
+        label: Accept the craftsmen's offer of guild standing
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 3
+          - type: faction
+            target: merchants_guild
+            value: -1
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: craftsmen
+        exhaustionCost: 0
+        nextNodeId: resolution
+      - id: take_merchant_offer
+        label: Accept the merchant's share offer
+        consequences:
+          - type: faction
+            target: merchants_guild
+            value: 3
+          - type: faction
+            target: craftsmen_guild
+            value: -1
+          - type: world_fact
+            target: guild_conflict_resolved
+            value: merchants
+        exhaustionCost: 0
+        nextNodeId: resolution
+      - id: decline_both_offers
+        label: Decline both offers. Your value is that you have not been bought.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: guild_neutral_broker
+            value: true
+        exhaustionCost: 0
+        nextNodeId: resolution
+
+  in_the_hall_afterward:
+    id: in_the_hall_afterward
+    text: >-
+      {guild_master.name} invites you into the hall after the square empties. The room
+      is sparse and smells of working tools. Several craftsmen are present, each of them
+      looking at you with varying degrees of cautious gratitude. {guild_master.name}
+      pours two cups and hands you one. "Whatever happens with the vote," they say,
+      "this town saw someone stand up today. That matters even if the alderman votes
+      wrong." They sound like someone preparing for a bad outcome while hoping they
+      are wrong.
+    choices:
+      - id: reassure_them
+        label: Reassure them that the alderman heard what was said today
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 2
+            axis: affection
+        exhaustionCost: 0
+        nextNodeId: vote_decided
+      - id: ask_what_comes_next
+        label: Ask what the guild does if the vote goes against them
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: vote_decided
+
+  what_the_charter_says:
+    id: what_the_charter_says
+    text: >-
+      In the middle of the confrontation, someone produces the charter. An actual copy,
+      on good paper, held open to the relevant passage. The relevant passage is dense and
+      uses words that have legal meanings and ordinary meanings that do not overlap
+      cleanly. Both guilds have a reading. Both readings are plausible. The alderman
+      stands to one side, listening to both readings, and their face gives away nothing.
+      The charter is being used to justify two opposite positions simultaneously.
+    choices:
+      - id: offer_your_reading
+        label: Offer your reading of the passage, as a third perspective
+        preconditions:
+          - type: world_fact
+            key: knows_ledger_details
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: arbitration
+      - id: point_to_alderman
+        label: Point out that the alderman is the person authorized to interpret the charter. Ask them to do so now.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 1
+        nextNodeId: alderman_pivotal
+
+  the_public_moment:
+    id: the_public_moment
+    text: >-
+      Whatever you said in the square, the crowd witnessed it. That creates a kind of
+      public record that is different from and more persistent than anything written.
+      People who were there will remember what you said and how you said it. People who
+      were not there will hear a version. The version will simplify. You will become
+      either the person who stood with the craftsmen, or the person who backed the merchants,
+      or the person who called for arbitration, or the person who stayed silent. One of
+      those identities is now yours in this town.
+    choices:
+      - id: accept_the_identity
+        label: Accept whatever identity the square gave you. It is earned.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: resolution
+      - id: complicate_the_narrative
+        label: Complicate it deliberately. Speak to people who have the simplified version.
+        preconditions:
+          - type: trait
+            key: charisma
+            min: 3
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: guild_neutral_broker
+            value: true
+        exhaustionCost: 2
+        nextNodeId: resolution
+
+  the_vote_tomorrow:
+    id: the_vote_tomorrow
+    text: >-
+      Whatever happened in the square, the vote is still tomorrow. The confrontation
+      resolved or did not resolve the public argument. The alderman's decision is made
+      in their office, not in the square, and the office door closed an hour ago.
+      Both guilds have said what they have to say. The rest is waiting. You find yourself
+      in the unusual position of having influenced something whose outcome you cannot control.
+    choices:
+      - id: spend_evening_with_craftsmen
+        label: Spend the evening with the craftsmen at the guild hall
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 1
+          - type: relationship
+            target: '{guild_master.id}'
+            value: 1
+            axis: affection
+        exhaustionCost: 1
+        nextNodeId: in_the_hall_afterward
+      - id: spend_evening_alone
+        label: Spend the evening alone. Think through what you did and why.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: resolution
+
+  schemer_after:
+    id: schemer_after
+    text: >-
+      {schemer.name} finds you that evening. Alone, no colleagues. They look at you
+      for a moment before speaking. "That was well done," they say, meaning: whether
+      you spoke for or against them, the manner was good. "I respect capable people
+      even when they are on the wrong side." They are gauging whether there is still a
+      path back to a workable relationship. Whether there is, or whether you want one,
+      is up to you.
+    choices:
+      - id: keep_it_civil
+        label: Keep it civil. Rivals are not always enemies.
+        consequences:
+          - type: relationship
+            target: '{schemer.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 0
+        nextNodeId: resolution
+      - id: make_clear_terms
+        label: Make clear that your opposition to the scheme stands regardless of personal regard
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 0
+        nextNodeId: resolution

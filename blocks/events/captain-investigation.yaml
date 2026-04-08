@@ -26,6 +26,11 @@ roles:
       - soldier
     factionRequirements:
       - town_guard
+  - id: alderman
+    label: The Supervising Alderman
+    archetypeFilter:
+      - merchant
+      - farmer
 
 entryNodeId: start
 
@@ -33,13 +38,14 @@ nodes:
   start:
     id: start
     text: >-
-      {captain.name} summons you to the guardhouse. It is spare and clean the kind of space that
-      belongs to someone who means what they say. The captain closes the door and sits across from
-      you. "{corrupt_guard.name} denies everything. Their record is clean." A pause. "Tell me
-      exactly what happened. Spare nothing."
+      {captain.name} summons you to the guardhouse. It is spare and clean, the kind of
+      space that belongs to someone who means what they say. The captain closes the door
+      and sits across from you. "{corrupt_guard.name} denies everything. Their record is
+      clean on paper." A pause. "Tell me exactly what happened. Spare nothing." The ledger
+      is open. The quill is in hand. This is a formal proceeding.
     choices:
       - id: full_truth
-        label: Tell the complete truth every word, every detail
+        label: Tell the complete truth. Every word, every detail.
         consequences:
           - type: stat
             target: charisma
@@ -75,7 +81,7 @@ nodes:
         exhaustionCost: 1
         nextNodeId: told_partial
       - id: recant
-        label: Claim you may have misunderstood walk it back
+        label: Claim you may have misunderstood. Walk it back.
         consequences:
           - type: stat
             target: cunning
@@ -92,14 +98,184 @@ nodes:
             value: true
         exhaustionCost: 1
         nextNodeId: recanted
+      - id: ask_about_other_complaints
+        label: Before giving your account, ask if there are other complaints on record
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: captain_shares_context
+
+  captain_shares_context:
+    id: captain_shares_context
+    text: >-
+      {captain.name} considers whether to answer. Then: "There have been informal
+      complaints. Nothing formal, no one willing to put their name to it. The problem
+      with protection schemes is that the people who pay often feel they got something
+      for their money, at least temporarily." They set down the quill. "Your account
+      would be the first formal complaint. That is different in kind from gossip and
+      rumor." They look at you steadily. "Do you want to be the first?"
+    choices:
+      - id: agree_to_be_first
+        label: Say yes. Someone has to be.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: stat
+            target: charisma
+            value: 1
+          - type: world_fact
+            target: testified_truthfully
+            value: true
+        exhaustionCost: 0
+        nextNodeId: told_truth
+      - id: ask_for_protection_first
+        label: Ask what protection you will have as the first complainant
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: protection_discussed
+      - id: offer_witness_names
+        label: Tell them you know others who might come forward if given reason to
+        preconditions:
+          - type: world_fact
+            key: corruption_witnessed
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 1
+        nextNodeId: multiple_witnesses
+
+  protection_discussed:
+    id: protection_discussed
+    text: >-
+      {captain.name} does not flinch at the question. "Formally, you are protected by
+      the inquiry process. {corrupt_guard.name} will be on restricted duties during the
+      investigation. They cannot touch anything involving you or your property without
+      it being noted." A pause. "Informally, you have the captain of the guard aware
+      of your situation. That is not nothing." The answer is honest in its limits.
+    choices:
+      - id: accept_and_testify
+        label: Accept the terms and give your full account
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{captain.id}'
+            value: 2
+            axis: trust
+          - type: world_fact
+            target: testified_truthfully
+            value: true
+        exhaustionCost: 1
+        nextNodeId: told_truth
+      - id: ask_about_alderman_role
+        label: Ask if the alderman is part of the oversight of this inquiry
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: alderman_role_explained
+
+  alderman_role_explained:
+    id: alderman_role_explained
+    text: >-
+      {captain.name} answers carefully. "The alderman reviews any inquiry findings
+      before formal discipline can be applied. It is the standard process." They watch
+      your face. "You have a concern about that." It is not a question. Whatever you
+      know about the alderman's relationship with the guild conflict, the captain is
+      reading your hesitation accurately. "Tell me."
+    choices:
+      - id: share_alderman_concerns
+        label: Tell the captain what you know about the alderman's double payments
+        preconditions:
+          - type: world_fact
+            key: alderman_corruption_reported
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: relationship
+            target: '{captain.id}'
+            value: 2
+            axis: respect
+          - type: world_fact
+            target: alderman_exposed
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_alarmed
+      - id: keep_alderman_concerns_back
+        label: Say it is nothing. Give your account of the guard.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: testified_truthfully
+            value: true
+        exhaustionCost: 1
+        nextNodeId: told_truth
+
+  captain_alarmed:
+    id: captain_alarmed
+    text: >-
+      {captain.name} is still for a moment longer than usual. They pick up the quill,
+      set it down again, and look at the door. "If what you are describing is accurate,
+      the alderman reviewing this inquiry has a conflict of interest. That changes the
+      process." They are thinking in several directions at once. "I need to take this
+      above the alderman. That means the regional magistrate. That means this becomes
+      larger than a single guard's misconduct." They look at you. "Are you prepared for
+      a larger thing?"
+    choices:
+      - id: agree_to_larger_thing
+        label: Say yes. If that is what is needed, then yes.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: testified_truthfully
+            value: true
+          - type: world_fact
+            target: agreed_to_testify
+            value: true
+        exhaustionCost: 0
+        nextNodeId: formal_inquiry
+      - id: step_back_from_larger
+        label: Say you reported what you experienced. You are not sure about beyond that.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: testified_vaguely
+            value: true
+        exhaustionCost: 0
+        nextNodeId: told_partial
 
   told_truth:
     id: told_truth
     text: >-
-      {captain.name} writes without looking up, then sets the quill down. "This is enough to
-      open a formal inquiry." They meet your eyes. "You understand this may make you a target.
-      {corrupt_guard.name} has friends." A long silence. "I will have two guards on your door
-      tonight. Whether you want them or not."
+      {captain.name} writes without looking up, then sets the quill down. "This is
+      enough to open a formal inquiry." They meet your eyes. "You understand this may
+      make you a target. {corrupt_guard.name} has friends and the kind of friends who
+      do small, difficult-to-prove things." A long silence. "I will have two guards on
+      your door tonight. Whether you want them or not, they are there."
     choices:
       - id: accept_protection
         label: Accept the protection gratefully
@@ -112,9 +288,9 @@ nodes:
             target: town_guard
             value: 1
         exhaustionCost: 0
-        nextNodeId: null
+        nextNodeId: inquiry_process
       - id: decline_protection
-        label: Decline you can look after yourself
+        label: Decline. You can look after yourself.
         consequences:
           - type: stat
             target: strength
@@ -124,18 +300,34 @@ nodes:
             value: 1
             axis: respect
         exhaustionCost: 0
-        nextNodeId: null
+        nextNodeId: inquiry_process
+      - id: ask_about_other_witnesses
+        label: Tell the captain you know of others who may be willing to testify
+        preconditions:
+          - type: world_fact
+            key: corruption_witnessed
+            value: true
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 1
+        nextNodeId: multiple_witnesses
 
   told_partial:
     id: told_partial
     text: >-
-      {captain.name} listens, tapping a finger on the table. "You are holding something back."
-      It is not a question. "I understand caution but half a truth is a dangerous thing in an
-      inquiry. If it comes out you softened your account, it reflects on you, not {corrupt_guard.name}."
-      The captain leans back and waits.
+      {captain.name} listens, tapping a finger slowly on the table. "You are holding
+      something back." It is not a question. "I understand caution. But half a truth
+      is a dangerous thing in an inquiry. If it comes out that you softened your account,
+      it reflects on you, not on {corrupt_guard.name}." The captain leans back and waits.
+      The silence is deliberate.
     choices:
-      - id: come_clean
-        label: Come clean tell them all of it
+      - id: come_clean_now
+        label: Come clean. Tell them all of it.
         consequences:
           - type: stat
             target: charisma
@@ -147,34 +339,46 @@ nodes:
             target: testified_truthfully
             value: true
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: told_truth
+      - id: explain_caution
+        label: Explain why you held back. Name the specific concern.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: relationship
+            target: '{captain.id}'
+            value: 1
+            axis: respect
+        exhaustionCost: 1
+        nextNodeId: captain_shares_context
       - id: hold_firm
-        label: Hold to your account it is what you are comfortable with
+        label: Hold to your account. It is what you are comfortable with.
         consequences:
           - type: stat
             target: cunning
             value: 1
         exhaustionCost: 0
-        nextNodeId: null
+        nextNodeId: inquiry_process
 
   recanted:
     id: recanted
     text: >-
-      {captain.name} sets the quill down slowly. "I see." Their voice is flat. "Then we have
-      nothing to act on." They stand. "You are dismissed." There is no warmth in it. Outside,
-      you pass {corrupt_guard.name} in the lane they give you a slow, satisfied smile. You
-      look away first.
+      {captain.name} sets the quill down slowly. "I see." Their voice is flat. "Then
+      we have nothing to act on." They stand. "You are dismissed." There is no warmth
+      in it. Outside, you pass {corrupt_guard.name} in the lane. They give you a slow,
+      satisfied smile. You look away first. The smile will be in your mind for a while.
     choices:
       - id: regret_it
-        label: Feel the weight of it some choices cannot be undone
+        label: Feel the weight of it. Some choices cannot be undone cleanly.
         consequences:
           - type: stat
             target: cunning
             value: -1
         exhaustionCost: 0
-        nextNodeId: null
-      - id: report_again
-        label: Turn back and change your statement before it is too late
+        nextNodeId: guard_unpunished
+      - id: report_again_immediately
+        label: Turn back and change your statement before it is filed
         consequences:
           - type: faction
             target: town_guard
@@ -187,4 +391,514 @@ nodes:
             value: 1
             axis: respect
         exhaustionCost: 2
+        nextNodeId: told_truth
+      - id: find_another_channel
+        label: Go to the alderman directly and report it there instead
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: alderman_report
+
+  multiple_witnesses:
+    id: multiple_witnesses
+    text: >-
+      {captain.name} straightens. "Other witnesses." They write something new in the
+      ledger. "If you can bring them to me directly, or name them and I will send for
+      them quietly, that changes what kind of inquiry this is. One account is a complaint.
+      Three accounts is a pattern. Patterns are much harder to dismiss." They look at you.
+      "Can you get them to speak?"
+    choices:
+      - id: commit_to_gathering_witnesses
+        label: Say yes. You know who to approach and how.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 3
+        nextNodeId: formal_inquiry
+      - id: give_names_only
+        label: Give the names and let the captain send for them
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 1
+        nextNodeId: inquiry_process
+      - id: warn_that_witnesses_are_scared
+        label: Warn that the witnesses are scared and may not come voluntarily
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: inquiry_process
+
+  inquiry_process:
+    id: inquiry_process
+    text: >-
+      The inquiry is running. {corrupt_guard.name} has been moved to desk duties, which
+      is a formal signal even if it is not yet punishment. You are aware of them at the
+      edge of things: in the lane, in the market, watching without looking directly.
+      It will take three days for the inquiry to run its formal course. Three days is a
+      long time to be the person who filed the complaint.
+    choices:
+      - id: stay_steady
+        label: Stay steady. Go about your days normally. Refuse to be moved.
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: inquiry_outcome
+      - id: gather_more_evidence
+        label: Use the three days to gather additional evidence to strengthen the case
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 3
+        nextNodeId: formal_inquiry
+      - id: tell_guild_what_is_happening
+        label: Tell the craftsmen's guild that the inquiry is running
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: inquiry_outcome
+
+  formal_inquiry:
+    id: formal_inquiry
+    text: >-
+      The formal inquiry convenes: {captain.name}, the alderman's clerk, and a panel
+      of two. You are asked to give your account formally. {corrupt_guard.name} is
+      present, on the other side of the table, with the particular stillness of someone
+      who is very angry and being careful about it. The process is dry and methodical
+      and more unsettling for being so.
+    choices:
+      - id: give_clear_account
+        label: Give your account clearly and without embellishment
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{captain.id}'
+            value: 2
+            axis: respect
+          - type: world_fact
+            target: agreed_to_testify
+            value: true
+        exhaustionCost: 2
+        nextNodeId: inquiry_outcome
+      - id: present_additional_evidence
+        label: Present the additional evidence you gathered alongside your account
+        preconditions:
+          - type: world_fact
+            key: corruption_evidence_gathered
+            value: true
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: world_fact
+            target: agreed_to_testify
+            value: true
+        exhaustionCost: 2
+        nextNodeId: inquiry_outcome
+      - id: request_alderman_recusal
+        label: Formally request the alderman be recused from the findings review
+        preconditions:
+          - type: world_fact
+            key: alderman_exposed
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_unsettled
+            value: true
+        exhaustionCost: 2
+        nextNodeId: inquiry_outcome
+
+  guard_unpunished:
+    id: guard_unpunished
+    text: >-
+      Without a formal complaint that stands, the inquiry closes without findings.
+      {corrupt_guard.name} returns to full duty. The captain cannot act without a
+      complainant who holds. {corrupt_guard.name} knows it. They do not gloat obviously,
+      but the awareness is there in how they carry themselves. The guild dispute
+      continues. The protection scheme continues. The gap between what you know
+      and what has been done about it sits in you, small and persistent.
+    choices:
+      - id: find_another_way
+        label: Find another way to address this. Quietly.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: inquiry_process
+      - id: let_it_go_for_now
+        label: Let it go. Some fights are not yours to win right now.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
         nextNodeId: null
+
+  alderman_report:
+    id: alderman_report
+    text: >-
+      {alderman.name} receives you with the expression of someone who expected this
+      eventually but not today. They listen. Their response is careful: "This is a matter
+      for the guard captain to handle through proper channels." But they do not dismiss
+      you entirely. When you leave, you notice they send a message almost immediately.
+      Where it goes is unclear. The alderman has their own calculations running.
+    choices:
+      - id: go_back_to_captain_now
+        label: Go back to the captain and try again with full account
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: world_fact
+            target: testified_truthfully
+            value: true
+        exhaustionCost: 1
+        nextNodeId: told_truth
+      - id: watch_where_message_goes
+        label: Watch to see where the alderman's message was sent
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: alderman_unsettled
+            value: true
+        exhaustionCost: 2
+        nextNodeId: inquiry_process
+
+  inquiry_outcome:
+    id: inquiry_outcome
+    text: >-
+      The inquiry finds. The outcome depends on the strength of the account and the
+      evidence behind it: {corrupt_guard.name} is either suspended, reassigned, formally
+      cautioned, or, with enough evidence, dismissed and referred for prosecution. The
+      captain informs you of the outcome in writing, a short letter that says more in
+      its formality than in its words. Whatever happened, the mechanism worked or it
+      did not, and you know now how much the mechanism is worth in this town.
+    choices:
+      - id: express_satisfaction
+        label: Accept the outcome. Justice of some kind was attempted.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: relationship
+            target: '{captain.id}'
+            value: 2
+            axis: respect
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: push_further_if_insufficient
+        label: If the outcome was insufficient, say so formally to the captain
+        preconditions:
+          - type: world_fact
+            key: agreed_to_testify
+            value: true
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: tell_guild_outcome
+        label: Tell the craftsmen's guild what happened with the inquiry
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+      - id: maintain_relationship_with_captain
+        label: Thank {captain.name} personally. This person did the right thing.
+        preconditions:
+          - type: world_fact
+            key: testified_truthfully
+            value: true
+        consequences:
+          - type: relationship
+            target: '{captain.id}'
+            value: 3
+            axis: affection
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  between_testimony_and_outcome:
+    id: between_testimony_and_outcome
+    text: >-
+      You gave your account. Now you wait. The inquiry process has its own pace, deliberate
+      and inscrutable from the outside. You hear nothing official for two days. On the
+      third day {corrupt_guard.name} is conspicuously not in their usual place on the
+      workshop lane patrol. That is either reassignment or suspension. Both are possible.
+      Neither is confirmation. You go about your day and try not to interpret every minor
+      variation as a sign.
+    choices:
+      - id: check_with_captain
+        label: Go ask {captain.name} directly where the inquiry stands
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: relationship
+            target: '{captain.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: inquiry_process
+      - id: wait_without_asking
+        label: Wait without asking. You trust the process.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: inquiry_outcome
+
+  the_threatened_recant:
+    id: the_threatened_recant
+    text: >-
+      Someone who is not {corrupt_guard.name} finds you in the lane. A person you barely
+      know, with the careful courtesy of someone delivering a message they did not write.
+      The message is: there are people who would prefer this inquiry not go forward, and
+      those people are aware you filed it, and they hope you will reconsider. No threat
+      is named. The implication is clear. You stand in the lane and decide what to do
+      with it.
+    choices:
+      - id: go_to_captain_immediately
+        label: Go to {captain.name} and report the message as evidence of interference
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_alarmed
+      - id: do_not_recant
+        label: Say nothing and do not recant. Hold.
+        consequences:
+          - type: stat
+            target: strength
+            value: 2
+        exhaustionCost: 0
+        nextNodeId: inquiry_process
+      - id: find_out_who_sent_message
+        label: Try to find out who sent the messenger before deciding anything
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+        exhaustionCost: 2
+        nextNodeId: inquiry_process
+
+  alderman_reviews:
+    id: alderman_reviews
+    text: >-
+      Word reaches you that the inquiry findings have been forwarded to {alderman.name}
+      for review, as the standard process requires. You know what you know about the
+      alderman's position in the guild dispute and their history of double payments.
+      This is the moment where those facts either matter or they do not. If the alderman
+      dismisses the findings, the inquiry dies without discipline. If they uphold them,
+      {corrupt_guard.name} faces consequence.
+    choices:
+      - id: speak_to_alderman_directly
+        label: Go to the alderman directly and make your case for upholding the findings
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: world_fact
+            target: alderman_approached
+            value: true
+        exhaustionCost: 2
+        nextNodeId: inquiry_outcome
+      - id: trust_the_captain
+        label: Trust that {captain.name} made a strong enough case in the formal record
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: relationship
+            target: '{captain.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 0
+        nextNodeId: inquiry_outcome
+      - id: expose_alderman_conflict
+        label: Formally object to the alderman reviewing, citing their conflict of interest
+        preconditions:
+          - type: world_fact
+            key: alderman_exposed
+            value: true
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: alderman_unsettled
+            value: true
+        exhaustionCost: 3
+        nextNodeId: captain_alarmed
+
+  the_formal_letter:
+    id: the_formal_letter
+    text: >-
+      The formal outcome of the inquiry arrives in a sealed letter delivered to your
+      door by a guard who is not {corrupt_guard.name}. The language is official and
+      dry. It describes findings consistent with conduct unbecoming, a formal caution,
+      a period of supervised duties. It is not a dismissal. It is not nothing. It
+      occupies the uncomfortable middle distance between justice and inadequacy, which
+      is where many official outcomes live.
+    choices:
+      - id: read_it_as_partial_victory
+        label: Read it as partial victory. The mechanism worked, within its limits.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: stat
+            target: charisma
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: inquiry_outcome
+      - id: push_for_more
+        label: Push for a stronger outcome. Send a formal response requesting escalation.
+        preconditions:
+          - type: world_fact
+            key: corruption_evidence_gathered
+            value: true
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: inquiry_outcome
+
+  guard_behavior_changes:
+    id: guard_behavior_changes
+    text: >-
+      A week into the inquiry, you notice the workshop lane patrol has a different guard.
+      {corrupt_guard.name} is not present. The new guard nods at you in the lane, either
+      because they know who you are, or because that is simply how they work. The absence
+      of {corrupt_guard.name} is not yet a conclusion. It is a change. Small changes are
+      how institutions show you what is happening in their interior, before the official
+      word comes.
+    choices:
+      - id: ask_captain_what_it_means
+        label: Ask {captain.name} what the change in patrol means
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+          - type: relationship
+            target: '{captain.id}'
+            value: 1
+            axis: trust
+        exhaustionCost: 1
+        nextNodeId: between_testimony_and_outcome
+      - id: read_it_as_progress
+        label: Read it as progress and wait for the formal word
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: inquiry_outcome
+
+  the_personal_cost:
+    id: the_personal_cost
+    text: >-
+      Reporting corruption costs something. You knew it would. The cost so far: a few
+      nights of light sleep, the awareness that {corrupt_guard.name} and whoever supports
+      them knows your name, the time spent in a guardhouse giving an account instead of
+      doing other things. Whether the outcome is worth the cost depends on the outcome.
+      You cannot know that yet. What you can know is that you made a choice that required
+      something from you, and that is not nothing.
+    choices:
+      - id: accept_the_cost
+        label: Accept the cost. This was worth doing.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: inquiry_outcome
+      - id: assess_what_comes_next
+        label: Assess what the next step costs and whether you have capacity for it
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: inquiry_outcome

@@ -31,6 +31,11 @@ roles:
       - soldier
     factionRequirements:
       - town_guard
+  - id: witness
+    label: A Nearby Witness
+    archetypeFilter:
+      - farmer
+      - merchant
 
 entryNodeId: start
 
@@ -39,9 +44,10 @@ nodes:
     id: start
     text: >-
       {corrupt_guard.name} stops you near the workshop lane, one hand resting on their belt.
-      "Busy time, isn't it. All this guild trouble." They lower their voice. "Accidents happen to
-      folk who don't have friends in the guard. Call it... a protection fee. Ten silver and I
-      make sure your door stays quiet."
+      "Busy time, isn't it. All this guild trouble." They lower their voice. "Accidents happen
+      to folk who don't have friends in the guard. Call it a protection fee. Ten silver and I
+      make sure your door stays quiet." The lane is empty except for {witness.name} crossing
+      at the far end, who may or may not have heard.
     choices:
       - id: pay
         label: Pay the ten silver and say nothing
@@ -89,13 +95,73 @@ nodes:
             value: true
         exhaustionCost: 2
         nextNodeId: reported
+      - id: stall_for_time
+        label: Stall. Say you do not carry that much coin. Ask if you can bring it tomorrow.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: stalled
+
+  stalled:
+    id: stalled
+    text: >-
+      {corrupt_guard.name} studies you, calculating whether you are about to run or genuinely
+      short of silver. "Tomorrow morning," they say finally. "Before the market opens." They
+      walk away without looking back, the easy confidence of someone who is used to being paid.
+      You have until morning. That is enough time to do several things.
+    choices:
+      - id: find_captain_tonight
+        label: Find {captain.name} tonight and report it before morning
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: reported
+      - id: find_the_witness
+        label: Find {witness.name} who was at the lane end and ask what they heard
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: corruption_witnessed
+            value: true
+        exhaustionCost: 1
+        nextNodeId: witness_consulted
+      - id: investigate_guard
+        label: Spend the evening finding out who else {corrupt_guard.name} has shaken down
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: evidence_gathered
+      - id: pay_in_morning
+        label: Decide to just pay in the morning and end the problem cheaply
+        consequences:
+          - type: world_fact
+            target: corruption_paid
+            value: true
+        exhaustionCost: 0
+        nextNodeId: paid
 
   paid:
     id: paid
     text: >-
       {corrupt_guard.name} palms the coins without blinking. "Smart choice. You have a good day
       now." They stroll away, unhurried. You feel the lightness of ten silver missing from your
-      purse and something heavier in its place.
+      purse and something heavier in its place. It is not guilt exactly, it is the weight of
+      knowing this will happen again. Perhaps to you. Perhaps to someone else. The choice to pay
+      does not end the problem, it only relocates it.
     choices:
       - id: swallow_it
         label: Swallow the humiliation and get on with the day
@@ -104,9 +170,9 @@ nodes:
             target: cunning
             value: 1
         exhaustionCost: 0
-        nextNodeId: null
+        nextNodeId: aftermath
       - id: change_mind_report
-        label: Change your mind go find {captain.name}
+        label: Change your mind. Find {captain.name}.
         consequences:
           - type: faction
             target: town_guard
@@ -115,44 +181,86 @@ nodes:
             target: corruption_reported
             value: true
         exhaustionCost: 2
-        nextNodeId: null
+        nextNodeId: reported
+      - id: find_others_who_paid
+        label: Find out who else has paid. Build a case.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: evidence_gathered
 
   refused:
     id: refused
     text: >-
-      {corrupt_guard.name} watches you go with flat eyes. "Your choice." That evening, you notice
-      a scratch on your door lock and a broken shutter latch. Nothing stolen just a message. You
-      sleep lightly.
+      {corrupt_guard.name} watches you go with flat eyes. "Your choice." That evening, you
+      notice a scratch on your door lock and a broken shutter latch. Nothing stolen, just a
+      message. You sleep lightly. The next morning {corrupt_guard.name} passes you in the lane
+      without speaking, which is its own kind of message. This is not over unless someone
+      makes it over.
     choices:
       - id: document_damage
-        label: Document the damage in case you need it later
+        label: Document the damage carefully in case you need it later
         consequences:
           - type: stat
             target: cunning
             value: 1
           - type: world_fact
-            target: corruption_reported
+            target: corruption_evidence_gathered
             value: true
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: evidence_gathered
+      - id: go_to_captain_now
+        label: Go to {captain.name} now and report both the shakedown and the damage
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: reported
       - id: ignore_it
-        label: Fix it yourself and stay alert
+        label: Fix it yourself and stay alert. Let it go.
         consequences:
           - type: stat
             target: strength
             value: 1
         exhaustionCost: 1
-        nextNodeId: null
+        nextNodeId: aftermath
+      - id: confront_directly
+        label: Confront {corrupt_guard.name} again, this time with names of witnesses
+        preconditions:
+          - type: world_fact
+            key: corruption_witnessed
+            value: true
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: relationship
+            target: '{corrupt_guard.id}'
+            value: -2
+            axis: fear
+        exhaustionCost: 2
+        nextNodeId: guard_confronted
 
   reported:
     id: reported
     text: >-
-      {corrupt_guard.name} goes pale. They say nothing as you turn and walk toward the guardhouse.
-      {captain.name} listens without interrupting, face unreadable. "Leave it with me," they say
-      at last. "And thank you for your courage."
+      {corrupt_guard.name} goes pale. They say nothing as you turn toward the guardhouse.
+      {captain.name} listens without interrupting, face unreadable. "Leave it with me," they
+      say at last. "And thank you for your courage." They do not use the word courage lightly.
+      You notice that the door is closed, the latch is firm, and the captain does not reach
+      for a ledger immediately. They are thinking first.
     choices:
       - id: give_full_account
-        label: Give a full account name, time, exact words
+        label: Give a full account, name, time, exact words
         consequences:
           - type: faction
             target: town_guard
@@ -165,12 +273,651 @@ nodes:
             value: 3
             axis: respect
         exhaustionCost: 2
-        nextNodeId: null
-      - id: vague_account
+        nextNodeId: captain_responds
+      - id: give_partial_account
         label: Give a general complaint and let the captain do the work
         consequences:
           - type: faction
             target: town_guard
             value: 1
         exhaustionCost: 1
+        nextNodeId: captain_responds
+      - id: add_context_about_guild
+        label: Add that the shakedown is tied to the guild dispute, if you believe it is
+        preconditions:
+          - type: world_fact
+            key: guild_dispute
+            value: true
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: corruption_tied_to_guild
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
+
+  witness_consulted:
+    id: witness_consulted
+    text: >-
+      {witness.name} heard enough. They are not happy about being put in this position.
+      "I do not want trouble," they say, twice, before reluctantly admitting they heard
+      the amount and the phrase "protection fee" clearly enough to repeat it. "But I will
+      not go to the guardhouse alone." They look at you steadily. "If someone else goes
+      first, I will confirm what they say. That is all I will do."
+    choices:
+      - id: go_first_yourself
+        label: Go to the captain first and tell them {witness.name} will confirm
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: corruption_reported
+            value: true
+          - type: world_fact
+            target: corruption_witnessed
+            value: true
+        exhaustionCost: 2
+        nextNodeId: reported
+      - id: find_more_witnesses
+        label: Thank them and find out if anyone else saw
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: evidence_gathered
+      - id: use_witness_as_leverage
+        label: Go to {corrupt_guard.name} with the witness's name. See if they back down.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: relationship
+            target: '{corrupt_guard.id}'
+            value: -2
+            axis: fear
+        exhaustionCost: 2
+        nextNodeId: guard_confronted
+
+  evidence_gathered:
+    id: evidence_gathered
+    text: >-
+      By asking carefully in three places, you learn that {corrupt_guard.name} has
+      collected similar fees from at least two other people in the past month, both of
+      them involved in the guild dispute in some way. One paid without reporting it.
+      The other refused and had a window broken. The pattern is clear: the guard is
+      exploiting the disruption the guild conflict has created, taking advantage of the
+      general atmosphere of threat and uncertainty. With evidence, the case becomes harder
+      to ignore.
+    choices:
+      - id: bring_evidence_to_captain
+        label: Take everything to {captain.name} and lay it all out
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: relationship
+            target: '{captain.id}'
+            value: 3
+            axis: respect
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
+      - id: bring_evidence_to_guild
+        label: Take the evidence to the craftsmen's guild, they may be able to use it
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: aftermath
+      - id: confront_guard_with_evidence
+        label: Confront {corrupt_guard.name} directly with what you have gathered
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{corrupt_guard.id}'
+            value: -3
+            axis: fear
+        exhaustionCost: 2
+        nextNodeId: guard_confronted
+
+  guard_confronted:
+    id: guard_confronted
+    text: >-
+      {corrupt_guard.name}'s face cycles through three expressions quickly: contempt,
+      calculation, and then something like wariness. They did not expect this. "You have
+      nothing that would hold in front of the captain," they say, but the confidence is
+      constructed. They are not sure of it. "Those people would not testify." They are
+      trying to work out how much you actually have.
+    choices:
+      - id: call_the_bluff
+        label: Name the witness. Say they will testify. Watch the guard's face.
+        preconditions:
+          - type: world_fact
+            key: corruption_witnessed
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: relationship
+            target: '{corrupt_guard.id}'
+            value: -3
+            axis: fear
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
+      - id: demand_repayment
+        label: Demand they return what they took from the others, in exchange for silence
+        preconditions:
+          - type: world_fact
+            key: corruption_evidence_gathered
+            value: true
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: corruption_paid
+            value: false
+        exhaustionCost: 1
+        nextNodeId: aftermath
+      - id: give_them_a_way_out
+        label: Offer them the chance to report themselves to {captain.name} before you do
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: relationship
+            target: '{corrupt_guard.id}'
+            value: -1
+            axis: rivalry
+        exhaustionCost: 1
+        nextNodeId: captain_responds
+
+  captain_responds:
+    id: captain_responds
+    text: >-
+      {captain.name} sets down their quill and folds their hands. They have been listening
+      with the particular attention of someone who already suspected something was wrong
+      and is now hearing their suspicion confirmed in detail. "This is not the first
+      complaint of this kind," they say, carefully. "But you are the first to bring it
+      with evidence." They look at you. "I am going to open an inquiry. {corrupt_guard.name}
+      will know it came from you. Do you understand what you are agreeing to?"
+    choices:
+      - id: accept_fully
+        label: Say yes. You understand. Proceed.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: relationship
+            target: '{captain.id}'
+            value: 3
+            axis: respect
+          - type: world_fact
+            target: corruption_reported
+            value: true
+          - type: world_fact
+            target: agreed_to_testify
+            value: true
+        exhaustionCost: 0
+        nextNodeId: inquiry_opened
+      - id: ask_for_protection
+        label: Ask what protection the captain can offer during the inquiry
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: inquiry_opened
+      - id: ask_about_other_complaints
+        label: Ask about the other complaints the captain mentioned
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 1
+        nextNodeId: inquiry_opened
+
+  inquiry_opened:
+    id: inquiry_opened
+    text: >-
+      {captain.name} writes two lines and seals them. An inquiry is now a formal thing.
+      {corrupt_guard.name} will be confined to light duties while it runs. The inquiry
+      will take days and the outcome is not guaranteed, but the mechanism has been set
+      in motion. As you leave the guardhouse you pass {corrupt_guard.name} in the lane.
+      They do not speak. They watch you with the still, flat attention of someone who is
+      marking a record.
+    choices:
+      - id: stay_visible
+        label: Stay visible and calm. The inquiry is your protection now.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: aftermath
+      - id: find_allies
+        label: Tell the craftsmen's guild what you did. They should know.
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: aftermath
+      - id: document_everything
+        label: Go home and write down every detail of the shakedown while it is fresh
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 1
+        nextNodeId: aftermath
+
+  aftermath:
+    id: aftermath
+    text: >-
+      The situation is not resolved. It is changed. {corrupt_guard.name} is either paid,
+      warned, reported, or confronted, but the guild dispute that enabled them still simmers.
+      The captain knows more than they did yesterday. The guilds are watching to see how
+      this shakes out. Your position in the middle of it has been established whether you
+      intended it or not. What happens at the guild vote will tell everyone what the
+      town's institutions are actually worth.
+    choices:
+      - id: stay_involved
+        label: Stay involved. This connects to the guild vote.
+        consequences:
+          - type: world_fact
+            target: warned_guild
+            value: true
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
         nextNodeId: null
+      - id: step_back
+        label: Step back. You have done what you could. Let it resolve itself.
+        consequences: []
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: report_to_guild
+        label: Tell the craftsmen's guild what you reported and what may follow
+        consequences:
+          - type: faction
+            target: craftsmen_guild
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+
+  the_long_game:
+    id: the_long_game
+    text: >-
+      Protection schemes do not exist in isolation. If {corrupt_guard.name} was doing
+      this, they were either doing it alone as an opportunist, or doing it with the
+      knowledge of someone above them who takes a cut. The question is which. An
+      opportunist can be stopped with a single inquiry. Something structural requires
+      more. The guild dispute is the disruption that enabled it, and the disruption is
+      not over.
+    choices:
+      - id: investigate_upward
+        label: Try to find out if {corrupt_guard.name} had support from above
+        preconditions:
+          - type: trait
+            key: cunning
+            min: 3
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 3
+        nextNodeId: captain_responds
+      - id: leave_it_to_captain
+        label: Leave the structural question to {captain.name}. That is their job.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+
+  calculating_cost:
+    id: calculating_cost
+    text: >-
+      You work out what the protection fee would have cost you over time if you had kept
+      paying it. The number is uncomfortable. You think about the other people in the
+      workshop lane who have probably been paying. The number becomes more uncomfortable.
+      A shakedown that runs for a year and touches twenty people is not a minor irritant.
+      It is a systematic tax on the people who can least afford it, administered by someone
+      who is supposed to protect them.
+    choices:
+      - id: turn_this_into_something
+        label: Use the calculation. Turn this into a formal complaint with numbers.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
+      - id: sit_with_the_anger
+        label: Sit with the anger. It is useful.
+        consequences:
+          - type: stat
+            target: strength
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: aftermath
+
+  workshop_lane_solidarity:
+    id: workshop_lane_solidarity
+    text: >-
+      You talk to three people in the workshop lane, carefully. Two of them have paid.
+      One of them refused and had something broken. None of them knew about the others.
+      When you tell each what you know, you watch relief and anger arrive in different
+      proportions in different faces. They are less alone than they thought they were,
+      which is both comfort and fuel. "If we all complained at once," one of them says.
+      "They could not dismiss all of us." The word all is doing a lot of work.
+    choices:
+      - id: organize_collective_complaint
+        label: Organize a collective formal complaint. More voices, harder to dismiss.
+        consequences:
+          - type: stat
+            target: charisma
+            value: 3
+          - type: faction
+            target: village_folk
+            value: 3
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 3
+        nextNodeId: captain_responds
+      - id: support_them_individually
+        label: Support each of them going individually rather than as a group
+        consequences:
+          - type: stat
+            target: charisma
+            value: 1
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
+      - id: tell_them_to_wait
+        label: Ask them to wait. You want to go to the captain first.
+        consequences:
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 1
+        nextNodeId: captain_responds
+
+  fear_of_retaliation:
+    id: fear_of_retaliation
+    text: >-
+      A window broken is a message. You spend two nights sleeping lightly and checking
+      your door. Nothing else happens. Either {corrupt_guard.name} is satisfied with
+      the warning, or they are being careful while they decide their next move, or someone
+      told them to hold off. The absence of further retaliation is its own information.
+      It suggests either weakness or strategy. You try to determine which.
+    choices:
+      - id: test_by_going_to_captain
+        label: Test it by going to the captain now. See what reaction comes.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: corruption_reported
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
+      - id: continue_being_visible
+        label: Continue being visible and unremarkable. Give them nothing to react to.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: aftermath
+
+  the_outcome_settles:
+    id: the_outcome_settles
+    text: >-
+      Whatever path you took through this, the workshop lane is quieter on the other
+      side of it. {corrupt_guard.name} is either disciplined, warned, or emboldened,
+      depending on what you did. The guild dispute that enabled the shakedown is still
+      ongoing. The connection between institutional corruption and political instability
+      is not abstract here. You have seen how they feed each other. What you do with
+      that knowledge is, as ever, your decision.
+    choices:
+      - id: stay_alert
+        label: Stay alert. This is not the last time something like this will happen.
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 0
+        nextNodeId: null
+      - id: report_guild_connection
+        label: Report the connection between the guild dispute and the shakedown to the captain
+        preconditions:
+          - type: world_fact
+            key: corruption_tied_to_guild
+            value: true
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: warned_guild
+            value: true
+        exhaustionCost: 1
+        nextNodeId: null
+
+  small_acts_of_resistance:
+    id: small_acts_of_resistance
+    text: >-
+      You tell two people in the lane, quietly, that they do not have to pay. Not as
+      an announcement, just as information delivered in passing. Word spreads the way
+      word spreads in close quarters: selectively, with the names of the right people
+      attached. By the end of the week, {corrupt_guard.name}'s approach has become more
+      cautious. They are still doing it, but more carefully. Which means you have made
+      the problem smaller without eliminating it. Progress is not always clean.
+    choices:
+      - id: formalize_the_resistance
+        label: Formalize it. Go to the captain and make this a case.
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: corruption_reported
+            value: true
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
+      - id: continue_informally
+        label: Continue informally. The quiet approach is sustainable.
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: stat
+            target: cunning
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: aftermath
+
+  the_second_approach:
+    id: the_second_approach
+    text: >-
+      {corrupt_guard.name} does not give up after the first approach. Three days later
+      they find you again, this time with different framing. "I want to apologize for the
+      other day," they say. "I was out of line." A pause. "But the offer still stands.
+      Call it a community contribution, not a fee." The words have changed. The meaning
+      has not. They are testing whether you respond better to a different package on the
+      same demand.
+    choices:
+      - id: see_through_reframe
+        label: See through the reframe and say so plainly
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: world_fact
+            target: corruption_refused
+            value: true
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 1
+        nextNodeId: guard_confronted
+      - id: report_second_approach
+        label: Go directly to {captain.name} and report this second approach as a pattern
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 3
+          - type: world_fact
+            target: corruption_reported
+            value: true
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
+
+  the_damage_done:
+    id: the_damage_done
+    text: >-
+      Whatever you decided, the protection scheme has cost the workshop lane something.
+      Even the people who paid without reporting carry something: the knowledge that their
+      guard is not what they understood the guard to be. That the institution that is supposed
+      to protect them can be turned against them with sufficient motivation. That is a structural
+      damage that the inquiry, if it succeeds, addresses only partially.
+    choices:
+      - id: think_about_institution
+        label: Think about what this means for the guard as an institution in this town
+        consequences:
+          - type: stat
+            target: cunning
+            value: 1
+          - type: faction
+            target: town_guard
+            value: -1
+        exhaustionCost: 0
+        nextNodeId: aftermath
+      - id: try_to_repair_trust
+        label: Try to repair some of the trust, separately from the inquiry
+        preconditions:
+          - type: faction
+            target: town_guard
+            value: 2
+        consequences:
+          - type: faction
+            target: village_folk
+            value: 2
+          - type: faction
+            target: town_guard
+            value: 1
+        exhaustionCost: 2
+        nextNodeId: aftermath
+
+  protecting_others:
+    id: protecting_others
+    text: >-
+      While you were deciding what to do, {corrupt_guard.name} approached someone else
+      in the lane. You see it happen: the same quiet conversation, the same hand on the
+      belt, the same lowered voice. The person being approached is young, recently
+      arrived, clearly uncertain of their rights in the town. They do not know what you
+      know. You have a window of about two minutes before the conversation concludes.
+    choices:
+      - id: intervene_directly
+        label: Walk over and interrupt the conversation directly
+        consequences:
+          - type: stat
+            target: charisma
+            value: 2
+          - type: relationship
+            target: '{corrupt_guard.id}'
+            value: -2
+            axis: rivalry
+          - type: world_fact
+            target: corruption_witnessed
+            value: true
+        exhaustionCost: 2
+        nextNodeId: guard_confronted
+      - id: signal_the_new_person
+        label: Catch the new person's eye and signal them to come to you after
+        consequences:
+          - type: stat
+            target: cunning
+            value: 2
+          - type: faction
+            target: village_folk
+            value: 1
+        exhaustionCost: 1
+        nextNodeId: workshop_lane_solidarity
+      - id: document_and_go_to_captain
+        label: Document what you just saw and go to the captain immediately
+        consequences:
+          - type: faction
+            target: town_guard
+            value: 2
+          - type: world_fact
+            target: corruption_reported
+            value: true
+          - type: world_fact
+            target: corruption_evidence_gathered
+            value: true
+        exhaustionCost: 2
+        nextNodeId: captain_responds
